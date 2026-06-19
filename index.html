@@ -1569,17 +1569,19 @@ function startNewConsultation() {
   showToast('✓ New consultation started');
 }
 
-// ─── WIRE UP ALL BUTTONS (safe DOMContentLoaded) ─────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('send-btn').addEventListener('click', sendMsg);
-  document.getElementById('build-btn').addEventListener('click', openPanel);
-  document.getElementById('close-panel-btn').addEventListener('click', closePanel);
-  document.getElementById('panel-ov').addEventListener('click', closePanel);
-  document.getElementById('hist-nav-btn').addEventListener('click', e => { e.preventDefault(); openHistory(); });
-  document.getElementById('hp-close-btn').addEventListener('click', closeHistory);
-  document.getElementById('hp-new-btn').addEventListener('click', startNewConsultation);
-  document.getElementById('cv-back-btn').addEventListener('click', closeViewer);
-});
+// ─── WIRE UP ALL BUTTONS ─────────────────────────────────────────────────────
+function wireBtn(id, fn) {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', fn);
+}
+wireBtn('send-btn', sendMsg);
+wireBtn('build-btn', openPanel);
+wireBtn('close-panel-btn', closePanel);
+wireBtn('panel-ov', closePanel);
+wireBtn('hist-nav-btn', e => { e.preventDefault(); openHistory(); });
+wireBtn('hp-close-btn', closeHistory);
+wireBtn('hp-new-btn', startNewConsultation);
+wireBtn('cv-back-btn', closeViewer);
 
 // Auto-save when user leaves the page
 window.addEventListener('beforeunload', saveCurrentConsultation);
