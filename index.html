@@ -1021,11 +1021,13 @@ const KB = {
 
 // ─── AI ENGINE ────────────────────────────────────────────────────────────────
 const AI = {
-  ctx: {country: null, topic: null, msgs: []},
+  ctx: {country: null, topic: null, intent: 'general', msgs: []},
 
   detectCountry(text) {
     const t = text.toLowerCase();
-    for (const [alias, code] of Object.entries(KB.aliases)) {
+    // Try longer aliases first for accuracy
+    const sorted = Object.entries(KB.aliases).sort((a,b) => b[0].length - a[0].length);
+    for (const [alias, code] of sorted) {
       const re = new RegExp(`\\b${alias.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i');
       if (re.test(t)) return code;
     }
@@ -1034,10 +1036,73 @@ const AI = {
 
   detectTopic(text) {
     const t = text.toLowerCase();
+    // Score each topic by how many keywords match, return best match
+    let best = null, bestScore = 0;
     for (const {topic, kw} of KB.topicMap) {
-      if (kw.some(k => t.includes(k))) return topic;
+      const score = kw.filter(k => t.includes(k)).length;
+      if (score > bestScore) { bestScore = score; best = topic; }
     }
-    return null;
+    return best;
+  },
+
+  detectIntent(text) {
+    const t = text.toLowerCase();
+    if (/\bcan i sue\b|do i have a case|take.*to court|file.*lawsuit|legal action against|sue them|sue him|sue her|is there a case/i.test(t)) return 'claim';
+    if (/is it legal|can i legally|is this legal|is that legal|is that illegal|am i allowed|can you legally|legal to |is it a crime|is that a crime|legally permitted/i.test(t)) return 'legality';
+    if (/what are my rights|do i have rights|what rights do|my legal rights|what entitlements|what am i entitled/i.test(t)) return 'rights';
+    if (/what should i do|what can i do|what do i do|what are my options|how do i|how can i|what steps|what is the process|advise me|help me understand/i.test(t)) return 'action';
+    if (/what happens if|what.*penalty|what.*fine|how much.*jail|prison sentence|consequences of|punished for/i.test(t)) return 'consequence';
+    if (/how much|how long|what damages|what compensation|what award|how much can i get|what can i claim|what am i owed/i.test(t)) return 'quantum';
+    if (/what is|what does|define|explain|meaning of|what counts as|what qualifies as|what constitutes/i.test(t)) return 'definition';
+    return 'general';
+  },
+
+  extractCtx(text) {
+    const out = {urgent: false, firstPerson: true, amount: null, period: null};
+    out.urgent = /urgent|emergency|right now|immediately|today|asap|what do i do now|in danger|scared|afraid|help me now/i.test(text);
+    out.firstPerson = !/my friend|my colleague|someone i know|asking for a friend|on behalf of/i.test(text);
+    const money = text.match(/[\$£€RM][\d,]+|\d[\d,]*\s*(dollars?|pounds?|euros?|sgd|aud|myr|cad|inr|aed|ringgit)/i);
+    if (money) out.amount = money[0];
+    const time = text.match(/(\d+)\s*(day|week|month|year)s?/i);
+    if (time) out.period = time[0];
+    return out;
+  },
+
+  isFollowUp(text) {
+    const t = text.toLowerCase().trim();
+    if (t.length < 50 && /^(and |but |so |what about|also |additionally|then |can i also|what if |how about|does this|is this|does that|would that|could i|should i|would i|what else|anything else)/.test(t)) return true;
+    if (/\b(this|that|it|same|the same|my case|my situation|as i said|as mentioned)\b/i.test(t) && t.length < 70) return true;
+    return false;
+  },
+
+  getActionSteps(topic, cData) {
+    const cn = cData ? cData.name : 'your country';
+    const steps = {
+      employment: [`<li>Request a formal termination letter from your employer stating the reason for dismissal</li>`,`<li>Calculate exactly what you are owed: unpaid wages, notice pay, accrued leave, redundancy pay, bonuses</li>`,`<li>Gather all evidence: employment contract, payslips, emails, performance reviews, disciplinary records</li>`,`<li>Send a formal written demand to your employer (this starts the clock on response time)</li>`,`<li>File a claim with ${cn}'s employment tribunal or labour court — there are strict deadlines (often 3 months)</li>`,`<li>Consult an employment lawyer — many work on no-win-no-fee and offer free consultations</li>`],
+      defamation: [`<li>Screenshot and archive ALL defamatory content immediately — include the URL, date, author, and full context</li>`,`<li>Do NOT engage or respond publicly — it can amplify the content and weaken your legal position</li>`,`<li>Send a formal cease-and-desist letter demanding immediate removal and a public apology</li>`,`<li>Report to the platform (Facebook, Instagram, etc.) for urgent content removal</li>`,`<li>If content remains up, consult a defamation lawyer about a civil damages claim</li>`,`<li>For serious cases (criminal defamation), file a police report</li>`],
+      harassment: [`<li>Document every incident in a log: date, time, location, what was said or done, and witnesses</li>`,`<li>Screenshot all digital evidence (messages, emails, posts) — even if the harasser deletes them</li>`,`<li>Tell the harasser in writing to stop — this creates a formal record (required in some jurisdictions)</li>`,`<li>Report to police — harassment is a criminal offence and they can intervene immediately</li>`,`<li>Apply for a Protection Order or Restraining Order at your local court (emergency orders available same-day in most countries)</li>`,`<li>If workplace harassment, submit a formal written complaint to HR and document their response</li>`],
+      landlord: [`<li>Put all complaints and requests to your landlord in writing and keep copies of everything</li>`,`<li>Photograph every issue with timestamps — and the entire property on move-in and move-out</li>`,`<li>Send your landlord a formal written demand with a specific deadline to return deposit or fix the issue</li>`,`<li>File a complaint with your local Tenancy Tribunal, Housing Authority, or Small Claims Court</li>`,`<li>If facing an unlawful lockout or utility cutoff, contact police immediately — this is a criminal offence in most countries</li>`],
+      contract: [`<li>Gather all evidence of the contract: written agreement, emails, messages, invoices, receipts, payment records</li>`,`<li>Calculate your total loss precisely — direct loss plus any consequential losses</li>`,`<li>Send a formal Letter Before Action giving the other party 14 days to respond before you sue</li>`,`<li>File in Small Claims Court (for smaller amounts — no lawyer required in most countries)</li>`,`<li>For large or complex disputes, instruct a commercial litigation lawyer</li>`],
+      fraud: [`<li><b>STOP immediately</b> — do not send any more money or personal information</li>`,`<li>Contact your bank right away to freeze the transaction or reverse the payment</li>`,`<li>Preserve ALL evidence: screenshots, emails, receipts, chat logs, transaction IDs</li>`,`<li>File a police report — include all evidence and transaction records</li>`,`<li>Report to your national fraud authority (USA: FBI IC3 / FTC; UK: Action Fraud; Singapore/Malaysia: local police; Australia: ACSC / Scamwatch)</li>`,`<li>Place a fraud alert with credit bureaus if identity theft occurred</li>`],
+      assault: [`<li>Seek medical attention immediately — medical records are your most important evidence</li>`,`<li>Call police and report the assault — do this even if injuries appear minor</li>`,`<li>Photograph ALL injuries within 24 hours (bruises worsen over days — re-photograph)</li>`,`<li>Collect witness names and contact details</li>`,`<li>Apply for an emergency Protection Order if you fear further violence</li>`,`<li>Consult a personal injury lawyer about a civil compensation claim in addition to any criminal charges</li>`],
+      theft: [`<li>Call police immediately and file a report — obtain a report number for your records</li>`,`<li>List everything taken with detailed descriptions and estimated values</li>`,`<li>Notify your insurer within the policy's required timeframe</li>`,`<li>Change passwords and secure all online accounts immediately if devices or wallets were taken</li>`,`<li>Ask police to check any nearby CCTV — footage may be overwritten quickly</li>`],
+      negligence: [`<li>Seek medical attention and keep all medical records, reports, and bills</li>`,`<li>Photograph the scene and preserve evidence immediately before it is disturbed</li>`,`<li>Get witness contact details at the scene</li>`,`<li>Do NOT admit fault or sign documents from the other party's insurer without legal advice</li>`,`<li>Calculate your losses: medical costs, lost income, future care, pain and suffering</li>`,`<li>Consult a personal injury lawyer — most work on no-win-no-fee; be aware of the limitation period (usually 3 years)</li>`],
+      divorce: [`<li>Consult a family lawyer before filing or making any financial decisions</li>`,`<li>Prepare a complete inventory of all shared and personal assets, debts, and income</li>`,`<li>Open a personal bank account if you don't have one, and ensure access to independent funds</li>`,`<li>Do NOT move, hide, or transfer shared assets — courts view this very seriously</li>`,`<li>If children are involved, document the existing care arrangements carefully</li>`,`<li>If domestic violence is present, obtain a Protection Order BEFORE starting divorce proceedings</li>`],
+      cybercrime: [`<li>Preserve all digital evidence immediately: screenshots, logs, email headers, transaction records</li>`,`<li>Change all affected passwords and enable two-factor authentication on all accounts</li>`,`<li>Contact your bank immediately if financial accounts were accessed</li>`,`<li>Report to police AND your national cybercrime unit</li>`,`<li>Notify the affected platform (Google, Microsoft, your email provider) and request account recovery</li>`,`<li>If identity theft occurred, place a fraud alert with credit bureaus</li>`],
+      drugs: [`<li>Exercise your right to remain silent — do not make any statement to police without a lawyer</li>`,`<li>Do not consent to searches unless police present a warrant</li>`,`<li>Contact a criminal defence lawyer immediately — this is a serious matter</li>`,`<li>Write down everything that happened while your memory is fresh — officer badge numbers, what was said, what was searched</li>`],
+      education: [`<li>Request a copy of the school's formal disciplinary or complaints procedure</li>`,`<li>Document everything in writing — what happened, who was involved, exact dates and times</li>`,`<li>Submit a formal written complaint to the principal, head of department, or dean</li>`,`<li>If the school's response is unsatisfactory, escalate to the school board or national education authority</li>`,`<li>For criminal conduct by a teacher or staff (assault, abuse, sexual misconduct) — report to police immediately, regardless of any internal process</li>`,`<li>Consult a lawyer if the matter involves discrimination, wrongful expulsion, or personal injury</li>`],
+      immigration: [`<li>Consult an immigration lawyer immediately — immigration issues are time-sensitive with hard legal deadlines</li>`,`<li>Do not overstay your visa — violations accrue from day one and affect future visa applications</li>`,`<li>Gather all immigration documents: passport, visa, entry stamps, work permits, correspondence</li>`,`<li>If facing deportation, file an appeal immediately — you have the right to appeal in most countries</li>`,`<li>If seeking asylum, apply formally as early as possible and do not leave the country while the claim is pending</li>`],
+      consumer: [`<li>Keep all receipts, packaging, and proof of purchase</li>`,`<li>Document the defect with photographs and a written description</li>`,`<li>Contact the seller in writing with a clear demand (repair, replace, or refund) and a specific deadline</li>`,`<li>If refused, escalate to your national Consumer Protection Agency or relevant Ombudsman</li>`,`<li>File in Small Claims Court — most countries allow consumer claims without a lawyer</li>`],
+      privacy: [`<li>Document the breach with screenshots, logs, and exact timestamps</li>`,`<li>Submit a Subject Access Request (SAR) to find out exactly what data they hold on you</li>`,`<li>File a formal complaint with your national Data Protection Authority (UK: ICO; Singapore: PDPC; EU: your national DPA; Australia: OAIC)</li>`,`<li>If the breach caused you financial or reputational harm, consult a privacy lawyer about a damages claim</li>`],
+      copyright: [`<li>Screenshot and archive all instances of the infringement immediately</li>`,`<li>Send a formal cease-and-desist letter to the infringer demanding removal and compensation</li>`,`<li>File a DMCA takedown notice (or equivalent in your country) with the platform hosting the content</li>`,`<li>Consult an intellectual property lawyer about a damages claim if the infringement is commercial in scale</li>`],
+      family: [`<li>If in immediate danger — call emergency services (999/911/000/112) right now</li>`,`<li>Document all incidents of abuse (dates, descriptions, photos of injuries)</li>`,`<li>Seek a Protection Order or Apprehended Violence Order at your local court or police station — emergency orders are available immediately</li>`,`<li>Contact your national domestic violence helpline for immediate support and safety planning</li>`,`<li>Consult a family lawyer about divorce, custody, and financial protection</li>`],
+      selfDefense: [`<li>Do NOT make statements to police without a lawyer present — exercise your right to silence</li>`,`<li>Contact a criminal defence lawyer immediately</li>`,`<li>Write down everything that happened in detail while the memory is fresh</li>`,`<li>Identify any witnesses and ask police to preserve nearby CCTV</li>`,`<li>Gather all evidence of the threat you faced: prior threatening messages, your own injuries, witness accounts</li>`],
+      property: [`<li>Document everything: photograph the trespass, damage, or boundary dispute with timestamps</li>`,`<li>Send a formal written notice to the trespasser or neighbour</li>`,`<li>For boundary disputes, hire a licensed surveyor to formally establish the boundary</li>`,`<li>Apply for a court injunction to prevent ongoing trespass or nuisance</li>`,`<li>File a police report for criminal trespass or vandalism</li>`],
+      traffic: [`<li>Do not admit fault at the scene — limit statements to exchanging insurance details</li>`,`<li>Photograph all vehicles, damage, road markings, and the scene from multiple angles</li>`,`<li>Get witness contact details immediately</li>`,`<li>Report the accident to police if required (injury accidents are mandatory to report in most countries)</li>`,`<li>Notify your insurer within the required timeframe</li>`,`<li>If facing a traffic charge, consult a traffic lawyer — for serious offences (DUI, causing death) instruct one immediately</li>`],
+    };
+    const s = steps[topic];
+    if (!s) return `<li>Document everything in writing with dates</li><li>Send a formal written complaint or demand letter</li><li>Seek advice from a qualified lawyer in ${cn}</li><li>Act within any applicable limitation periods — missing a deadline can bar your claim entirely</li>`;
+    return s.join('');
   },
 
   handleUnknown(input) {
@@ -1127,35 +1192,63 @@ const AI = {
       return this.handleUnknown(input);
     }
 
-    // Have topic but no country — give general answer immediately AND ask for country
+    const intent = this.detectIntent(input);
+    const xCtx = this.extractCtx(input);
+    if (intent !== 'general') this.ctx.intent = intent;
+
+    // Have topic but no country
     if (tp && !c) {
       const topicLabel = tp.replace(/_/g,' ');
       const genInfo = this.getGeneralAnswer(tp);
-      return {type:'text', text:`Here is what the law generally says about <b>${topicLabel}</b>:<br><br>${genInfo}<br><br><div style="margin-top:12px;padding:10px 14px;background:rgba(6,182,212,.08);border-left:3px solid var(--cyan);border-radius:6px;"><b>For jurisdiction-specific laws, statutes, and case law:</b> which country is your question about? (e.g., Singapore, UK, USA, Australia, Malaysia, Canada, India, UAE)</div>`};
+      const steps = this.getActionSteps(tp, null);
+      const intentOpening = {
+        claim: `Here is what you need to prove to bring a <b>${topicLabel}</b> claim:`,
+        legality: `Here is the general legal position on <b>${topicLabel}</b>:`,
+        rights: `Here are your rights regarding <b>${topicLabel}</b>:`,
+        action: `Here is what you should do about your <b>${topicLabel}</b> situation:`,
+        consequence: `Here are the legal consequences in <b>${topicLabel}</b> cases:`,
+        quantum: `Here is what you may be able to claim in a <b>${topicLabel}</b> case:`,
+      };
+      const opening = intentOpening[intent] || `Here is what the law generally says about <b>${topicLabel}</b>:`;
+      return {type:'text', text:`${opening}<br><br>${genInfo}<br><br><b>⚡ What to do right now:</b><ol style="padding-left:18px;margin:6px 0;font-size:.83rem;">${steps}</ol><br><div style="padding:10px 14px;background:rgba(6,182,212,.08);border-left:3px solid var(--cyan);border-radius:6px;font-size:.85rem;"><b>Tell me your country</b> for the specific statutes, case law, deadlines, and courts that apply — e.g. Singapore, UK, USA, Australia, Malaysia, Canada, India, UAE.</div>`};
     }
 
     // Have country — check if we have specific data
     if (!KB.countries[c]) {
-      // Country not in our detailed KB — give general answer
       const genInfo = this.getGeneralAnswer(tp);
-      return {type:'text', text:`Here is what the law generally says about <b>${tp.replace(/_/g,' ')}</b> in most countries with similar legal systems:<br><br>${genInfo}<br><br><span style="color:var(--muted);font-size:.78rem;">Note: I have detailed case law and statutes for 🇸🇬 Singapore · 🇺🇸 US · 🇬🇧 UK · 🇦🇺 Australia · 🇲🇾 Malaysia · 🇨🇦 Canada · 🇮🇳 India · 🇦🇪 UAE. For local specifics in your country, consult a qualified lawyer.</span>`};
+      const steps = this.getActionSteps(tp, null);
+      return {type:'text', text:`Here is what the law generally says about <b>${tp.replace(/_/g,' ')}</b>:<br><br>${genInfo}<br><br><b>⚡ What to do:</b><ol style="padding-left:18px;margin:6px 0;font-size:.83rem;">${steps}</ol><br><span style="color:var(--muted);font-size:.78rem;">I have detailed statutes &amp; case law for 🇸🇬 Singapore · 🇺🇸 US · 🇬🇧 UK · 🇦🇺 Australia · 🇲🇾 Malaysia · 🇨🇦 Canada · 🇮🇳 India · 🇦🇪 UAE. For your country's specific laws, consult a local lawyer.</span>`};
     }
 
     const cData = KB.countries[c];
     const tData = cData.topics[tp];
 
     if (!tData) {
-      // Country in KB but this topic not specifically stored — give general answer in country context
       const genInfo = this.getGeneralAnswer(tp);
-      const covered = Object.keys(cData.topics).map(k => k.replace(/_/g,' ')).join(' · ');
-      return {type:'text', text:`<b>${cData.flag} ${cData.name} — ${tp.replace(/_/g,' ')} law:</b><br><br>${genInfo}<br><br><span style="color:var(--muted);font-size:.78rem;">My detailed ${cData.name} database covers: ${covered}. If your question is actually about one of those topics, let me know and I'll give you the specific statutes and case law.</span>`};
+      const steps = this.getActionSteps(tp, cData);
+      return {type:'text', text:`<b>${cData.flag} ${cData.name} — ${tp.replace(/_/g,' ')} law:</b><br><br>${genInfo}<br><br><b>⚡ What to do in ${cData.name}:</b><ol style="padding-left:18px;margin:6px 0;font-size:.83rem;">${steps}</ol><br><span style="color:var(--muted);font-size:.78rem;">For the most current ${cData.name} statutes on this specific topic, consult a qualified ${cData.name} lawyer.</span>`};
     }
 
     return {type:'legal', country: cData, topic: tp, data: tData};
   },
 
   formatLegal(cData, tp, data) {
+    const intent = this.ctx.intent || 'general';
     let html = '';
+
+    // Intent-aware header
+    const tLabel = tp.replace(/_/g,' ');
+    const headers = {
+      claim:      `<b>Can you take legal action? — ${cData.flag} ${cData.name} analysis:</b>`,
+      legality:   `<b>Is this legal in ${cData.flag} ${cData.name}?</b>`,
+      rights:     `<b>Your legal rights — ${cData.flag} ${cData.name}:</b>`,
+      action:     `<b>What to do — ${cData.flag} ${cData.name} legal guide:</b>`,
+      consequence:`<b>Legal consequences in ${cData.flag} ${cData.name}:</b>`,
+      quantum:    `<b>Compensation &amp; remedies — ${cData.flag} ${cData.name}:</b>`,
+      definition: `<b>${tLabel.charAt(0).toUpperCase()+tLabel.slice(1)} law — ${cData.flag} ${cData.name}:</b>`,
+      general:    `<b>Legal position — ${cData.flag} ${cData.name}:</b>`,
+    };
+    html += (headers[intent] || headers.general) + '<br>';
 
     // Verdict badge
     if (data.verdict === 'risk') html += `<span class="vbadge risk">⚠️ Potentially Illegal / Risky</span><br>`;
@@ -1163,7 +1256,7 @@ const AI = {
     if (data.verdict === 'ok') html += `<span class="vbadge ok">✓ Generally Legal (with conditions)</span><br>`;
 
     // Summary
-    html += `<b>Legal Position in ${cData.flag} ${cData.name}:</b><br>${data.summary || ''}`;
+    html += data.summary || '';
 
     // Warning
     if (data.warning) {
@@ -1226,6 +1319,10 @@ const AI = {
     if (data.advice) {
       html += `<br><div class="li" style="border-left-color:var(--green)">${data.advice.replace(/\n/g,'<br>')}</div>`;
     }
+
+    // Always: step-by-step action guide
+    const steps = this.getActionSteps(tp, cData);
+    html += `<br><b>⚡ What you should do — step by step:</b><ol style="padding-left:18px;margin:6px 0;font-size:.82rem;">${steps}</ol>`;
 
     html += `<br><span style="color:var(--muted);font-size:.78rem;">This is educational information, not legal advice. For your specific situation, consult a qualified ${cData.name} lawyer. Ready to <b>Build My Case</b>? Click the button below ↓</span>`;
 
