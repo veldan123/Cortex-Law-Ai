@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex Law AI — Your Personal Legal Intelligence</title>
+<style>
+:root {
+  --bg: #030712;
+  --surface: rgba(15,23,42,0.85);
+  --border: rgba(6,182,212,0.15);
+  --border-hi: rgba(6,182,212,0.4);
+  --cyan: #06b6d4;
+  --cyan-d: rgba(6,182,212,0.08);
+  --purple: #a855f7;
+  --purple-d: rgba(168,85,247,0.08);
+  --amber: #f59e0b;
+  --amber-d: rgba(245,158,11,0.08);
+  --red: #ef4444;
+  --green: #22c55e;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --r: 12px;
+  --r-lg: 20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;overflow-x:hidden;line-height:1.6;}
+
+/* CANVAS */
+#pc{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,7,18,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.logo{font-size:1.4rem;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;transition:color .3s;}
+.nav-links a:hover,.nav-links a.cta{color:var(--cyan);}
+.nav-links a.cta{border:1px solid var(--border-hi);padding:6px 16px;border-radius:100px;}
+
+/* LAYOUT */
+section{position:relative;z-index:1;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 40px;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 40px 80px;overflow:hidden;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--cyan-d);border:1px solid var(--border-hi);border-radius:100px;padding:6px 18px;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:32px;animation:fadeUp .8s ease both;}
+.bdot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 2s infinite;}
+.hero-title{font-size:clamp(3rem,8vw,7rem);font-weight:900;line-height:1;margin-bottom:20px;animation:fadeUp .8s .2s ease both;}
+.grad{background:linear-gradient(135deg,var(--cyan) 0%,var(--purple) 50%,var(--amber) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(.95rem,2vw,1.2rem);color:var(--muted);max-width:580px;margin:0 auto 48px;animation:fadeUp .8s .4s ease both;}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .6s ease both;}
+.btn-p{padding:15px 36px;background:linear-gradient(135deg,var(--cyan),var(--purple));border:none;border-radius:100px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .3s,box-shadow .3s;}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(6,182,212,.4);}
+.btn-s{padding:14px 36px;background:transparent;border:1px solid var(--border-hi);border-radius:100px;color:var(--text);font-size:1rem;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;transition:all .3s;}
+.btn-s:hover{background:var(--cyan-d);border-color:var(--cyan);color:var(--cyan);}
+
+/* RINGS */
+.rings{position:absolute;width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:-1;}
+.ring{position:absolute;border-radius:50%;border:1px solid;top:50%;left:50%;transform:translate(-50%,-50%);}
+.r1{width:320px;height:320px;border-color:rgba(6,182,212,.12);animation:spin 20s linear infinite;}
+.r2{width:480px;height:480px;border-color:rgba(168,85,247,.08);animation:spin 35s linear infinite reverse;}
+.r3{width:640px;height:640px;border-color:rgba(245,158,11,.05);animation:spin 50s linear infinite;}
+
+/* SCROLL */
+.scroll-ind{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;animation:fadeUp 1s 1s ease both;}
+.sline{width:1px;height:50px;background:linear-gradient(to bottom,var(--cyan),transparent);animation:spulse 2s ease-in-out infinite;}
+
+/* STATS */
+.stats{display:flex;justify-content:center;gap:60px;padding:40px;background:rgba(6,182,212,.02);border-top:1px solid var(--border);border-bottom:1px solid var(--border);flex-wrap:wrap;position:relative;z-index:1;}
+.stat{text-align:center;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
+.stat.vis{opacity:1;transform:translateY(0);}
+.sn{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sl{color:var(--muted);font-size:.82rem;margin-top:4px;}
+
+/* FEATURES */
+#features{padding:120px 0;}
+.sh{text-align:center;margin-bottom:72px;}
+.stag{display:inline-block;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;}
+.st{font-size:clamp(2rem,4vw,3.5rem);font-weight:800;line-height:1.1;}
+.sd{color:var(--muted);max-width:560px;margin:14px auto 0;font-size:1.05rem;}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:40px;position:relative;overflow:hidden;opacity:0;transform:translateY(40px);transition:opacity .6s,transform .6s,border-color .3s,box-shadow .3s;}
+.card.vis{opacity:1;transform:translateY(0);}
+.card:hover{border-color:var(--border-hi);box-shadow:0 0 30px rgba(6,182,212,.12);}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,var(--cyan-d),transparent 60%);pointer-events:none;}
+.fi{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:1.4rem;}
+.fi.c{background:var(--cyan-d);border:1px solid rgba(6,182,212,.25);}
+.fi.p{background:var(--purple-d);border:1px solid rgba(168,85,247,.25);}
+.fi.a{background:var(--amber-d);border:1px solid rgba(245,158,11,.25);}
+.ct{font-size:1.2rem;font-weight:700;margin-bottom:10px;}
+.cd{color:var(--muted);line-height:1.7;font-size:.9rem;}
+
+/* HOW IT WORKS */
+#how{padding:120px 0;position:relative;}
+#how::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(168,85,247,.04),transparent 70%);pointer-events:none;}
+.step-card{text-align:center;opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s;}
+.step-card.vis{opacity:1;transform:translateY(0);}
+.snum{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;margin:0 auto 20px;box-shadow:0 0 20px rgba(6,182,212,.3);}
+.stt{font-size:1.15rem;font-weight:700;margin-bottom:10px;}
+.std{color:var(--muted);line-height:1.7;font-size:.9rem;}
+
+/* CHAT SECTION */
+#chat-sec{padding:120px 0;}
+.chat-wrap{max-width:880px;margin:0 auto;}
+.chat-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:0 0 60px rgba(6,182,212,.08);}
+.chat-hd{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(6,182,212,.02);}
+.ai-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 0 16px rgba(6,182,212,.3);}
+.ai-nm{font-weight:700;font-size:.95rem;}
+.ai-st{font-size:.72rem;color:var(--green);display:flex;align-items:center;gap:4px;}
+.ai-st::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+.msgs{height:480px;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:18px;scroll-behavior:smooth;}
+.msgs::-webkit-scrollbar{width:3px;}
+.msgs::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px;}
+.msg{display:flex;gap:10px;max-width:82%;animation:msgIn .35s ease both;}
+.msg.u{align-self:flex-end;flex-direction:row-reverse;}
+.mav{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+.msg.ai .mav{background:linear-gradient(135deg,var(--cyan),var(--purple));}
+.msg.u .mav{background:linear-gradient(135deg,var(--amber),#f97316);}
+.mb{padding:12px 16px;border-radius:14px;font-size:.88rem;line-height:1.65;}
+.msg.ai .mb{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.12);border-bottom-left-radius:4px;}
+.msg.u .mb{background:rgba(245,158,11,.09);border:1px solid rgba(245,158,11,.18);border-bottom-right-radius:4px;}
+.mb b{color:var(--cyan);}
+
+/* Law item inside message */
+.li{background:rgba(6,182,212,.05);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:9px 12px;margin:8px 0;font-size:.82rem;}
+.ln{color:var(--cyan);font-weight:700;margin-bottom:3px;}
+.lp{color:var(--amber);font-size:.77rem;margin-top:3px;}
+.warn-box{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:9px 12px;margin:8px 0;font-size:.82rem;color:#fca5a5;}
+.vbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px;}
+.vbadge.risk{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber);}
+.vbadge.bad{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:var(--red);}
+.vbadge.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green);}
+
+/* Typing dots */
+.typing{display:flex;gap:10px;max-width:82%;}
+.tdots{display:flex;gap:4px;align-items:center;padding:12px 16px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.12);border-radius:14px;border-bottom-left-radius:4px;}
+.td{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:bounce 1.4s infinite;}
+.td:nth-child(2){animation-delay:.2s;}
+.td:nth-child(3){animation-delay:.4s;}
+
+/* Input */
+.cin-area{padding:18px 24px;border-top:1px solid var(--border);}
+.cin-row{display:flex;gap:10px;align-items:flex-end;}
+.cin{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-size:.88rem;font-family:inherit;resize:none;outline:none;transition:border-color .3s;min-height:50px;max-height:120px;}
+.cin:focus{border-color:var(--cyan);}
+.cin::placeholder{color:var(--muted);}
+.sbtn{width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--purple));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;flex-shrink:0;}
+.sbtn:hover{transform:scale(1.07);box-shadow:0 0 20px rgba(6,182,212,.4);}
+.sbtn svg{width:19px;height:19px;fill:#fff;}
+.cact{display:flex;justify-content:flex-end;margin-top:10px;}
+.bc-btn{display:flex;align-items:center;gap:7px;padding:11px 22px;background:linear-gradient(135deg,var(--amber),#f97316);border:none;border-radius:100px;color:#fff;font-size:.84rem;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:transform .3s,box-shadow .3s;animation:bpulse 3s ease-in-out infinite;}
+.bc-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,.4);animation:none;}
+
+/* PANEL */
+#panel-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:190;opacity:0;pointer-events:none;transition:opacity .3s;}
+#panel-ov.show{opacity:1;pointer-events:all;}
+#cpanel{position:fixed;top:0;right:0;width:580px;height:100vh;background:rgba(4,8,20,.97);border-left:1px solid var(--border-hi);z-index:200;transform:translateX(100%);transition:transform .5s cubic-bezier(.4,0,.2,1);overflow-y:auto;backdrop-filter:blur(20px);}
+#cpanel.open{transform:translateX(0);}
+#cpanel::-webkit-scrollbar{width:3px;}
+#cpanel::-webkit-scrollbar-thumb{background:var(--border-hi);}
+.ph{position:sticky;top:0;padding:20px 24px;border-bottom:1px solid var(--border);background:rgba(4,8,20,.95);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;z-index:10;}
+.pt{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:7px;color:var(--amber);}
+.pcls{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .2s;}
+.pcls:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:var(--red);}
+.pb{padding:24px;}
+.cs{margin-bottom:28px;}
+.csh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cst{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.cst.cy{color:var(--cyan);}
+.cst.pu{color:var(--purple);}
+.cst.am{color:var(--amber);}
+.cst.rd{color:var(--red);}
+.cst.gr{color:var(--green);}
+.cpbtn{display:flex;align-items:center;gap:3px;padding:4px 9px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:.68rem;cursor:pointer;transition:all .2s;}
+.cpbtn:hover{background:var(--cyan-d);border-color:var(--cyan);color:var(--cyan);}
+.csc{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-size:.84rem;line-height:1.7;}
+.me-item{display:flex;gap:9px;padding:9px 11px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.18);border-radius:8px;margin-bottom:7px;font-size:.8rem;}
+.me-ic{color:var(--red);flex-shrink:0;margin-top:2px;}
+.cl-item{padding:11px;background:rgba(168,85,247,.05);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:9px;font-size:.8rem;}
+.cl-nm{color:var(--purple);font-weight:600;margin-bottom:3px;}
+.cnt-item{padding:11px;background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.18);border-radius:8px;margin-bottom:8px;font-size:.8rem;}
+.cnt-atk{color:var(--red);font-weight:600;margin-bottom:5px;font-size:.73rem;text-transform:uppercase;letter-spacing:.8px;}
+.cnt-rb{color:var(--green);margin-top:7px;}
+.cnt-rb::before{content:'✓ REBUTTAL: ';font-weight:600;}
+.dns-item{padding:9px 11px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.22);border-radius:8px;margin-bottom:7px;font-size:.8rem;}
+.dns-bad{color:var(--red);text-decoration:line-through;margin-bottom:3px;font-weight:600;}
+.dns-good{color:var(--green);}
+.dns-good::before{content:'→ SAY: ';font-weight:600;color:var(--muted);}
+.os-text{font-style:italic;line-height:1.85;color:var(--text);padding:14px;background:rgba(6,182,212,.03);border-radius:8px;border:1px solid var(--border);font-size:.84rem;}
+.kf-list{list-style:none;}
+.kf-list li{display:flex;gap:7px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82rem;}
+.kf-list li:last-child{border:none;}
+.kf-list li::before{content:'▸';color:var(--cyan);flex-shrink:0;}
+.jqa{margin-bottom:9px;padding:10px;background:rgba(168,85,247,.04);border-radius:8px;font-size:.8rem;}
+.jq{color:var(--purple);font-weight:600;margin-bottom:3px;}
+.ja{color:var(--text);}
+.copy-all{width:100%;padding:13px;background:linear-gradient(135deg,var(--amber),#f97316);border:none;border-radius:var(--r);color:#fff;font-size:.84rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .2s,box-shadow .2s;margin-top:20px;}
+.copy-all:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,158,11,.4);}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:9px 22px;border-radius:100px;font-size:.84rem;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* FOOTER */
+footer{padding:50px 40px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:.82rem;position:relative;z-index:1;}
+
+/* DIVIDER */
+.div{height:1px;background:linear-gradient(to right,transparent,var(--border-hi),transparent);margin:0 40px;position:relative;z-index:1;}
+
+/* KEYFRAMES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+@keyframes spulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-7px);}}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes bpulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0);}50%{box-shadow:0 0 0 8px rgba(245,158,11,.1);}}
+
+@media(max-width:768px){
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  .wrap{padding:0 20px;}
+  #cpanel{width:100%;}
+  .rings{display:none;}
+  .stats{gap:30px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="pc"></canvas>
+
+<nav>
+  <div class="logo">CORTEX LAW AI</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#chat-sec" class="cta">Consult Now</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="rings"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div></div>
+  <div class="badge"><span class="bdot"></span>AI-Powered Legal Intelligence · No API Required</div>
+  <h1 class="hero-title">Your Personal<br><span class="grad">Legal AI</span></h1>
+  <p class="hero-sub">Ask any legal question in plain English. Get jurisdiction-specific answers, relevant case law, and a complete courtroom strategy — instantly.</p>
+  <div class="hero-btns">
+    <a href="#chat-sec" class="btn-p">Start Consultation</a>
+    <a href="#features" class="btn-s">Explore Features</a>
+  </div>
+  <div class="scroll-ind"><div class="sline"></div>Scroll</div>
+</section>
+
+<div class="stats" id="stats-bar">
+  <div class="stat"><div class="sn">10+</div><div class="sl">Jurisdictions Covered</div></div>
+  <div class="stat"><div class="sn">200+</div><div class="sl">Laws &amp; Statutes</div></div>
+  <div class="stat"><div class="sn">80+</div><div class="sl">Case Precedents</div></div>
+  <div class="stat"><div class="sn">24/7</div><div class="sl">Always Available</div></div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sh">
+      <div class="stag">Why Cortex Law AI</div>
+      <h2 class="st">Legal Intelligence <span class="grad">Reimagined</span></h2>
+      <p class="sd">No lawyers, no expensive consultations. Instant, precise legal knowledge at your fingertips.</p>
+    </div>
+    <div class="grid3">
+      <div class="card"><div class="fi c">⚖️</div><h3 class="ct">Jurisdiction-Aware Analysis</h3><p class="cd">Automatically detects your country and applies the correct laws, statutes, and court precedents specific to your jurisdiction.</p></div>
+      <div class="card"><div class="fi p">🛡️</div><h3 class="ct">Case Builder Engine</h3><p class="cd">Transform your raw situation into a professionally structured legal case — missing elements, counterarguments, and a judge-ready script included.</p></div>
+      <div class="card"><div class="fi a">🎯</div><h3 class="ct">Strategic Defense AI</h3><p class="cd">Simulates opposing counsel's arguments, prepares rebuttals, flags dangerous phrases, and generates formal legal prose from your plain-English description.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sh">
+      <div class="stag">Process</div>
+      <h2 class="st">How It <span style="background:linear-gradient(135deg,var(--purple),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Works</span></h2>
+      <p class="sd">Three steps from question to courtroom-ready strategy</p>
+    </div>
+    <div class="grid3">
+      <div class="step-card"><div class="snum">1</div><h3 class="stt">Ask Your Question</h3><p class="std">Type your legal question in plain English. Mention your country for jurisdiction-specific answers — or Cortex Law AI will ask you.</p></div>
+      <div class="step-card"><div class="snum">2</div><h3 class="stt">AI Analyses the Law</h3><p class="std">Cortex Law AI cross-references its legal knowledge base, identifies applicable statutes, and surfaces relevant court precedents in seconds.</p></div>
+      <div class="step-card"><div class="snum">3</div><h3 class="stt">Build Your Strategy</h3><p class="std">Hit "Build My Case" to generate a complete legal strategy: case analysis, courtroom script, counterarguments, and professional legal language.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section id="chat-sec">
+  <div class="wrap">
+    <div class="sh">
+      <div class="stag">Consultation</div>
+      <h2 class="st">Ask Your <span class="grad">Legal Question</span></h2>
+      <p class="sd">Start a conversation. Cortex Law AI will guide you to the answers you need.</p>
+    </div>
+    <div class="chat-wrap">
+      <div class="chat-box">
+        <div class="chat-hd">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="ai-av">⚖️</div>
+            <div><div class="ai-nm">Cortex Law AI Legal Counsel</div><div class="ai-st">Online · Ready to Advise</div></div>
+          </div>
+          <div style="font-size:.7rem;color:var(--muted);text-align:right;line-height:1.5;">Educational purposes only.<br>Not a substitute for licensed legal advice.</div>
+        </div>
+        <div class="msgs" id="msgs"></div>
+        <div class="cin-area">
+          <div class="cin-row">
+            <textarea class="cin" id="cin" placeholder="e.g. 'Is it legal to prank someone in Singapore?' or 'My employer fired me without notice in the UK'" rows="1"></textarea>
+            <button class="sbtn" id="send-btn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+          </div>
+          <div class="cact"><button class="bc-btn" id="build-btn">⚖️ Build My Case</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="margin-bottom:10px;font-size:1.1rem;font-weight:900;letter-spacing:4px;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">CORTEX LAW AI</div>
+  <p>AI-powered legal intelligence for educational and informational purposes only.</p>
+  <p style="margin-top:6px;">Always consult a qualified attorney for your specific legal situation.</p>
+  <p style="margin-top:14px;color:rgba(148,163,184,.3);">© 2025 Cortex Law AI · Built with Pure Intelligence</p>
+</footer>
+
+<div id="panel-ov"></div>
+<div id="cpanel">
+  <div class="ph"><div class="pt">⚖️ Build My Case</div><button class="pcls" id="close-panel-btn">✕</button></div>
+  <div class="pb" id="panel-body"></div>
+</div>
+<div id="toast">✓ Copied to clipboard!</div>
+
+<script>
+// ─── PARTICLES ───────────────────────────────────────────────────────────────
+const C=document.getElementById('pc'),X=C.getContext('2d');
+let PS=[];
+function rC(){C.width=innerWidth;C.height=innerHeight;}
+class P{
+  reset(){this.x=Math.random()*C.width;this.y=Math.random()*C.height;this.s=Math.random()*1.4+.4;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.o=Math.random()*.4+.08;this.col=Math.random()>.5?'6,182,212':'168,85,247';}
+  constructor(){this.reset();}
+  update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>C.width||this.y<0||this.y>C.height)this.reset();}
+  draw(){X.beginPath();X.arc(this.x,this.y,this.s,0,Math.PI*2);X.fillStyle=`rgba(${this.col},${this.o})`;X.fill();}
+}
+function initP(){PS=[];for(let i=0;i<100;i++)PS.push(new P());}
+function animP(){
+  X.clearRect(0,0,C.width,C.height);
+  for(let i=0;i<PS.length;i++){
+    for(let j=i+1;j<PS.length;j++){
+      const d=Math.hypot(PS[i].x-PS[j].x,PS[i].y-PS[j].y);
+      if(d<110){X.beginPath();X.moveTo(PS[i].x,PS[i].y);X.lineTo(PS[j].x,PS[j].y);X.strokeStyle=`rgba(6,182,212,${.04*(1-d/110)})`;X.lineWidth=.4;X.stroke();}
+    }
+    PS[i].update();PS[i].draw();
+  }
+  requestAnimationFrame(animP);
+}
+window.addEventListener('resize',()=>{rC();initP();});
+rC();initP();animP();
+
+// ─── SCROLL ANIMATIONS ────────────────────────────────────────────────────────
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.15});
+document.querySelectorAll('.card,.step-card,.stat').forEach(el=>io.observe(el));
+
+// ─── LEGAL KNOWLEDGE BASE ─────────────────────────────────────────────────────
+const KB = {
+  aliases: {
+    'singapore':'sg','sg':'sg','sing':'sg',
+    'united states':'us','usa':'us','us':'us','america':'us','u.s.':'us','u.s.a.':'us',
+    'united kingdom':'uk','uk':'uk','england':'uk','britain':'uk','great britain':'uk',
+    'australia':'au','oz':'au','au':'au','aussie':'au',
+    'malaysia':'my','my':'my',
+    'canada':'ca','ca':'ca',
+    'india':'in','in':'in',
+    'philippines':'ph','ph':'ph','pinas':'ph',
+    'uae':'ae','dubai':'ae','united arab emirates':'ae','emirates':'ae','abu dhabi':'ae',
+    'germany':'de','de':'de','deutschland':'de',
+    'new zealand':'nz','nz':'nz',
+    'hong kong':'hk','hk':'hk',
+    'thailand':'th','th':'th',
+    'indonesia':'id','id':'id',
+    'japan':'jp','jp':'jp',
+    'south korea':'kr','korea':'kr','kr':'kr',
+    'france':'fr','fr':'fr',
+    'spain':'es','es':'es',
+    'italy':'it','it':'it',
+    'brazil':'br','br':'br',
+    'nigeria':'ng','ng':'ng',
+    'south africa':'za','za':'za',
+  },
+
+  countries: {
+    sg: {
+      name: 'Singapore',
+      sys: 'Common Law (based on English law)',
+      flag: '🇸🇬',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'Pranks in Singapore occupy a legally grey zone. While "pranks" are not a specific criminal category, a prank can trigger multiple serious laws depending on what you do and to whom.',
+          laws: [
+            {n:'Penal Code (Cap 224) s.352 — Criminal Force',d:'Applying force to another person, even jokingly, without consent constitutes criminal force if it causes fear or annoyance.',p:'Up to 3 months imprisonment and/or fine.'},
+            {n:'Penal Code s.506 — Criminal Intimidation',d:'Threatening someone with injury to their person, reputation or property — even as a "joke" — is criminal intimidation.',p:'Up to 2 years imprisonment.'},
+            {n:'Miscellaneous Offences (Public Order) Act s.13A',d:'Fake bomb threats, false fire alarms, or prank emergency calls are criminal. Causing unnecessary public alarm is an offence.',p:'Up to $5,000 fine and/or 12 months imprisonment.'},
+            {n:'Protection from Harassment Act (POHA) 2014',d:'Repeated pranks or behaviour that causes harassment, alarm, or distress — including online trolling or prank calls — are actionable under POHA.',p:'Up to $5,000 fine and/or 6 months imprisonment (first offence).'},
+            {n:'Personal Data Protection Act (PDPA)',d:'Filming the victim of a prank without consent and publishing it may violate PDPA and privacy laws.',p:'Financial penalties up to $1 million.'},
+          ],
+          caselaw: [
+            {c:'PP v Muhammad Shafiq bin Shariff [2016] SGDC',r:'The court established that intent to "joke" is not a defence if the victim suffered genuine fear or alarm.'},
+            {c:'Benber Dayao Yu v Jacker Chew [2020] SGHC',r:'Protection Order granted for persistent online harassment; illustrates that digital pranks/trolling are actionable.'},
+          ],
+          advice: '✓ A prank is most likely LEGAL in Singapore if: both parties explicitly consent, no fear/alarm/distress is caused, it is conducted in private, and no property is damaged or false emergency reported.\n\n⚠️ A prank is RISKY or ILLEGAL if: the victim did not consent, they could reasonably feel fear or humiliation, it involves public spaces, it involves filming without consent, or it triggers emergency services.',
+        },
+
+        defamation: {
+          verdict: 'risk',
+          summary: 'Defamation in Singapore is both a civil tort and a criminal offence. Singapore courts have historically awarded substantial damages, making defamation claims particularly serious here.',
+          laws: [
+            {n:'Defamation Act (Cap 75)',d:'Governs civil defamation. A defamatory statement is one that lowers the reputation of a person in the eyes of right-thinking members of society, or causes them to be shunned or avoided.',p:'Court-assessed damages (can be very substantial in Singapore).'},
+            {n:'Penal Code ss.499–502 — Criminal Defamation',d:'Making or publishing a defamatory imputation knowing it will harm the person\'s reputation is a criminal offence.',p:'Up to 2 years imprisonment and/or fine.'},
+            {n:'Protection from Harassment Act (POHA) s.15',d:'False statements of fact published online that cause harassment can be addressed via court order to compel corrections.',p:'Court orders, injunctions, and civil damages.'},
+          ],
+          caselaw: [
+            {c:'Lee Kuan Yew v Jeyaretnam Joshua Benjamin [1979] 1 MLJ 281',r:'Foundational Singapore defamation case. Public figures can sue — the burden is on the defendant to prove truth or establish a recognised defence.'},
+            {c:'Review Publishing Co Ltd v Lee Hsien Loong [2010] 1 SLR 52',r:'Court of Appeal clarified the defence of neutral reportage and responsible journalism under Singapore law.'},
+            {c:'Arul Chandran v Chew Chin Aik Victor [2001] 1 SLR 505',r:'Key case on the fair comment defence and the distinction between comment and statement of fact.'},
+          ],
+          elements: ['A false statement of fact (not mere opinion)','Publication to at least one third party','The statement refers to the claimant','The statement caused or is likely to cause reputational harm'],
+          defences: ['Justification (the statement is true in substance)','Fair comment (honest opinion on a matter of public interest)','Qualified privilege (e.g., references, duty-bound communications)','Absolute privilege (court proceedings, Parliament)'],
+        },
+
+        contract: {
+          verdict: 'depends',
+          summary: 'Contract law in Singapore follows English common law principles codified in various statutes. A binding contract requires offer, acceptance, consideration, and intention to create legal relations.',
+          laws: [
+            {n:'Common Law of Contract (judge-made)',d:'Singapore contract law is primarily judge-made common law, closely following English precedent.'},
+            {n:'Contracts (Rights of Third Parties) Act (Cap 53B)',d:'Third parties can enforce a contract term made for their benefit.'},
+            {n:'Unfair Contract Terms Act (Cap 396)',d:'Limits the ability of parties to exclude liability through unfair terms, particularly in standard-form contracts.'},
+            {n:'Misrepresentation Act (Cap 390)',d:'Allows rescission or damages where a contract was induced by a false statement.'},
+          ],
+          elements: ['Offer — a clear proposal to contract on definite terms','Acceptance — unequivocal agreement to the exact terms of the offer','Consideration — something of value given by each party','Intention to create legal relations — presumed in commercial contexts','Certainty of terms — sufficiently definite terms','Capacity — both parties must be of legal capacity'],
+          breach: 'A breach of contract occurs when a party fails, without lawful excuse, to perform their contractual obligations. Remedies include: compensatory damages, specific performance, injunction, and rescission.',
+          caselaw: [
+            {c:'Gay Choon Ing v Loh Sze Ti Terence Peter [2009] 2 SLR 332',r:'Court of Appeal set out the modern test for consideration in Singapore — reinforcing the need for sufficient (not adequate) consideration.'},
+            {c:'Tribune Investment Trust Inc v Soosan Trading Co Ltd [2000] 2 SLR 786',r:'Established the objective test for offer and acceptance — courts look at the objective conduct of parties, not their subjective intentions.'},
+          ],
+        },
+
+        negligence: {
+          verdict: 'depends',
+          summary: 'To succeed in a negligence claim in Singapore, a claimant must prove four elements using the Spandeck two-stage test for duty of care.',
+          laws: [
+            {n:'Civil Law Act (Cap 43)',d:'Governs tortious (civil wrong) liability in Singapore.'},
+            {n:'Contributory Negligence and Personal Injuries Act (Cap 54)',d:'If the claimant was also negligent, damages are reduced proportionally.'},
+          ],
+          elements: [
+            'Duty of Care — the defendant owed the claimant a legal duty of care (apply Spandeck test: factual foreseeability + proximity + policy considerations)',
+            'Breach — the defendant fell below the standard of a reasonable person in those circumstances',
+            'Causation — the breach caused the damage (but-for test + legal causation)',
+            'Damage — the claimant suffered actual, recoverable loss or harm',
+          ],
+          caselaw: [
+            {c:'Spandeck Engineering (S) Pte Ltd v DSTA [2007] 4 SLR 100',r:'LANDMARK — Court of Appeal established Singapore\'s unified two-stage test for duty of care, superseding the English Caparo test.'},
+            {c:'Ngiam Kong Seng v Lim Chiew Hock [2008] 3 SLR 674',r:'Applied the Spandeck test and clarified how the proximity stage is analysed in Singapore.'},
+            {c:'Man Mohan Singh v Zurich Insurance (Singapore) [2008] 3 SLR 735',r:'Defined the "but-for" causation test in the Singapore negligence context.'},
+          ],
+        },
+
+        harassment: {
+          verdict: 'bad',
+          summary: 'Singapore has robust anti-harassment laws, particularly the Protection from Harassment Act (POHA) 2014, which covers both physical and digital harassment.',
+          laws: [
+            {n:'POHA 2014, s.3 — Intentional Harassment',d:'Intentionally causing harassment, alarm, or distress through threatening, abusive, or insulting behaviour.',p:'Up to $5,000 fine and/or 6 months imprisonment (first offence). Double on repeat.'},
+            {n:'POHA s.4 — Harassment (Non-Intentional)',d:'Causing harassment, alarm, or distress even without specific intent.',p:'Up to $5,000 fine.'},
+            {n:'POHA s.7 — Unlawful Stalking',d:'A course of conduct that causes harassment or alarm, including following a person, loitering near their home/workplace, or sending unwanted communications.',p:'Up to $5,000 fine and/or 12 months imprisonment.'},
+          ],
+          remedies: ['Protection Order (PO) — court order to stop contact/harassment','Expedited Protection Order (EPO) — emergency order granted same day','Civil damages claim against harasser','Criminal prosecution — referral to police'],
+          caselaw: [
+            {c:'Benber Dayao Yu v Jacker Chew [2020] 3 SLR 74',r:'Protection Order granted for persistent online harassment across multiple platforms — cyber-harassment is fully covered by POHA.'},
+            {c:'Lim Teng Ee Joyce v Singapore Medical Council [2020]',r:'Illustrates that professional-context harassment is also governed by POHA.'},
+          ],
+        },
+
+        employment: {
+          verdict: 'depends',
+          summary: 'Singapore employment law is governed primarily by the Employment Act. Wrongful dismissal claims can be made to the Employment Claims Tribunals (ECT).',
+          laws: [
+            {n:'Employment Act (Cap 91)',d:'Covers employees earning up to $4,500/month (or managers/executives earning up to $4,500). Sets minimum standards for salary, hours, annual leave, and dismissal notice.'},
+            {n:'Employment Claims Act 2016',d:'Provides a streamlined process for resolving salary-related employment disputes via the Employment Claims Tribunals.'},
+            {n:'Retirement and Re-employment Act (Cap 274A)',d:'Requires employers to offer re-employment to eligible employees up to age 67.'},
+          ],
+          notice: 'Minimum statutory notice periods (or salary-in-lieu): less than 26 weeks service = 1 day; 26 weeks–2 years = 1 week; 2–5 years = 2 weeks; 5+ years = 4 weeks.',
+          wrongful: 'Wrongful dismissal: dismissal without just cause or excuse. File at ECT within 1 year of dismissal.',
+          caselaw: [
+            {c:'Wee Kim San Lawrence Bernard v Robinson & Co (Singapore) Pte Ltd [2014] 4 SLR 357',r:'Court of Appeal clarified that employers must prove a valid reason for dismissal — the burden of proof sits with the employer.'},
+          ],
+        },
+
+        traffic: {
+          verdict: 'depends',
+          summary: 'Road traffic offences in Singapore are governed by the Road Traffic Act and carry demerit points in addition to fines and potential imprisonment.',
+          laws: [
+            {n:'Road Traffic Act (Cap 276)',d:'Main legislation. Covers licensing, speeding, drink-driving, careless/dangerous driving, and traffic violations.'},
+            {n:'Road Traffic (Motor Vehicles, Speed Limits) Rules',d:'Sets speed limits: 50 km/h on roads, 90 km/h on expressways (unless otherwise signposted).'},
+          ],
+          offences: [
+            {o:'Speeding (1–30 km/h over)',p:'$150 fine, 4 demerit points'},
+            {o:'Drink driving (>80mg/100ml blood)',p:'First offence: $1,000–$5,000 fine, up to 6 months imprisonment, 12–24 month disqualification'},
+            {o:'Dangerous driving (death)',p:'Up to 8 years imprisonment'},
+            {o:'Running red light',p:'$400 fine, 12 demerit points'},
+            {o:'Using phone while driving',p:'$300 fine, 12 demerit points'},
+          ],
+        },
+
+        drugs: {
+          verdict: 'bad',
+          summary: '⚠️ CRITICAL: Singapore has some of the world\'s most severe drug laws. Trafficking above threshold quantities carries the MANDATORY DEATH PENALTY.',
+          laws: [
+            {n:'Misuse of Drugs Act (Cap 185)',d:'Strictly governs all drug offences. Trafficking heroin (>15g), cocaine (>30g), cannabis (>500g), methamphetamine (>250g) carries the MANDATORY DEATH PENALTY.',p:'Death penalty or mandatory minimum imprisonment depending on quantity and drug type.'},
+          ],
+          warning: 'Even drug transit through Changi Airport is subject to Singapore law. Never carry drugs in or through Singapore under any circumstances.',
+        },
+
+        consumer: {
+          verdict: 'ok',
+          summary: 'Singapore consumers have strong statutory protection. Defective goods can be addressed under the Lemon Law, and unfair trade practices are governed by the CPFTA.',
+          laws: [
+            {n:'Consumer Protection (Fair Trading) Act (CPFTA)',d:'Protects consumers from unfair trade practices such as misrepresentation, high-pressure tactics, and deceptive advertising.'},
+            {n:'Sale of Goods Act (Cap 393)',d:'Implies statutory terms: satisfactory quality, fitness for purpose, and correspondence to description.'},
+            {n:'Lemon Law (s.12B–12G CPFTA, amended 2012)',d:'Within 6 months of purchase, consumer can demand repair, replacement, or refund for defective goods. Burden on seller to prove goods were not defective at delivery.'},
+          ],
+          remedy: 'Small Claims Tribunal for disputes up to $20,000 (or $30,000 by consent). CASE (Consumers Association of Singapore) provides mediation.',
+        },
+
+        cybercrime: {
+          verdict: 'bad',
+          summary: 'Singapore takes cybercrime very seriously. The Computer Misuse Act carries heavy penalties for unauthorised access, data theft, and system interference.',
+          laws: [
+            {n:'Computer Misuse Act (Cap 50A)',d:'Prohibits unauthorised access to computer material, modification of computer material, unauthorised use of computer service, and DDoS attacks.',p:'Up to $10,000 fine and/or 3 years imprisonment (first offence). Up to $50,000 and 10 years for aggravated offences.'},
+            {n:'Personal Data Protection Act (PDPA) 2012 (amended 2021)',d:'Governs collection, use, and disclosure of personal data. Mandatory breach notification within 3 days for significant breaches.',p:'Financial penalties up to 10% of annual Singapore turnover or $1 million, whichever is higher.'},
+          ],
+          caselaw: [
+            {c:'PP v Muhammad Nuzaihan bin Kamal Luddin [1999] 3 SLR 873',r:'First conviction under the Computer Misuse Act — established that even "curiosity-driven" unauthorised access is a criminal offence.'},
+          ],
+        },
+      }
+    },
+
+    us: {
+      name: 'United States',
+      sys: 'Common Law (varies by state); Federal and State systems',
+      flag: '🇺🇸',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'US prank law is primarily state-level and varies significantly. Federal law applies to pranks involving interstate communications or federal property.',
+          laws: [
+            {n:'Common Law Assault (all states)',d:'A prank that places a person in reasonable apprehension of imminent harmful or offensive contact constitutes assault — even without physical contact.',p:'Misdemeanor to felony depending on state and severity.'},
+            {n:'Intentional Infliction of Emotional Distress (IIED)',d:'Extreme or outrageous conduct that intentionally or recklessly causes severe emotional distress. Prank videos that go too far often result in IIED tort claims.',p:'Civil damages (compensatory and punitive).'},
+            {n:'18 U.S.C. § 1038 — False Information and Hoaxes',d:'Making false statements to federal authorities (e.g., bomb hoaxes), or "swatting" — calling in fake emergencies to cause armed police response.',p:'Up to 5 years federal imprisonment; up to life if death results.'},
+            {n:'State Invasion of Privacy Laws',d:'Filming a prank in private settings or publishing footage without consent may violate state privacy statutes (e.g., California Penal Code § 647(j)).',p:'Varies by state — civil damages and criminal fines.'},
+          ],
+          caselaw: [
+            {c:'Snyder v Phelps, 562 U.S. 443 (2011)',r:'First Amendment broadly protects speech on matters of public concern — relevant to prank/stunt content that is public commentary.'},
+            {c:'Garratt v Dailey, 46 Wash.2d 197 (1955)',r:'Classic battery case — even an "unintentional" harmful contact (pulling away a chair) gives rise to liability if the defendant knew with substantial certainty that contact would occur.'},
+          ],
+        },
+
+        contract: {
+          verdict: 'depends',
+          summary: 'US contract law is primarily state-governed common law, with the UCC applying to sale of goods. All valid contracts require: offer, acceptance, consideration, and mutual assent.',
+          elements: ['Offer — definite proposal','Acceptance — unequivocal agreement (mirror image rule at common law; UCC more flexible)','Consideration — bargained-for exchange of value','Mutual assent — meeting of the minds','Capacity — both parties of legal age and sound mind','Legality — contract object must be legal'],
+          breach_remedies: ['Compensatory damages (expectation damages)','Consequential damages (if foreseeable at formation)','Punitive damages (rare — only for fraudulent breach)','Specific performance (for unique goods or real estate)','Rescission and restitution'],
+          caselaw: [
+            {c:'Hawkins v McGee, 84 N.H. 114 (1929)',r:'The "Hairy Hand" case — established expectation damages; plaintiff entitled to the benefit of the bargain (the "perfect hand" promised).'},
+            {c:'Lucy v Zehmer, 196 Va. 493 (1954)',r:'Objective theory of contracts — a party cannot escape a contract by claiming they were joking if a reasonable person would believe they were serious.'},
+          ],
+        },
+
+        employment: {
+          verdict: 'depends',
+          summary: 'US employment is predominantly "at-will" — either party can terminate for any lawful reason. Federal law provides key protections against discrimination and wage theft.',
+          laws: [
+            {n:'Fair Labor Standards Act (FLSA)',d:'Sets federal minimum wage ($7.25/hour), overtime pay (1.5x for hours over 40/week), and prohibits oppressive child labor.'},
+            {n:'Title VII, Civil Rights Act 1964',d:'Prohibits employment discrimination based on race, color, religion, sex, or national origin. Applies to employers with 15+ employees.'},
+            {n:'Americans with Disabilities Act (ADA)',d:'Prohibits discrimination against qualified individuals with disabilities; requires reasonable accommodation.'},
+            {n:'Family and Medical Leave Act (FMLA)',d:'Provides up to 12 weeks of unpaid, job-protected leave for qualifying medical/family reasons. Applies to employers with 50+ employees.'},
+            {n:'Age Discrimination in Employment Act (ADEA)',d:'Prohibits discrimination against employees 40 years or older.'},
+          ],
+          atWill: 'Most US states follow at-will employment — either party can terminate for any reason not prohibited by law. Exceptions: public policy violation, implied contract, covenant of good faith.',
+          caselaw: [
+            {c:'McDonnell Douglas Corp v Green, 411 U.S. 792 (1973)',r:'LANDMARK — established the burden-shifting framework for employment discrimination cases under Title VII.'},
+            {c:'Burlington Industries Inc v Ellerth, 524 U.S. 742 (1998)',r:'Employer liability for supervisor sexual harassment — established the "tangible employment action" standard.'},
+          ],
+        },
+
+        selfDefense: {
+          verdict: 'depends',
+          summary: 'Self-defense law in the US varies significantly by state. Key questions: Is there a duty to retreat? Does Stand Your Ground apply? Was force proportionate?',
+          laws: [
+            {n:'Castle Doctrine (most states)',d:'In your home, you generally have no duty to retreat before using force in self-defense.'},
+            {n:'Stand Your Ground (approx. 30 states including FL, TX)',d:'No duty to retreat anywhere you have a legal right to be, before using force in self-defense.'},
+            {n:'Duty to Retreat (some states: NY, MA, NJ, etc.)',d:'Must attempt to safely retreat before using deadly force, if retreat is possible.'},
+          ],
+          caselaw: [
+            {c:'State v Norman, 324 N.C. 253 (1989)',r:'Important battered woman syndrome self-defense case — established that imminent threat does not require immediate threat in abuse contexts.'},
+          ],
+        },
+
+        defamation: {
+          verdict: 'risk',
+          summary: 'US defamation law is heavily influenced by First Amendment protections. The standard of proof depends on whether the plaintiff is a public or private figure.',
+          elements: ['A false statement of fact (opinions are protected)','Publication to a third party','Fault — negligence (private figures) or actual malice (public figures/officials)','Damages — actual harm to reputation (or presumed in some cases)'],
+          caselaw: [
+            {c:'New York Times Co. v Sullivan, 376 U.S. 254 (1964)',r:'LANDMARK — public officials must prove "actual malice" (knowledge of falsity or reckless disregard for truth) to win defamation.'},
+            {c:'Gertz v Robert Welch Inc., 418 U.S. 323 (1974)',r:'Private figures need only prove negligence (not actual malice) to recover damages.'},
+            {c:'Milkovich v Lorain Journal Co., 497 U.S. 1 (1990)',r:'Opinion is not an absolute defence — false statements of fact stated as opinion can still be defamatory.'},
+          ],
+        },
+
+        drugs: {
+          verdict: 'depends',
+          summary: 'US drug law is complex — federal law classifies marijuana as Schedule I, but 24+ states have legalised recreational use. Penalties vary dramatically by substance, quantity, and state.',
+          laws: [
+            {n:'Controlled Substances Act (federal, 21 U.S.C.)',d:'Schedules drugs I–V. Schedule I (heroin, LSD, marijuana federally) deemed to have no accepted medical use.',p:'Trafficking Schedule I or II: 5–40 years imprisonment for first offence.'},
+          ],
+          marijuana: 'As of 2025, recreational marijuana is legal in 24+ states (CA, CO, NY, etc.) but remains a federal felony. Crossing state lines with marijuana is a federal crime even between two legal states.',
+        },
+      }
+    },
+
+    uk: {
+      name: 'United Kingdom',
+      sys: 'Common Law (England & Wales); Scots Law (Scotland); NI has its own system',
+      flag: '🇬🇧',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'UK prank law is primarily governed by public order, harassment, and communications legislation. Even a single incident can constitute an offence.',
+          laws: [
+            {n:'Protection from Harassment Act 1997',d:'A course of conduct (as few as 2 incidents) that causes harassment, alarm, or distress is a criminal offence.',p:'Up to 6 months imprisonment (s.2); up to 5 years for stalking (s.4A).'},
+            {n:'Public Order Act 1986, ss.4A & 5',d:'Threatening, abusive, or insulting words or behaviour in public that cause or are likely to cause harassment, alarm, or distress.',p:'Fine (s.5); up to 6 months imprisonment (s.4A).'},
+            {n:'Communications Act 2003, s.127',d:'Sending a grossly offensive, obscene, or menacing message over a public electronic communications network — includes prank calls.',p:'Up to 6 months imprisonment.'},
+            {n:'Malicious Communications Act 1988',d:'Sending a letter or electronic communication that is indecent, grossly offensive, or threatening, with intent to cause distress or anxiety.',p:'Up to 2 years imprisonment (increased by Crime and Courts Act 2013).'},
+          ],
+          caselaw: [
+            {c:'R v Chambers [2008] EWCA Crim 2467',r:'Airport tweet joke ("Blow the airport sky high") led to conviction under Communications Act s.127 — later overturned on appeal, which clarified the "menace" threshold requires genuine menace, not dark humour.'},
+            {c:'Majrowski v Guy\'s and St Thomas\' NHS Trust [2006] UKHL 34',r:'House of Lords established that employers can be vicariously liable for harassment by their employees under the 1997 Act.'},
+          ],
+        },
+
+        employment: {
+          verdict: 'depends',
+          summary: 'UK employment law provides strong statutory protections. After 2 years\' continuous service, employees have the right not to be unfairly dismissed.',
+          laws: [
+            {n:'Employment Rights Act 1996',d:'Core employment statute. Covers unfair dismissal (2-year qualifying period), redundancy payments, written statements, and deductions from wages.'},
+            {n:'Equality Act 2010',d:'Prohibits discrimination based on 9 protected characteristics: age, disability, gender reassignment, marriage/civil partnership, pregnancy/maternity, race, religion/belief, sex, sexual orientation.'},
+            {n:'Working Time Regulations 1998',d:'48-hour maximum working week (opt-out available), minimum 28 days\' paid annual leave, 11 hours\' daily rest.'},
+            {n:'National Minimum Wage Act 1998',d:'Current rates (2025): £11.44/hour (21+), £8.60 (18–20), £6.40 (16–17).'},
+          ],
+          unfair_dismissal: 'Employer must prove: (1) a potentially fair reason (conduct, capability, redundancy, statutory restriction, SOSR), and (2) they acted reasonably. File at Employment Tribunal within 3 months of dismissal.',
+          caselaw: [
+            {c:'Iceland Frozen Foods v Jones [1983] ICR 17',r:'The "band of reasonable responses" test — tribunal asks whether the dismissal was within the range of reasonable responses, not whether it was the decision the tribunal itself would have made.'},
+            {c:'Williams v Compair Maxam [1982] ICR 156',r:'Established procedural fairness standards for redundancy selection (consultation, objective selection criteria, consideration of alternatives).'},
+          ],
+        },
+
+        defamation: {
+          verdict: 'risk',
+          summary: 'UK defamation law (Defamation Act 2013) requires proof of "serious harm" to reputation, making claims more targeted but still very powerful.',
+          laws: [
+            {n:'Defamation Act 2013',d:'Requires the claimant to show that the statement caused, or is likely to cause, "serious harm" to their reputation. Companies must show "serious financial loss".',p:'Civil damages — no cap; injunctive relief available.'},
+          ],
+          defences: ['Truth (s.2) — the statement is substantially true','Honest Opinion (s.3) — genuinely held opinion on a matter of public interest','Publication on a matter of public interest (s.4) — responsible journalism defence'],
+          caselaw: [
+            {c:'Flood v Times Newspapers Ltd [2012] UKSC 11',r:'Supreme Court case on the "responsible journalism" public interest defence — requires verification, integrity, and genuine public benefit.'},
+            {c:'Lachaux v Independent Print Ltd [2019] UKSC 27',r:'Supreme Court clarified that "serious harm" under s.1 of the Defamation Act 2013 must be proved on the evidence, not merely inferred.'},
+          ],
+        },
+
+        contract: {
+          verdict: 'depends',
+          summary: 'UK contract law follows the classical common law framework plus modern statutory protections for consumers.',
+          elements: ['Offer','Acceptance (mirror image)','Consideration (must be sufficient, not adequate)','Intention to create legal relations (presumed in commercial contracts)','Certainty of terms'],
+          laws: [
+            {n:'Consumer Rights Act 2015',d:'Implied terms in consumer contracts: satisfactory quality, fit for purpose, as described. 30-day right to reject faulty goods.'},
+            {n:'Misrepresentation Act 1967',d:'Rescission and/or damages for contracts induced by misrepresentation (fraudulent, negligent, or innocent).'},
+            {n:'Unfair Contract Terms Act 1977',d:'Controls exclusion clauses in commercial contracts — reasonableness test.'},
+          ],
+          caselaw: [
+            {c:'Carlill v Carbolic Smoke Ball Company [1893] 1 QB 256',r:'FOUNDATIONAL — unilateral contract; advertisement constituted an offer accepted by performance. Puffery vs. binding offer distinction.'},
+            {c:'Hadley v Baxendale (1854) 9 Exch 341',r:'FOUNDATIONAL — remoteness of damage; only losses that were reasonably foreseeable at the time of contracting are recoverable.'},
+          ],
+        },
+
+        negligence: {
+          verdict: 'depends',
+          summary: 'UK negligence law follows the three-stage Caparo test and requires proof of duty, breach, causation, and damage.',
+          elements: ['Duty of care (Caparo test: foreseeable victim, proximity, fair/just/reasonable to impose duty)','Breach of that duty (falling below the standard of a reasonable person)','Causation — factual (but-for) and legal (remoteness)','Damage — actual recoverable loss'],
+          caselaw: [
+            {c:'Donoghue v Stevenson [1932] AC 562',r:'FOUNDATIONAL — established modern negligence and the "neighbour principle" (duty of care owed to persons closely and directly affected by your acts).'},
+            {c:'Caparo Industries plc v Dickman [1990] 2 AC 605',r:'Three-part test for duty of care: (1) foreseeable harm, (2) proximity, (3) fair/just/reasonable to impose duty.'},
+            {c:'Bolam v Friern Hospital [1957] 1 WLR 582',r:'Bolam test for professional negligence — a professional is not negligent if they acted in accordance with a practice accepted by a responsible body of professionals.'},
+          ],
+        },
+      }
+    },
+
+    au: {
+      name: 'Australia',
+      sys: 'Common Law (English tradition); Federal and State/Territory systems',
+      flag: '🇦🇺',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'Australian prank law varies by state and territory. Federal law applies to communications and interstate conduct.',
+          laws: [
+            {n:'Criminal Code Act 1995 (Cth), s.474.17',d:'Using a carriage service to menace, harass, or cause offence — covers prank calls, texts, and online content.',p:'Up to 3 years imprisonment.'},
+            {n:'Summary Offences Acts (state-level)',d:'Public nuisance, offensive conduct, and threatening behaviour are covered by each state\'s summary offences legislation.',p:'Varies — typically fines and short terms of imprisonment.'},
+            {n:'Surveillance Devices Acts (state-level)',d:'Recording conversations or filming a person without their consent in private circumstances is illegal in most states.',p:'Varies — criminal penalties in most jurisdictions.'},
+          ],
+          caselaw: [
+            {c:'Monis v The Queen [2013] HCA 4',r:'High Court on s.474.17 — "menace" and "offence" must be judged by an ordinary reasonable person standard; very broad reach.'},
+          ],
+        },
+        employment: {
+          verdict: 'depends',
+          summary: 'Australian employment is governed primarily by the Fair Work Act 2009, which provides a national framework and ten National Employment Standards (NES).',
+          laws: [
+            {n:'Fair Work Act 2009 (Cth)',d:'National workplace relations framework. Covers unfair dismissal, general protections (adverse action), enterprise agreements, and the National Employment Standards.'},
+            {n:'National Employment Standards (NES)',d:'Minimum entitlements: 4 weeks annual leave, 10 days personal/carer\'s leave, parental leave (12 months unpaid), flexible working arrangements, and notice/redundancy pay.'},
+          ],
+          unfair_dismissal: 'Employees (minimum 6 months employment in businesses with 15+ employees; 12 months in small businesses) can apply to the Fair Work Commission (FWC) for unfair dismissal within 21 days of dismissal taking effect.',
+          caselaw: [
+            {c:'Selvachandran v Peteron Plastics Pty Ltd [1995] IRCA 333',r:'Test for "valid reason" for dismissal — the reason must be sound, defensible, and well-founded, not capricious, fanciful, or spiteful.'},
+          ],
+        },
+        negligence: {
+          verdict: 'depends',
+          summary: 'Australian negligence law follows the common law framework modified by Civil Liability Acts introduced from 2002 in each state.',
+          elements: ['Duty of care (proximity and reasonable foreseeability)','Breach of that duty (objective standard of a reasonable person)','Causation (but-for test)','Damage (recoverable losses)'],
+          caselaw: [
+            {c:'Donoghue v Stevenson [1932] AC 562',r:'Applied in Australia — the foundational negligence authority globally.'},
+            {c:'Rogers v Whitaker (1992) 175 CLR 479',r:'HIGH COURT — established Australia\'s distinct medical negligence standard (patient-centred disclosure; differs from the English Bolam test).'},
+            {c:'Ipp Report (2002)',r:'Led to legislative reform (Civil Liability Acts) capping damages and limiting liability in many categories of negligence claims.'},
+          ],
+        },
+      }
+    },
+
+    my: {
+      name: 'Malaysia',
+      sys: 'Common Law (English origin); dual system (Civil Courts + Syariah Courts for Muslims)',
+      flag: '🇲🇾',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'Malaysian prank law is similar to Singapore but governed by distinct Malaysian legislation. Online pranks carry significant criminal exposure.',
+          laws: [
+            {n:'Penal Code (Act 574), s.352',d:'Criminal force — any force applied to another person as a prank causing fear or annoyance.',p:'Up to 3 months imprisonment and/or fine.'},
+            {n:'Communications and Multimedia Act 1998 (CMA), s.233',d:'Improper use of network facilities — sending offensive, obscene, false, or threatening content online, including prank videos and messages.',p:'Up to RM50,000 fine and/or 1 year imprisonment.'},
+            {n:'Penal Code, s.503',d:'Criminal intimidation — threatening someone with injury to their person, reputation, or property.',p:'Up to 2 years imprisonment.'},
+          ],
+        },
+        employment: {
+          verdict: 'depends',
+          summary: 'Malaysian employment is governed by the Employment Act 1955 and the Industrial Relations Act 1967.',
+          laws: [
+            {n:'Employment Act 1955',d:'Covers employees earning up to RM4,000/month in Peninsular Malaysia. Minimum standards for hours (48/week), leave, and termination notice.'},
+            {n:'Industrial Relations Act 1967',d:'Dismissed employees who believe their dismissal was without just cause may refer to the Industrial Court within 60 days of dismissal.'},
+          ],
+          notice: 'Statutory minimum notice: less than 2 years service = 4 weeks; 2–5 years = 6 weeks; 5+ years = 8 weeks.',
+        },
+      }
+    },
+
+    ca: {
+      name: 'Canada',
+      sys: 'Common Law (except Quebec — Civil Law); Federal and Provincial systems',
+      flag: '🇨🇦',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'Canadian prank law involves both federal Criminal Code provisions and provincial legislation.',
+          laws: [
+            {n:'Criminal Code, s.264.1 — Uttering Threats',d:'Knowingly uttering a threat to cause death or bodily harm — even as a "joke".',p:'Up to 5 years imprisonment.'},
+            {n:'Criminal Code, s.372 — False Messages',d:'Sending false information knowing it will cause alarm or annoyance, including prank calls.',p:'Up to 2 years imprisonment.'},
+            {n:'Criminal Code, s.175 — Causing a Disturbance',d:'Fighting, screaming, using insulting language, or loitering in public in a way that disturbs peace.',p:'Up to 2 years imprisonment.'},
+            {n:'Criminal Code, s.264 — Criminal Harassment',d:'Repeatedly following, communicating with, or watching a person in a way that causes them to fear for their safety.',p:'Up to 10 years imprisonment.'},
+          ],
+        },
+        employment: {
+          verdict: 'depends',
+          summary: 'Canadian employment law varies by province. Federally regulated employees (banking, telecom, airlines) are covered by the Canada Labour Code.',
+          laws: [
+            {n:'Canada Labour Code (federal)',d:'Governs federally regulated industries. Provides wrongful dismissal protections and unjust dismissal remedies.'},
+            {n:'Provincial Employment Standards Acts',d:'Each province has its own minimum standards legislation (e.g., Ontario ESA 2000). Covers notice, severance, public holidays, and leave.'},
+            {n:'Canadian Human Rights Act',d:'Prohibits discrimination in federally regulated workplaces on grounds including race, sex, disability, age, religion, and sexual orientation.'},
+          ],
+          notice: 'Common law reasonable notice in Canada is often significantly longer than statutory minimums — calculated on age, length of service, character of employment, and availability of similar positions (Bardal factors).',
+          caselaw: [
+            {c:'Bardal v Globe and Mail Ltd [1960] OJ No 149',r:'The foundational Canadian case establishing factors for determining reasonable notice of termination.'},
+          ],
+        },
+      }
+    },
+
+    in: {
+      name: 'India',
+      sys: 'Common Law (based on English law); Constitution is supreme law',
+      flag: '🇮🇳',
+      topics: {
+        prank: {
+          verdict: 'risk',
+          summary: 'Indian prank law depends on the nature and medium of the prank. Criminal liability can arise under the IPC and the IT Act.',
+          laws: [
+            {n:'Indian Penal Code (IPC), s.503 — Criminal Intimidation',d:'Threatening a person with injury to their body, reputation, or property constitutes criminal intimidation — even if intended as a joke.',p:'Up to 2 years imprisonment and/or fine.'},
+            {n:'IPC, s.294 — Obscene Acts',d:'Committing obscene acts in or near a public place to the annoyance of others.',p:'Up to 3 months imprisonment and/or fine.'},
+            {n:'IPC, s.268 — Public Nuisance',d:'Doing an act that causes common injury, danger, or annoyance to the public or to the people who dwell or occupy property in the vicinity.',p:'Fine.'},
+            {n:'Information Technology Act 2000, s.66A (struck down)',d:'This section criminalising offensive online content was struck down in Shreya Singhal v UOI [2015] — online pranks causing offence are not per se criminal under central law, though they may still be under the IPC.'},
+          ],
+        },
+        employment: {
+          verdict: 'depends',
+          summary: 'Indian employment law involves both central and state legislation. The Code on Wages 2019 consolidates four wage-related laws.',
+          laws: [
+            {n:'Industrial Disputes Act 1947',d:'Governs retrenchment — employers with 100+ workers require government permission to retrench. Dismissed workers can challenge termination as "industrial dispute."'},
+            {n:'Code on Wages 2019',d:'Consolidates the Minimum Wages Act, Payment of Wages Act, Payment of Bonus Act, and Equal Remuneration Act.'},
+            {n:'Industrial Employment (Standing Orders) Act 1946',d:'Requires employers with 100+ workers to define conditions of employment in certified Standing Orders.'},
+          ],
+        },
+      }
+    },
+
+    ae: {
+      name: 'United Arab Emirates',
+      sys: 'Civil Law (Egyptian/French influence); Islamic Sharia for personal status',
+      flag: '🇦🇪',
+      topics: {
+        prank: {
+          verdict: 'bad',
+          summary: '⚠️ HIGH RISK: The UAE has zero tolerance for conduct deemed disrespectful, disruptive, or offensive. What seems a harmless prank elsewhere can result in arrest and deportation.',
+          laws: [
+            {n:'Federal Decree-Law No. 34 of 2021 (Cybercrime Law)',d:'Criminalises use of electronic means to publish content that violates public order, religious values, public morals, or privacy.',p:'Up to 2 years imprisonment and AED 500,000 fine (can be higher).'},
+            {n:'Federal Penal Code (Federal Law No. 3 of 1987, as amended)',d:'Public order offences — public mischief, causing unnecessary alarm, or disrespecting public officials or the state.',p:'Imprisonment and/or deportation for non-nationals.'},
+            {n:'Privacy Laws',d:'Filming or photographing others in private or semi-private settings without consent is illegal.',p:'Fines and imprisonment.'},
+          ],
+          warning: 'Tourists and residents in the UAE have been arrested for social media posts, gestures, and behaviour that would be entirely lawful in Western countries. Exercise extreme caution and be aware that UAE law applies to conduct within the country regardless of your nationality.',
+        },
+        employment: {
+          verdict: 'depends',
+          summary: 'UAE employment is governed by Federal Decree-Law No. 33 of 2021, which modernised the labour framework.',
+          laws: [
+            {n:'Federal Decree-Law No. 33 of 2021 on Labour Relations',d:'Governs employment contracts, working hours (8 hrs/day, 48 hrs/week max), end-of-service gratuity (21 days per year for first 5 years, 30 days thereafter), and termination.'},
+          ],
+          gratuity: 'End-of-service gratuity is a key benefit. It is calculated on basic salary only (not allowances). Minimum service: 1 year for entitlement.',
+        },
+      }
+    },
+  },
+
+  // Topic keyword patterns
+  topicMap: [
+    {topic:'prank', kw:['prank','joke','troll','trick','scare','hoax','gag','stunt','prank call']},
+    {topic:'defamation', kw:['defamation','defame','slander','libel','reputation','false statement about']},
+    {topic:'contract', kw:['contract','agreement','breach','signed','terms','deal','violated the agreement','broke our deal']},
+    {topic:'negligence', kw:['negligence','negligent','duty of care','careless','accident caused by','injured because of','fault']},
+    {topic:'harassment', kw:['harassment','harass','stalking','bully','threaten','intimidate','follow me','follow her','follow him']},
+    {topic:'employment', kw:['fired','dismissed','sacked','let go','employment','employer','workplace','wrongful','redundancy','redundant','job','boss','salary','wage','hours','leave','termination']},
+    {topic:'traffic', kw:['speeding','road accident','traffic','driving','drunk driving','red light','lane','hit and run']},
+    {topic:'drugs', kw:['drug','drugs','marijuana','cannabis','cocaine','heroin','narcotics','substance']},
+    {topic:'consumer', kw:['refund','defective','broken','product','consumer','goods','warranty','purchase','bought','return']},
+    {topic:'cybercrime', kw:['hacked','hack','cybercrime','computer','data breach','phishing','online fraud','unauthorised access']},
+    {topic:'defamation', kw:['said something false','posted lies','wrote about me']},
+    {topic:'selfDefense', kw:['self defense','self-defense','self defence','fight back','attacked','assault','protect myself']},
+  ],
+
+  // Claim elements for Build My Case
+  claimElements: {
+    negligence: [
+      {e:'Duty of Care', hint:'Who owed you a duty of care? State the relationship (e.g., doctor-patient, driver-pedestrian, employer-employee).', kw:['owed','duty','responsible','care for']},
+      {e:'Breach of Duty', hint:'Specifically HOW did they fall below the required standard? Quote their failure.', kw:['fail','breach','neglect','below standard','not careful']},
+      {e:'Causation', hint:'Clearly state that their breach DIRECTLY caused your harm. Use "as a direct result of..." language.', kw:['cause','result','because','led to','due to']},
+      {e:'Specific Damage', hint:'Quantify and specify your losses — medical bills, lost earnings, pain and suffering. Give amounts where possible.', kw:['injur','damage','loss','harm','cost','expense']},
+    ],
+    contract: [
+      {e:'Valid Contract Existence', hint:'State when, where, and how the contract was formed (written/verbal). Attach or reference it.', kw:['contract','agreement','signed','agreed','terms']},
+      {e:'Your Performance', hint:'Confirm that YOU performed your obligations under the contract, or explain any lawful excuse for non-performance.', kw:['performed','paid','delivered','completed','my part']},
+      {e:'Specific Breach', hint:'State EXACTLY which clause or obligation the defendant breached, and precisely how they breached it.', kw:['breach','broke','violat','fail','didn\'t','not deliver']},
+      {e:'Notice of Breach', hint:'Did you notify the defendant of the breach? Include the date and method of notice.', kw:['told','notif','inform','notice','wrote']},
+      {e:'Quantified Loss', hint:'Quantify every head of loss — direct costs, consequential losses, and any mitigation steps you took.', kw:['loss','damage','cost','owe','pay']},
+    ],
+    harassment: [
+      {e:'Identified Perpetrator', hint:'Name or clearly identify the harasser and your relationship to them.', kw:['he','she','they','the defendant','my']},
+      {e:'Specific Acts', hint:'List each incident of harassment with date, time, location, and what was said or done.', kw:['said','did','called','messaged','followed','sent']},
+      {e:'Impact on You', hint:'Describe the psychological, physical, and practical impact on you (e.g., anxiety, inability to sleep, unable to go to work).', kw:['feel','scared','anxious','distress','afraid','impact']},
+      {e:'Evidence', hint:'List all evidence: screenshots, witnesses, medical reports, CCTV footage, phone records.', kw:['witness','screenshot','record','evidence','proof','cctv']},
+    ],
+    employment: [
+      {e:'Employment Duration & Role', hint:'State your job title, start date, and length of continuous service.', kw:['work','employ','job','role','position','years','months']},
+      {e:'Circumstances of Dismissal', hint:'Describe exactly how and when you were told you were dismissed and by whom.', kw:['fired','dismiss','let go','told','terminated']},
+      {e:'Reason Given (if any)', hint:'What reason (if any) did your employer give for the dismissal?', kw:['reason','because','said','told me why','cause']},
+      {e:'Procedure Followed', hint:'Was there a disciplinary hearing? Were you given written warnings? Was ACAS/fair process followed?', kw:['hearing','warning','process','procedure','given notice']},
+      {e:'Losses', hint:'Calculate your financial losses — lost wages, loss of benefits, notice pay not received, redundancy pay owed.', kw:['paid','salary','wage','money','notice','benefit']},
+    ],
+  },
+
+  // Emotional phrases to flag as dangerous
+  dangerousPhrases: [
+    {bad:"I'm going to make them pay",good:"I intend to seek full recovery of all damages to which I am legally entitled.",reason:"Threatening language can be used against you to suggest malice."},
+    {bad:"they ruined my life",good:"The defendant's conduct has caused significant and ongoing harm to my personal and professional life, as detailed herein.",reason:"Hyperbolic language undermines credibility with a judge."},
+    {bad:"I don't care what it takes",good:"I am committed to pursuing all available legal remedies.",reason:"Can be portrayed as evidence of vexatious or disproportionate intent."},
+    {bad:"this is ridiculous",good:"With respect, this position is unsupported by the evidence.",reason:"Emotional language suggests lack of control and undermines your case."},
+    {bad:"I know my rights",good:"I respectfully refer the court to my legal entitlements under [statute/case].",reason:"Asserting "rights" without citing authority sounds uninformed."},
+    {bad:"everyone knows they did it",good:"The evidence establishes, on the balance of probabilities, that the defendant committed the following acts...",reason:"Speculation without evidence is inadmissible."},
+    {bad:"this is unfair",good:"The defendant's conduct falls below the standard required by [law/duty], and constitutes a breach thereof.",reason:"\"Unfair\" is not a legal standard — courts need a specific legal wrong."},
+    {bad:"I promise this is true",good:"I affirm the truth of the foregoing to the best of my knowledge and belief.",reason:"Casual assurances of honesty suggest the opposite to trained legal professionals."},
+  ],
+};
+
+// ─── AI ENGINE ────────────────────────────────────────────────────────────────
+const AI = {
+  ctx: {country: null, topic: null, msgs: []},
+
+  detectCountry(text) {
+    const t = text.toLowerCase();
+    for (const [alias, code] of Object.entries(KB.aliases)) {
+      // word boundary check
+      const re = new RegExp(`\\b${alias.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\\b`,'i');
+      if (re.test(t)) return code;
+    }
+    return null;
+  },
+
+  detectTopic(text) {
+    const t = text.toLowerCase();
+    for (const {topic, kw} of KB.topicMap) {
+      if (kw.some(k => t.includes(k))) return topic;
+    }
+    return null;
+  },
+
+  respond(input) {
+    const country = this.detectCountry(input);
+    const topic = this.detectTopic(input);
+    if (country) this.ctx.country = country;
+    if (topic) this.ctx.topic = topic;
+
+    const c = this.ctx.country;
+    const tp = this.ctx.topic;
+
+    // Greetings
+    if (/^(hi|hello|hey|greetings|good morning|good evening|howdy)/i.test(input.trim())) {
+      return {type:'text', text:`Welcome. I am Cortex Law AI, your personal legal intelligence. I can answer questions about law in Singapore, the United States, United Kingdom, Australia, Malaysia, Canada, India, the UAE, and more.\n\nSimply describe your legal situation or ask a specific question — for example: "Is it legal to prank someone in Singapore?" or "My employer fired me without notice in the UK — what are my rights?"\n\nFor best results, mention your country and the nature of your legal issue.`};
+    }
+
+    // No topic yet
+    if (!tp) {
+      return {type:'text', text:`I need a little more detail to assist you accurately.\n\nCould you describe the legal situation you\'re facing? For example:\n• "Is it legal to record a phone call in Australia?"\n• "My landlord refuses to return my deposit in Canada"\n• "I was wrongfully dismissed from my job in Singapore"\n• "Someone posted false things about me online in the UK"\n\nAlso please mention your country so I can apply the correct jurisdiction's laws.`};
+    }
+
+    // Topic detected but no country
+    if (tp && !c) {
+      const topicLabel = tp.replace(/_/g,' ');
+      return {type:'clarify', text:`I can see your question is about <b>${topicLabel}</b> — I need to know your country to give you the correct legal answer, as laws vary significantly between jurisdictions.\n\nWhich country are you in or asking about? (e.g., Singapore, United States, United Kingdom, Australia, Malaysia, Canada, India, UAE, etc.)`};
+    }
+
+    // Country not in KB
+    if (!KB.countries[c]) {
+      return {type:'text', text:`I don't have detailed legal data for ${c} yet in my current database. However, I can answer your question using general principles that apply in most common law countries, or you may want to specify one of these jurisdictions I cover fully:\n\n🇸🇬 Singapore · 🇺🇸 United States · 🇬🇧 United Kingdom · 🇦🇺 Australia · 🇲🇾 Malaysia · 🇨🇦 Canada · 🇮🇳 India · 🇦🇪 UAE\n\nWhich would you like?`};
+    }
+
+    const cData = KB.countries[c];
+    const tData = cData.topics[tp];
+
+    if (!tData) {
+      return {type:'text', text:`I have detailed information about ${cData.name} law, but my database doesn't yet include a specific entry for <b>${tp.replace(/_/g,' ')}</b> law in ${cData.name}.\n\nI can help with the following topics for ${cData.name}: ${Object.keys(cData.topics).join(', ')}.\n\nWould you like to ask about one of those, or could you rephrase your question?`};
+    }
+
+    return {type:'legal', country: cData, topic: tp, data: tData};
+  },
+
+  formatLegal(cData, tp, data) {
+    let html = '';
+
+    // Verdict badge
+    if (data.verdict === 'risk') html += `<span class="vbadge risk">⚠️ Potentially Illegal / Risky</span><br>`;
+    if (data.verdict === 'bad') html += `<span class="vbadge bad">🚫 Illegal</span><br>`;
+    if (data.verdict === 'ok') html += `<span class="vbadge ok">✓ Generally Legal (with conditions)</span><br>`;
+
+    // Summary
+    html += `<b>Legal Position in ${cData.flag} ${cData.name}:</b><br>${data.summary || ''}`;
+
+    // Warning
+    if (data.warning) {
+      html += `<div class="warn-box">⚠️ CRITICAL WARNING: ${data.warning}</div>`;
+    }
+
+    // Laws
+    if (data.laws && data.laws.length) {
+      html += `<br><b>Applicable Laws &amp; Statutes:</b>`;
+      data.laws.forEach(l => {
+        html += `<div class="li"><div class="ln">${l.n}</div>${l.d}${l.p ? `<div class="lp">Penalty: ${l.p}</div>` : ''}</div>`;
+      });
+    }
+
+    // Offences (traffic etc)
+    if (data.offences) {
+      html += `<br><b>Common Offences &amp; Penalties:</b>`;
+      data.offences.forEach(o => {
+        html += `<div class="li"><div class="ln">${o.o}</div><div class="lp">${o.p}</div></div>`;
+      });
+    }
+
+    // Elements
+    if (data.elements && data.elements.length) {
+      html += `<br><b>Legal Elements to Prove:</b><ol style="padding-left:18px;margin:6px 0;">`;
+      data.elements.forEach(e => { html += `<li style="margin-bottom:4px;font-size:.82rem;">${e}</li>`; });
+      html += `</ol>`;
+    }
+
+    // Defences
+    if (data.defences) {
+      html += `<br><b>Available Defences:</b><ul style="padding-left:18px;margin:6px 0;">`;
+      data.defences.forEach(d => { html += `<li style="margin-bottom:3px;font-size:.82rem;">${d}</li>`; });
+      html += `</ul>`;
+    }
+
+    // Case law
+    if (data.caselaw && data.caselaw.length) {
+      html += `<br><b>Relevant Case Law:</b>`;
+      data.caselaw.forEach(cl => {
+        html += `<div class="li"><div class="ln">📋 ${cl.c}</div>${cl.r}</div>`;
+      });
+    }
+
+    // Notice periods (employment)
+    if (data.notice) html += `<br><b>Notice Periods:</b><div class="li">${data.notice}</div>`;
+    if (data.wrongful) html += `<br><b>Wrongful Dismissal:</b><div class="li">${data.wrongful}</div>`;
+    if (data.unfair_dismissal) html += `<br><b>Unfair Dismissal:</b><div class="li">${data.unfair_dismissal}</div>`;
+    if (data.remedy) html += `<br><b>How to Seek Remedy:</b><div class="li">${data.remedy}</div>`;
+    if (data.remedies && data.remedies.length) {
+      html += `<br><b>Available Remedies:</b><ul style="padding-left:18px;margin:6px 0;">`;
+      data.remedies.forEach(r => { html += `<li style="margin-bottom:3px;font-size:.82rem;">${r}</li>`; });
+      html += `</ul>`;
+    }
+
+    // At-will (US)
+    if (data.atWill) html += `<br><b>At-Will Employment Note:</b><div class="li">${data.atWill}</div>`;
+
+    // Advice
+    if (data.advice) {
+      html += `<br><div class="li" style="border-left-color:var(--green)">${data.advice.replace(/\n/g,'<br>')}</div>`;
+    }
+
+    html += `<br><span style="color:var(--muted);font-size:.78rem;">This is educational information, not legal advice. For your specific situation, consult a qualified ${cData.name} lawyer. Ready to <b>Build My Case</b>? Click the button below ↓</span>`;
+
+    return html;
+  }
+};
+
+// ─── CHAT UI ──────────────────────────────────────────────────────────────────
+const msgsEl = document.getElementById('msgs');
+const cinEl = document.getElementById('cin');
+let typingEl = null;
+
+function addMsg(role, htmlContent) {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+  const av = document.createElement('div');
+  av.className = 'mav';
+  av.textContent = role === 'ai' ? '⚖️' : '👤';
+  const bubble = document.createElement('div');
+  bubble.className = 'mb';
+  bubble.innerHTML = htmlContent;
+  wrap.appendChild(av);
+  wrap.appendChild(bubble);
+  msgsEl.appendChild(wrap);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function showTyping() {
+  typingEl = document.createElement('div');
+  typingEl.className = 'typing';
+  typingEl.innerHTML = `<div class="mav" style="background:linear-gradient(135deg,var(--cyan),var(--purple))">⚖️</div><div class="tdots"><div class="td"></div><div class="td"></div><div class="td"></div></div>`;
+  msgsEl.appendChild(typingEl);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function removeTyping() {
+  if (typingEl) { typingEl.remove(); typingEl = null; }
+}
+
+function sendMsg() {
+  const val = cinEl.value.trim();
+  if (!val) return;
+  cinEl.value = '';
+  cinEl.style.height = 'auto';
+  addMsg('u', val);
+  AI.ctx.msgs.push({role:'user', text:val});
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    const r = AI.respond(val);
+    let html = '';
+    if (r.type === 'legal') {
+      html = AI.formatLegal(r.country, r.topic, r.data);
+    } else {
+      html = r.text;
+    }
+    addMsg('ai', html);
+    AI.ctx.msgs.push({role:'ai', text:val});
+  }, 900 + Math.random() * 600);
+}
+
+cinEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+});
+cinEl.addEventListener('input', () => {
+  cinEl.style.height = 'auto';
+  cinEl.style.height = Math.min(cinEl.scrollHeight, 120) + 'px';
+});
+document.getElementById('send-btn').addEventListener('click', sendMsg);
+document.getElementById('build-btn').addEventListener('click', openPanel);
+document.getElementById('close-panel-btn').addEventListener('click', closePanel);
+document.getElementById('panel-ov').addEventListener('click', closePanel);
+
+// Initial greeting
+setTimeout(() => {
+  addMsg('ai', `Welcome. I am <b>Cortex Law AI</b> — your personal AI legal counsel.<br><br>I can answer questions about law in <b>Singapore 🇸🇬, the US 🇺🇸, UK 🇬🇧, Australia 🇦🇺, Malaysia 🇲🇾, Canada 🇨🇦, India 🇮🇳, the UAE 🇦🇪</b>, and more.<br><br>Ask me anything — for example:<br>• <i>"Is it legal to prank someone in Singapore?"</i><br>• <i>"My employer fired me without notice in the UK"</i><br>• <i>"What counts as harassment in Australia?"</i><br><br>Once you've described your situation, click <b>⚖️ Build My Case</b> for a full legal strategy.`);
+}, 400);
+
+// ─── BUILD MY CASE PANEL ──────────────────────────────────────────────────────
+function openPanel() {
+  document.getElementById('panel-ov').classList.add('show');
+  document.getElementById('cpanel').classList.add('open');
+  generateCase();
+}
+
+function closePanel() {
+  document.getElementById('panel-ov').classList.remove('show');
+  document.getElementById('cpanel').classList.remove('open');
+}
+
+function generateCase() {
+  const body = document.getElementById('panel-body');
+  const country = AI.ctx.country ? KB.countries[AI.ctx.country] : null;
+  const topic = AI.ctx.topic;
+
+  // Gather user text from conversation
+  const userTexts = AI.ctx.msgs.filter(m => m.role === 'user').map(m => m.text).join(' ');
+
+  if (!userTexts || (!country && !topic)) {
+    body.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--muted);">
+      <div style="font-size:2.5rem;margin-bottom:16px;">⚖️</div>
+      <p style="margin-bottom:8px;font-size:.95rem;color:var(--text);">No case context yet.</p>
+      <p style="font-size:.85rem;">Ask Cortex Law AI a legal question in the chat first, then come back here to build your case strategy.</p>
+    </div>`;
+    return;
+  }
+
+  const cName = country ? country.name : 'Your Jurisdiction';
+  const cFlag = country ? country.flag : '⚖️';
+  const tData = country && topic ? country.topics[topic] : null;
+  const topicLabel = topic ? topic.replace(/_/g,' ') : 'Legal Claim';
+  const claimElements = KB.claimElements[topic] || KB.claimElements['negligence'];
+
+  // 1. Check missing elements
+  const missing = claimElements.filter(el => {
+    return !el.kw.some(k => userTexts.toLowerCase().includes(k));
+  });
+
+  // 2. Case law
+  const caseLaws = tData && tData.caselaw ? tData.caselaw : [
+    {c:'Donoghue v Stevenson [1932] AC 562', r:'Foundational case establishing duty of care obligations between parties.'},
+    {c:'Hadley v Baxendale (1854) 9 Exch 341', r:'Remoteness principle — only reasonably foreseeable losses are recoverable.'},
+  ];
+
+  // 3. Counterarguments
+  const counters = generateCounters(topic, userTexts);
+
+  // 4. Formal version
+  const formal = formalize(userTexts, cName, topicLabel);
+
+  // 5. Courtroom script
+  const script = generateScript(userTexts, cName, topicLabel, tData);
+
+  // 6. Dangerous phrases
+  const dnsList = KB.dangerousPhrases.filter(p => userTexts.toLowerCase().includes(p.bad.toLowerCase()));
+  const alwaysShow = KB.dangerousPhrases.slice(0, 3);
+  const finalDns = dnsList.length ? dnsList : alwaysShow;
+
+  body.innerHTML = `
+    <!-- Missing Elements -->
+    <div class="cs">
+      <div class="csh">
+        <div class="cst rd">⚠ Missing Legal Elements</div>
+        <button class="cpbtn" onclick="copySection('missing-sec')">⎘ Copy</button>
+      </div>
+      <div id="missing-sec">
+        ${missing.length === 0
+          ? `<div style="color:var(--green);font-size:.84rem;padding:10px 0;">✓ All key elements appear to be present in your account.</div>`
+          : missing.map(m => `<div class="me-item"><span class="me-ic">✗</span><div><b>${m.e}</b><br><span style="color:var(--muted)">${m.hint}</span></div></div>`).join('')
+        }
+        ${missing.length > 0 ? `<div style="font-size:.78rem;color:var(--muted);margin-top:8px;">Add the missing elements to your statement and click Build My Case again.</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Case Law -->
+    <div class="cs">
+      <div class="csh">
+        <div class="cst pu">📋 Relevant Case Law &amp; Statutes</div>
+        <button class="cpbtn" onclick="copySection('caselaw-sec')">⎘ Copy</button>
+      </div>
+      <div id="caselaw-sec">
+        ${caseLaws.map(cl => `<div class="cl-item"><div class="cl-nm">${cl.c}</div>${cl.r}</div>`).join('')}
+        ${tData && tData.laws ? tData.laws.slice(0,2).map(l => `<div class="cl-item" style="border-left-color:var(--cyan)"><div class="cl-nm" style="color:var(--cyan)">${l.n}</div>${l.d}</div>`).join('') : ''}
+      </div>
+    </div>
+
+    <!-- Counterarguments -->
+    <div class="cs">
+      <div class="csh">
+        <div class="cst am">🛡 Opposing Counsel Simulation</div>
+        <button class="cpbtn" onclick="copySection('counter-sec')">⎘ Copy</button>
+      </div>
+      <div id="counter-sec">
+        ${counters.map(ct => `<div class="cnt-item"><div class="cnt-atk">⚔ Their Attack: ${ct.attack}</div>${ct.detail}<div class="cnt-rb">${ct.rebuttal}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- Formal Legal Version -->
+    <div class="cs">
+      <div class="csh">
+        <div class="cst cy">📝 Formal Legal Statement</div>
+        <button class="cpbtn" onclick="copySection('formal-sec')">⎘ Copy</button>
+      </div>
+      <div id="formal-sec" class="csc" style="font-style:italic;line-height:1.85;font-size:.84rem;">${formal}</div>
+    </div>
+
+    <!-- Courtroom Script -->
+    <div class="cs">
+      <div class="csh">
+        <div class="cst gr">🎙 Courtroom Script</div>
+        <button class="cpbtn" onclick="copySection('script-sec')">⎘ Copy</button>
+      </div>
+      <div id="script-sec">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Opening Statement (≈2 minutes)</div>
+        <div class="os-text">${script.opening}</div>
+        <div style="font-size:.78rem;color:var(--muted);margin:14px 0 8px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Top 3 Facts to Emphasise</div>
+        <ul class="kf-list">${script.facts.map(f=>`<li>${f}</li>`).join('')}</ul>
+        <div style="font-size:.78rem;color:var(--muted);margin:14px 0 8px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Tough Questions from the Judge</div>
+        ${script.questions.map(q=>`<div class="jqa"><div class="jq">Judge: "${q.q}"</div><div class="ja">You: "${q.a}"</div></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- What NOT to Say -->
+    <div class="cs">
+      <div class="csh">
+        <div class="cst rd">🚫 What NOT to Say</div>
+        <button class="cpbtn" onclick="copySection('dns-sec')">⎘ Copy</button>
+      </div>
+      <div id="dns-sec">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px;">Emotional or legally damaging phrases detected in your account — replace these before any court filing or hearing.</div>
+        ${finalDns.map(d=>`<div class="dns-item"><div class="dns-bad">✗ "${d.bad}"</div><small style="color:var(--muted)">${d.reason}</small><div class="dns-good">"${d.good}"</div></div>`).join('')}
+        <div class="warn-box" style="margin-top:10px;">Do not argue with the judge. If challenged on a point, say: <i>"Your Honour, I respect that. May I refer the court to [Exhibit / Statute]?"</i></div>
+      </div>
+    </div>
+
+    <button class="copy-all" onclick="copyAll()">⎘ Copy Full Case Strategy to Clipboard</button>
+    <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-top:12px;">Generated for informational purposes. Review with a licensed attorney before use in actual proceedings.</div>
+  `;
+}
+
+function generateCounters(topic, userText) {
+  const counterMap = {
+    prank: [
+      {attack:'Consent argument defeated — you had no explicit consent.',detail:'The opposing party will argue you proceeded without the victim\'s knowledge or agreement.',rebuttal:'Establish that any reasonable person would have understood the context as playful — or gather evidence of prior mutual pranks. Distinguish from cases where no such prior pattern existed.'},
+      {attack:'Emotional distress claim — victim will produce evidence of psychological impact.',detail:'Opposing counsel may produce a medical report showing anxiety, sleep disturbance, or PTSD symptoms directly attributed to the incident.',rebuttal:'Counter with evidence of the victim\'s pre-existing conditions and engage a medical expert to challenge the causal link between the incident and the alleged distress.'},
+    ],
+    contract: [
+      {attack:'Consideration argument — they will claim no valid consideration existed.',detail:'Opposing counsel may argue that the contract lacked sufficient consideration, making it unenforceable.',rebuttal:'Establish the consideration clearly — identify what was exchanged by each party at the time of formation. Even nominal consideration is sufficient if truly bargained for.'},
+      {attack:'Limitation period — they will claim your claim is time-barred.',detail:'The defendant may argue the claim was brought outside the statutory limitation period.',rebuttal:'Confirm the applicable limitation period for your jurisdiction and show that time began running from the date of breach (not agreement). Consider whether any extensions apply (e.g., fraudulent concealment).'},
+      {attack:'Mitigation failure — they will claim you failed to mitigate your losses.',detail:'The opposing party will argue that you took no steps to reduce your losses after the breach.',rebuttal:'Document every step you took to mitigate — job searches, alternative suppliers sought, expenses reduced. The burden is on the defendant to prove failure to mitigate.'},
+    ],
+    negligence: [
+      {attack:'Contributory negligence — they will claim you were also at fault.',detail:'The defendant will argue that your own negligence contributed to or caused your loss, reducing or eliminating their liability.',rebuttal:'Identify all steps you took to protect yourself. Even if partially at fault, you may still recover reduced damages (apportionment). Gather evidence of the defendant\'s primary fault.'},
+      {attack:'No duty of care — they will argue they owed you no duty.',detail:'The defendant may argue there was insufficient proximity or that policy reasons weigh against imposing a duty.',rebuttal:'Apply the applicable test for your jurisdiction (Spandeck in Singapore, Caparo in UK). Identify the specific relationship or assumption of responsibility that creates the duty.'},
+      {attack:'Causation break — they will argue your loss was caused by an intervening event.',detail:'The defence may introduce an independent cause (novus actus interveniens) to break the chain of causation between their breach and your damage.',rebuttal:'Demonstrate that the intervening event was reasonably foreseeable, or that the defendant\'s breach was still the operative cause of your damage.'},
+    ],
+    harassment: [
+      {attack:'Credibility attack — they will challenge your evidence and memory.',detail:'The harasser will deny the incidents or argue that communications are being misinterpreted or fabricated.',rebuttal:'Ensure all evidence is preserved and organised chronologically. Screenshots, call logs, and witness statements are critical. Inconsistencies in the defendant\'s account should be highlighted.'},
+      {attack:'Consent argument — they will claim all contact was welcomed.',detail:'The defendant may produce selected evidence of prior friendly communication to suggest consent.',rebuttal:'Show the full context of communications — particularly any explicit requests to stop, changes in tone over time, and any formal notices to desist.'},
+    ],
+    employment: [
+      {attack:'Performance justification — they will produce performance records.',detail:'The employer will likely produce written records, PIPs (performance improvement plans), or documented warnings to justify the dismissal as capability-related.',rebuttal:'Challenge the quality and procedural fairness of the performance management process. Were the targets objective? Were you given adequate support and warning? Were procedures followed?'},
+      {attack:'Procedural compliance — they will claim they followed all required steps.',detail:'The employer will argue that they gave adequate notice, conducted a fair hearing, and followed their internal disciplinary policy.',rebuttal:'Compare the employer\'s actual procedure against the contractual policy and statutory requirements step by step. Identify any deviations — failure to consult, inadequate notice, or absent appeal rights.'},
+    ],
+  };
+  return counterMap[topic] || counterMap['contract'];
+}
+
+function formalize(text, country, topic) {
+  if (!text || text.length < 20) {
+    return `The Claimant respectfully submits that the Respondent has engaged in conduct giving rise to a legal claim under the applicable laws of ${country}. The Claimant sets out herein the material facts, the legal basis for the claim, and the relief sought. Full particulars are to be provided upon disclosure.`;
+  }
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 5);
+  const formal = sentences.slice(0, 4).map(s => {
+    return s.trim()
+      .replace(/\bi\b/g, 'the Claimant')
+      .replace(/\bme\b/g, 'the Claimant')
+      .replace(/\bmy\b/g, 'the Claimant\'s')
+      .replace(/\bthey\b/g, 'the Respondent')
+      .replace(/\bhe\b/g, 'the Respondent')
+      .replace(/\bshe\b/g, 'the Respondent')
+      .replace(/\bthem\b/g, 'the Respondent')
+      .replace(/\btheir\b/g, 'the Respondent\'s')
+      .replace(/\bfired\b/gi, 'wrongfully terminated')
+      .replace(/\bsacked\b/gi, 'unlawfully dismissed')
+      .replace(/\blet go\b/gi, 'dismissed without just cause')
+      .replace(/\bupset\b/gi, 'suffered material distress')
+      .replace(/\bhurt\b/gi, 'suffered injury')
+      .replace(/\bbad\b/gi, 'prejudicial')
+      .replace(/\bunfair\b/gi, 'in breach of the applicable standard')
+      .replace(/\bgot\b/gi, 'received')
+      .replace(/\bsaid\b/gi, 'represented')
+      .replace(/\btold\b/gi, 'informed');
+  }).join('. ');
+
+  return `The Claimant brings this action against the Respondent arising from matters occurring in ${country} relating to ${topic} law. ${formal}. The Claimant avers that the Respondent's conduct constitutes a legal wrong as particularised herein, and the Claimant seeks all available relief including damages, costs, and such further or other relief as this Honourable Court deems just and equitable.`;
+}
+
+function generateScript(text, country, topic, tData) {
+  const opening = `Your Honour, may it please the Court. My name is [Your Name], and I appear as a self-represented litigant in this matter. This case concerns a ${topic} dispute arising in ${country}. The facts are straightforward. [Describe the key event in one sentence]. This conduct directly caused me [describe your primary loss or harm]. I will establish through the evidence before Your Honour that: first, the Respondent owed me a clear legal duty; second, that duty was unambiguously breached; third, the breach directly caused my loss; and fourth, the quantum of damages I seek is both reasonable and fully supported by the evidence. I respectfully ask the Court to find in my favour on each of these elements. The evidence I will present includes [list 2–3 key exhibits]. I thank the Court for its time and attention to this matter.`;
+
+  const facts = [
+    `The date, time, and precise circumstances of the core incident — with documentary evidence attached as Exhibit A.`,
+    `The direct causal link between the Respondent's conduct and your specific, quantified loss — supported by financial records or expert evidence.`,
+    `Any prior communications showing the Respondent's awareness of their duty and their deliberate or negligent failure to comply.`,
+  ];
+
+  const questions = [
+    {q:`Why did you not seek legal representation?`, a:`Your Honour, I have attempted to resolve this matter proportionately. I am exercising my right to represent myself. I respectfully ask the Court to consider the merits of my evidence.`},
+    {q:`What evidence do you have that the defendant's actions caused your loss?`, a:`Your Honour, I refer to Exhibit A — [document name] — which directly establishes the causal link. I also rely on the unchallenged fact that [state key fact].`},
+    {q:`Why should I accept your version of events over the defendant's?`, a:`Your Honour, the objective documentary evidence — [describe key document] — is inconsistent with the defendant's account. I invite Your Honour to weigh the credibility of each party's account against this contemporaneous record.`},
+    {q:`Did you take any steps to mitigate your losses?`, a:`Yes, Your Honour. I took the following steps to minimise my losses: [describe mitigation]. I refer to Exhibit B, which documents these efforts.`},
+  ];
+
+  return {opening, facts, questions};
+}
+
+// ─── COPY FUNCTIONS ───────────────────────────────────────────────────────────
+function copySection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text));
+}
+
+function copyAll() {
+  const ids = ['missing-sec','caselaw-sec','counter-sec','formal-sec','script-sec','dns-sec'];
+  const labels = ['MISSING ELEMENTS','CASE LAW','COUNTERARGUMENTS','FORMAL STATEMENT','COURTROOM SCRIPT','DO NOT SAY'];
+  let full = 'CORTEX LAW AI — BUILD MY CASE REPORT\n' + '='.repeat(40) + '\n\n';
+  ids.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) full += `${labels[i]}\n${'-'.repeat(30)}\n${el.innerText}\n\n`;
+  });
+  navigator.clipboard.writeText(full).then(showToast).catch(() => fallbackCopy(full));
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
