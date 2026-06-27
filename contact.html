@@ -348,15 +348,26 @@ ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.togg
 const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
 
-function handleSubmit(e){
+async function handleSubmit(e){
   e.preventDefault();
   const f=e.target;
-  const name=f.name.value.trim(),email=f.email.value.trim(),service=f.service.value,budget=f.budget.value||'Not specified',message=f.message.value.trim();
-  const subject=encodeURIComponent(`[PrismStatic.web] Enquiry — ${service}`);
-  const body=encodeURIComponent(`Hi,\n\nI'd like to book a discovery call with PrismStatic.web.\n\nName: ${name}\nReply-to: ${email}\nService: ${service}\nBudget: ${budget}\n\nProject details:\n${message}\n\n---\nSent via PrismStatic.web`);
-  window.location.href=`mailto:veldanleeyh@gmail.com?subject=${subject}&body=${body}`;
-  document.getElementById('bookForm').style.display='none';
-  document.getElementById('successBox').classList.add('show');
+  const btn=f.querySelector('.submit-btn');
+  btn.disabled=true;
+  btn.querySelector('span').textContent='Sending…';
+  const data={name:f.name.value.trim(),email:f.email.value.trim(),service:f.service.value,budget:f.budget.value||'Not specified',message:f.message.value.trim()};
+  try{
+    const res=await fetch('https://formspree.io/f/mzdlrnrz',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)});
+    if(res.ok){
+      document.getElementById('bookForm').style.display='none';
+      document.getElementById('successBox').classList.add('show');
+    } else {
+      btn.disabled=false;btn.querySelector('span').textContent='Send enquiry';
+      alert('Something went wrong. Please email us directly at veldanleeyh@gmail.com');
+    }
+  } catch(err){
+    btn.disabled=false;btn.querySelector('span').textContent='Send enquiry';
+    alert('Something went wrong. Please email us directly at veldanleeyh@gmail.com');
+  }
 }
 </script>
 </body>
