@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — PrismStatic.web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#111;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#fff;--muted:rgba(255,255,255,0.42);--subtle:rgba(255,255,255,0.16);--grad:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 50%,#06b6d4 100%);--ease:cubic-bezier(0.16,1,0.3,1);--nav-h:70px;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+body.no-scroll{overflow:hidden;}
+a{text-decoration:none;color:inherit;}p{color:var(--muted);line-height:1.7;}button{font-family:inherit;cursor:none;}
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.9s var(--ease);}
+#loader.hide{transform:translateY(-100%);}
+.ld-brand{font-size:1.6rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:52px;}
+.ld-brand span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ld-bar{width:220px;height:1px;background:rgba(255,255,255,0.13);position:relative;overflow:hidden;}
+.ld-fill{position:absolute;left:0;top:0;height:100%;background:var(--grad);width:0;transition:width 0.08s linear;}
+.ld-pct{font-size:0.7rem;font-weight:600;color:var(--muted);letter-spacing:0.12em;margin-top:14px;}
+#pt{position:fixed;inset:0;z-index:5000;background:var(--bg);transform:translateY(100%);pointer-events:none;transition:transform 0.6s var(--ease);}
+#pt.in{transform:translateY(0);pointer-events:all;}#pt.out{transform:translateY(-100%);}
+.cdot{position:fixed;width:6px;height:6px;background:#fff;border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);}
+.cring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(255,255,255,0.35);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%);transition:width 0.3s var(--ease),height 0.3s var(--ease),border-color 0.3s;}
+.cring.hov{width:64px;height:64px;border-color:rgba(139,92,246,0.6);}
+.cdot.hov{transform:translate(-50%,-50%) scale(0);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);display:flex;align-items:center;transition:background 0.3s,border-color 0.3s;border-bottom:1px solid transparent;}
+nav.sc{background:rgba(8,8,8,0.88);backdrop-filter:blur(24px);border-color:var(--border);}
+.nav-in{width:100%;max-width:1300px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-size:1.05rem;font-weight:800;letter-spacing:-0.03em;}
+.nav-logo .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:40px;}
+.nav-links a{font-size:0.875rem;font-weight:500;color:var(--muted);position:relative;transition:color 0.2s;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform 0.3s var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:#fff;}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-cta{font-size:0.85rem;font-weight:700;color:var(--bg);background:#fff;padding:11px 24px;border-radius:100px;transition:background 0.2s;}
+.nav-cta:hover{background:#ddd;}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;}
+.ham span{display:block;width:22px;height:1.5px;background:#fff;transition:transform 0.3s,opacity 0.3s;}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.ham.open span:nth-child(2){opacity:0;}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+@media(max-width:860px){.nav-links,.nav-cta{display:none;}.ham{display:flex;}.nav-in{padding:0 24px;}}
+.mmenu{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateX(100%);transition:transform 0.6s var(--ease);}
+.mmenu.open{transform:translateX(0);}
+.mmenu a{font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;color:var(--muted);transition:color 0.2s;}
+.mmenu a:hover{color:#fff;}
+.mmenu .mc{font-size:1.1rem;background:#fff;color:var(--bg);padding:16px 44px;border-radius:100px;font-weight:700;margin-top:12px;}
+.con{max-width:1300px;margin:0 auto;padding:0 48px;}
+@media(max-width:768px){.con{padding:0 24px;}}
+.rv{opacity:0;transform:translateY(32px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease);}
+.rv.vis{opacity:1;transform:translateY(0);}
+.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}.d4{transition-delay:0.4s;}
+.gr{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.lw{overflow:hidden;display:block;}
+.ll{display:block;transform:translateY(110%);animation:lu 1s var(--ease) forwards;}
+.lw:nth-child(1) .ll{animation-delay:0.3s;}.lw:nth-child(2) .ll{animation-delay:0.48s;}
+@keyframes lu{to{transform:translateY(0);}}
+@keyframes fu{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.wa{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.35);transition:transform 0.2s;animation:wap 3s ease-in-out infinite;}
+.wa:hover{transform:scale(1.1);animation:none;}
+.wa svg{width:26px;height:26px;fill:#fff;}
+@keyframes wap{0%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 0 rgba(37,211,102,0.45);}70%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 0 rgba(37,211,102,0);}}
+footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
+.fi{max-width:1300px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
+@media(max-width:600px){.fi{padding:0 24px;flex-direction:column;}}
+.fl{font-size:0.92rem;font-weight:800;letter-spacing:-0.02em;}
+.fl .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.fc{font-size:0.76rem;color:var(--subtle);}
+.flinks{display:flex;gap:26px;}
+.flinks a{font-size:0.76rem;color:var(--muted);transition:color 0.2s;}
+.flinks a:hover{color:#fff;}
+.btn-w{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--bg);padding:15px 30px;border-radius:100px;font-weight:700;font-size:0.9rem;transition:background 0.2s;}
+.btn-w:hover{background:#e0e0e0;}
+
+/* PAGE HERO */
+.phero{padding:calc(var(--nav-h) + 100px) 0 100px;border-bottom:1px solid var(--border);}
+.phero-label{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;opacity:0;animation:fu 0.8s var(--ease) 0.2s forwards;}
+.phero h1{font-size:clamp(3.5rem,9vw,8rem);font-weight:900;letter-spacing:-0.045em;line-height:0.95;margin-bottom:32px;}
+.phero-sub{font-size:1.05rem;color:var(--muted);max-width:520px;opacity:0;animation:fu 0.8s var(--ease) 0.7s forwards;}
+
+/* SERVICE ITEMS */
+.svc-list{padding:80px 0;}
+.svc-item{
+  display:grid;grid-template-columns:1fr 2fr;gap:80px;align-items:start;
+  padding:64px 0;border-bottom:1px solid var(--border);
+  transition:background 0.3s;position:relative;
+}
+@media(max-width:800px){.svc-item{grid-template-columns:1fr;gap:32px;padding:48px 0;}}
+.svc-item:first-child{border-top:1px solid var(--border);}
+.svc-left{}
+.svc-idx{font-size:0.7rem;font-weight:700;letter-spacing:0.12em;color:var(--subtle);margin-bottom:28px;}
+.svc-icon-wrap{width:52px;height:52px;border:1px solid var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;transition:border-color 0.3s,background 0.3s;}
+.svc-item:hover .svc-icon-wrap{border-color:rgba(139,92,246,0.5);background:rgba(139,92,246,0.08);}
+.svc-icon-wrap svg{width:26px;height:26px;stroke:rgba(255,255,255,0.5);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.3s;}
+.svc-item:hover .svc-icon-wrap svg{stroke:rgba(139,92,246,0.9);}
+.svc-left h2{font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;}
+.svc-right{}
+.svc-right p{font-size:1rem;line-height:1.8;color:var(--muted);margin-bottom:32px;}
+.svc-features{display:flex;flex-direction:column;gap:0;}
+.sf{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--border);font-size:0.875rem;color:var(--muted);}
+.sf:last-child{border-bottom:1px solid var(--border);}
+.sf-check{flex-shrink:0;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(139,92,246,0.5);display:flex;align-items:center;justify-content:center;}
+.sf-check svg{width:10px;height:10px;stroke:#8b5cf6;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.svc-price{margin-top:32px;display:inline-flex;align-items:baseline;gap:8px;}
+.sp-from{font-size:0.75rem;font-weight:600;color:var(--subtle);letter-spacing:0.06em;text-transform:uppercase;}
+.sp-num{font-size:2rem;font-weight:900;letter-spacing:-0.04em;}
+.sp-cur{font-size:0.8rem;color:var(--muted);}
+
+/* PROCESS */
+.process-sec{padding:80px 0 120px;border-top:1px solid var(--border);}
+.process-head{margin-bottom:64px;}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--border);}
+@media(max-width:800px){.process-steps{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.process-steps{grid-template-columns:1fr;}}
+.ps{background:var(--bg);padding:44px 32px;position:relative;transition:background 0.3s;}
+.ps:hover{background:var(--s1);}
+.ps-num{font-size:0.68rem;font-weight:700;letter-spacing:0.12em;color:var(--subtle);margin-bottom:32px;display:flex;align-items:center;gap:12px;}
+.ps-line{height:1px;flex:1;background:var(--border2);}
+.ps h3{font-size:1rem;font-weight:700;margin-bottom:12px;}
+.ps p{font-size:0.84rem;color:var(--muted);line-height:1.7;}
+.ps.highlight{border-top:2px solid #8b5cf6;}
+
+/* CTA */
+.cta-sec{padding:0 0 120px;}
+.ctai{border:1px solid var(--border);border-radius:20px;padding:100px 80px;background:var(--s1);position:relative;overflow:hidden;text-align:center;}
+.ctai::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(139,92,246,0.09) 0%,transparent 65%);pointer-events:none;}
+.ctai h2{font-size:clamp(2.6rem,6vw,4.5rem);font-weight:900;letter-spacing:-0.04em;line-height:1.05;margin-bottom:18px;}
+.ctai p{font-size:1rem;color:var(--muted);margin-bottom:48px;}
+@media(max-width:680px){.ctai{padding:60px 28px;}}
+</style>
+</head>
+<body class="no-scroll">
+
+<div id="loader">
+  <div class="ld-brand">PrismStatic<span>.web</span></div>
+  <div class="ld-bar"><div class="ld-fill" id="lf"></div></div>
+  <div class="ld-pct" id="lp">0</div>
+</div>
+<div id="pt"></div>
+<div class="cdot" id="cd"></div>
+<div class="cring" id="cr"></div>
+
+<nav id="nav">
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo" data-h>PrismStatic<span class="g">.web</span></a>
+    <div class="nav-links">
+      <a href="index.html" data-h>Home</a>
+      <a href="work.html" data-h>Work</a>
+      <a href="services.html" class="active" data-h>Services</a>
+      <a href="contact.html" data-h>Contact</a>
+    </div>
+    <a href="contact.html" class="nav-cta" data-h>Book a call</a>
+    <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mmenu" id="mm">
+  <a href="index.html">Home</a>
+  <a href="work.html">Work</a>
+  <a href="services.html">Services</a>
+  <a href="contact.html">Contact</a>
+  <a href="contact.html" class="mc">Book a call →</a>
+</div>
+
+<section class="phero">
+  <div class="con">
+    <div class="phero-label">What we offer</div>
+    <h1>
+      <span class="lw"><span class="ll">Everything</span></span>
+      <span class="lw"><span class="ll"><em style="font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">you need</em></span></span>
+    </h1>
+    <p class="phero-sub">From a single landing page to a fully custom web application — we scope each project to exactly what your business needs, nothing more.</p>
+  </div>
+</section>
+
+<div class="con">
+  <div class="svc-list">
+
+    <div class="svc-item rv">
+      <div class="svc-left">
+        <div class="svc-idx">01 / 06</div>
+        <div class="svc-icon-wrap">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h2>Landing Pages</h2>
+      </div>
+      <div class="svc-right">
+        <p>A single, focused page designed to do one job really well — whether that's capturing leads, selling a product, or launching a campaign. We strip everything back to what matters and build around conversion.</p>
+        <div class="svc-features">
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Custom design — no page builders or templates</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Mobile-first, fast-loading</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Contact form or CTA integration</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Delivered in 5–7 days</div>
+        </div>
+        <div class="svc-price"><span class="sp-from">From</span><span class="sp-num gr">$1,200</span><span class="sp-cur">SGD</span></div>
+      </div>
+    </div>
+
+    <div class="svc-item rv">
+      <div class="svc-left">
+        <div class="svc-idx">02 / 06</div>
+        <div class="svc-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <h2>Business Websites</h2>
+      </div>
+      <div class="svc-right">
+        <p>Multi-page websites that give your business a complete, professional online home. We build around your brand, your audience, and the action you want visitors to take — whether that's a call, a booking, or a purchase.</p>
+        <div class="svc-features">
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Up to 8 pages (Home, About, Services, Contact…)</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Consistent branding throughout</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>SEO-ready structure and meta tags</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Delivered in 10–14 days</div>
+        </div>
+        <div class="svc-price"><span class="sp-from">From</span><span class="sp-num gr">$2,400</span><span class="sp-cur">SGD</span></div>
+      </div>
+    </div>
+
+    <div class="svc-item rv">
+      <div class="svc-left">
+        <div class="svc-idx">03 / 06</div>
+        <div class="svc-icon-wrap">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h2>Web Applications</h2>
+      </div>
+      <div class="svc-right">
+        <p>Interactive, data-driven tools built for real use. Dashboards, booking systems, client portals, and more. We scope what you need first, then build it properly — no over-engineering, no shortcuts.</p>
+        <div class="svc-features">
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Built with modern frameworks (React, Next.js)</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Database integration if required</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>User auth and role-based access</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Timeline scoped per project</div>
+        </div>
+        <div class="svc-price"><span class="sp-from">From</span><span class="sp-num gr">$4,000</span><span class="sp-cur">SGD</span></div>
+      </div>
+    </div>
+
+    <div class="svc-item rv">
+      <div class="svc-left">
+        <div class="svc-idx">04 / 06</div>
+        <div class="svc-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h2>SEO & Performance</h2>
+      </div>
+      <div class="svc-right">
+        <p>A site no one can find is a site that doesn't work. Every project we ship is fast, structured for search, and readable by Google — but we also offer standalone audits and optimisation for existing sites.</p>
+        <div class="svc-features">
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Core Web Vitals optimisation</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Structured data and meta tags</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Sitemap and robots.txt setup</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Page speed report included</div>
+        </div>
+        <div class="svc-price"><span class="sp-from">From</span><span class="sp-num gr">$600</span><span class="sp-cur">SGD</span></div>
+      </div>
+    </div>
+
+    <div class="svc-item rv">
+      <div class="svc-left">
+        <div class="svc-idx">05 / 06</div>
+        <div class="svc-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        </div>
+        <h2>Redesigns</h2>
+      </div>
+      <div class="svc-right">
+        <p>Got a site that's embarrassing to share? We'll take what you have, modernise the design, fix the structure, and make it something you're actually proud to send clients to — without rebuilding everything from scratch if we don't need to.</p>
+        <div class="svc-features">
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Full visual overhaul</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Content restructuring if needed</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Performance improvements included</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>No disruption to existing traffic</div>
+        </div>
+        <div class="svc-price"><span class="sp-from">From</span><span class="sp-num gr">$1,500</span><span class="sp-cur">SGD</span></div>
+      </div>
+    </div>
+
+    <div class="svc-item rv">
+      <div class="svc-left">
+        <div class="svc-idx">06 / 06</div>
+        <div class="svc-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h2>Maintenance</h2>
+      </div>
+      <div class="svc-right">
+        <p>Websites need upkeep. We offer ongoing support packages for businesses that want someone reliable to handle updates, fixes, and improvements — so you can focus on running the business, not the site.</p>
+        <div class="svc-features">
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Content updates on request</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Bug fixes and security patches</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Monthly performance reports</div>
+          <div class="sf"><div class="sf-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Priority response time</div>
+        </div>
+        <div class="svc-price"><span class="sp-from">From</span><span class="sp-num gr">$200</span><span class="sp-cur">SGD / mo</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="con">
+  <div class="process-sec">
+    <div class="process-head">
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;" class="rv">How it works</div>
+      <h2 style="font-size:clamp(2.2rem,5vw,4rem);font-weight:900;letter-spacing:-0.04em;" class="rv d1">Our process</h2>
+    </div>
+    <div class="process-steps rv d2">
+      <div class="ps highlight">
+        <div class="ps-num">01<div class="ps-line"></div></div>
+        <h3>Discovery call</h3>
+        <p>Free 30-minute Google Meet to understand your business, goals, and what success looks like for your site.</p>
+      </div>
+      <div class="ps">
+        <div class="ps-num">02<div class="ps-line"></div></div>
+        <h3>Proposal</h3>
+        <p>You receive a clear written scope — what we'll build, how long it takes, and exactly what it costs. No surprises.</p>
+      </div>
+      <div class="ps">
+        <div class="ps-num">03<div class="ps-line"></div></div>
+        <h3>Design & build</h3>
+        <p>We get to work. Regular updates throughout — you can give feedback at each stage before we move forward.</p>
+      </div>
+      <div class="ps">
+        <div class="ps-num">04<div class="ps-line"></div></div>
+        <h3>Launch & handover</h3>
+        <p>We deploy the site and hand over all files, credentials, and documentation. You own everything, fully.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-sec">
+    <div class="ctai rv">
+      <h2>Not sure what<br>you need?</h2>
+      <p>Book a free call and we'll figure it out together.</p>
+      <a href="contact.html" class="btn-w" style="font-size:1rem;padding:18px 42px;display:inline-flex;" data-h>Book a free discovery call →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fi">
+    <span class="fl">PrismStatic<span class="g">.web</span></span>
+    <span class="fc">© 2026 PrismStatic.web · Singapore</span>
+    <div class="flinks">
+      <a href="mailto:veldanleeyh@gmail.com" data-h>Email</a>
+      <a href="https://wa.me/6589008796" target="_blank" data-h>WhatsApp</a>
+      <a href="work.html" data-h>Work</a>
+      <a href="contact.html" data-h>Contact</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/6589008796" class="wa" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16 .5C7.44.5.5 7.44.5 16c0 2.76.72 5.35 1.98 7.6L.5 31.5l8.1-2.1A15.44 15.44 0 0016 31.5C24.56 31.5 31.5 24.56 31.5 16S24.56.5 16 .5zm0 28.22a12.68 12.68 0 01-6.46-1.77l-.46-.28-4.8 1.26 1.28-4.67-.3-.48A12.72 12.72 0 1116 28.72zm6.97-9.52c-.38-.19-2.26-1.12-2.61-1.24-.35-.13-.6-.19-.85.19-.25.38-.97 1.24-1.19 1.5-.22.25-.44.28-.82.1-.38-.19-1.6-.59-3.05-1.88-1.12-1-1.88-2.24-2.1-2.62-.22-.38-.02-.58.17-.77.17-.17.38-.44.57-.66.19-.22.25-.38.38-.63.13-.25.06-.47-.03-.66-.1-.19-.85-2.06-1.17-2.82-.31-.74-.62-.64-.85-.65h-.73c-.25 0-.66.1-1.01.47-.35.38-1.32 1.29-1.32 3.14s1.35 3.64 1.54 3.89c.19.25 2.66 4.06 6.44 5.69.9.39 1.6.62 2.15.8.9.28 1.72.24 2.37.14.72-.11 2.26-.92 2.58-1.81.32-.9.32-1.66.22-1.82-.1-.16-.35-.25-.73-.44z"/></svg>
+</a>
+
+<script>
+const ldr=document.getElementById('loader'),lf=document.getElementById('lf'),lp=document.getElementById('lp');
+let p=0;const ti=setInterval(()=>{p+=Math.random()*16;if(p>=100){p=100;clearInterval(ti);setTimeout(()=>{ldr.classList.add('hide');document.body.classList.remove('no-scroll');setTimeout(()=>ldr.remove(),950);},280);}lf.style.width=p+'%';lp.textContent=Math.floor(p);},55);
+const pt=document.getElementById('pt');
+document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(!h||h[0]==='#'||h.startsWith('mailto')||h.startsWith('https')||h.startsWith('tel'))return;a.addEventListener('click',e=>{e.preventDefault();pt.classList.add('in');setTimeout(()=>{location.href=h;},600);});});
+window.addEventListener('pageshow',()=>{pt.classList.remove('in');pt.classList.add('out');setTimeout(()=>pt.classList.remove('out'),650);});
+const cd=document.getElementById('cd'),cr=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*0.11;ry+=(my-ry)*0.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('[data-h]').forEach(el=>{el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});});
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
+const ham=document.getElementById('ham'),mm=document.getElementById('mm');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.toggle('open');document.body.classList.toggle('no-scroll');});
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>
