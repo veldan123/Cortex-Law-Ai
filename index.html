@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="PrismStatic.web — boutique web studio in Singapore building fast, custom websites from $1,200 SGD. Book a free discovery call.">
 <title>PrismStatic.web — Web Studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%238b5cf6'/><stop offset='0.5' stop-color='%233b82f6'/><stop offset='1' stop-color='%2306b6d4'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='%23080808'/><text x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='url(%23g)'>P</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#080808;--s1:#111;--s2:#181818;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#fff;--muted:rgba(255,255,255,0.42);--subtle:rgba(255,255,255,0.16);
+  --text:#fff;--muted:rgba(255,255,255,0.52);--subtle:rgba(255,255,255,0.16);
   --grad:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 50%,#06b6d4 100%);
   --ease:cubic-bezier(0.16,1,0.3,1);--nav-h:70px;
 }
@@ -38,8 +40,8 @@ button{font-family:inherit;cursor:none;}
 
 /* CURSOR */
 .cdot{position:fixed;width:6px;height:6px;background:#fff;border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:opacity 0.2s,transform 0.15s;}
-.cring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(255,255,255,0.35);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%);transition:width 0.3s var(--ease),height 0.3s var(--ease),border-color 0.3s;}
-.cring.hov{width:64px;height:64px;border-color:rgba(139,92,246,0.6);}
+.cring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(255,255,255,0.35);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%) scale(1);transition:transform 0.3s var(--ease),border-color 0.3s;}
+.cring.hov{transform:translate(-50%,-50%) scale(1.68);border-color:rgba(139,92,246,0.6);}
 .cdot.hov{transform:translate(-50%,-50%) scale(0);}
 
 /* NAV */
@@ -80,7 +82,7 @@ nav.sc{background:rgba(8,8,8,0.88);backdrop-filter:blur(24px);-webkit-backdrop-f
 .tdot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.35;}}
 .ttxt{font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
-.htitle{font-size:clamp(3.8rem,10vw,10rem);font-weight:900;letter-spacing:-0.045em;line-height:0.93;margin-bottom:56px;}
+.htitle{font-size:clamp(3rem,8vw,6rem);font-weight:900;letter-spacing:-0.045em;line-height:0.93;margin-bottom:56px;text-wrap:balance;}
 .lw{overflow:hidden;display:block;}
 .ll{display:block;transform:translateY(110%);animation:lu 1s var(--ease) forwards;}
 .lw:nth-child(1) .ll{animation-delay:0.3s;}
@@ -114,7 +116,7 @@ nav.sc{background:rgba(8,8,8,0.88);backdrop-filter:blur(24px);-webkit-backdrop-f
 .con{max-width:1300px;margin:0 auto;padding:0 48px;}
 @media(max-width:768px){.con{padding:0 24px;}.sec{padding:80px 0;}}
 .slabel{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;}
-.stitle{font-size:clamp(2.2rem,5vw,4.2rem);font-weight:900;letter-spacing:-0.04em;line-height:1.05;}
+.stitle{font-size:clamp(2.2rem,5vw,4.2rem);font-weight:900;letter-spacing:-0.04em;line-height:1.05;text-wrap:balance;}
 
 /* REVEAL */
 .rv{opacity:0;transform:translateY(32px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease);}
@@ -165,14 +167,14 @@ nav.sc{background:rgba(8,8,8,0.88);backdrop-filter:blur(24px);-webkit-backdrop-f
 /* STATS */
 .stg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
 @media(max-width:700px){.stg{grid-template-columns:1fr 1fr;}}
-.stb{background:var(--bg);padding:52px 36px;transition:background 0.3s;}
+.stb{background:var(--bg);padding:44px 36px;transition:background 0.3s;display:flex;flex-direction:column;gap:6px;}
 .stb:hover{background:var(--s1);}
-.stn{font-size:clamp(2.4rem,4.5vw,3.6rem);font-weight:900;letter-spacing:-0.04em;line-height:1;margin-bottom:10px;}
+.stn{font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);}
+.stv{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;letter-spacing:-0.03em;line-height:1;color:var(--text);}
 .gr{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.stl{font-size:0.8rem;color:var(--muted);}
 
 /* CTA */
-.ctai{border:1px solid var(--border);border-radius:20px;padding:100px 80px;background:var(--s1);position:relative;overflow:hidden;text-align:center;}
+.ctai{border:1px solid var(--border);border-radius:16px;padding:100px 80px;background:var(--s1);position:relative;overflow:hidden;text-align:center;}
 .ctai::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(139,92,246,0.09) 0%,transparent 65%);pointer-events:none;}
 .ctai h2{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;letter-spacing:-0.04em;line-height:1.05;margin-bottom:18px;}
 .ctai p{font-size:1rem;color:var(--muted);margin-bottom:48px;}
@@ -188,6 +190,17 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
 .flinks{display:flex;gap:26px;}
 .flinks a{font-size:0.76rem;color:var(--muted);transition:color 0.2s;}
 .flinks a:hover{color:#fff;}
+
+/* REDUCED MOTION */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+  .rv{opacity:1;transform:none;}
+  .ll{transform:none;animation:none;}
+  .htag,.hbottom,.hscroll{opacity:1;animation:none;}
+  .orb1,.orb2{animation:none;}
+  .ttrack{animation:none;}
+  .cdot,.cring{display:none;}
+}
 
 /* WA */
 .wa{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.35);transition:transform 0.2s;animation:wap 3s ease-in-out infinite;}
@@ -211,7 +224,7 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
   <div class="nav-in">
     <a href="index.html" class="nav-logo" data-h>PrismStatic<span class="g">.web</span></a>
     <div class="nav-links">
-      <a href="index.html" data-h>Home</a>
+      <a href="index.html" class="active" data-h>Home</a>
       <a href="work.html" data-h>Work</a>
       <a href="services.html" data-h>Services</a>
       <a href="contact.html" data-h>Contact</a>
@@ -280,12 +293,12 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
       <p class="rv d2" style="max-width:340px;font-size:0.95rem;">Clean, fast, and purposeful — every site we build is tailored to your business goals.</p>
     </div>
     <div class="sg">
-      <div class="sc rv"><div class="sn">01</div><div class="si"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>Landing Pages</h3><p>High-converting pages built to turn visitors into clients. Fast, focused, strong first impression.</p><span class="sa">↗</span></div>
-      <div class="sc rv d1"><div class="sn">02</div><div class="si"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Business Websites</h3><p>Multi-page sites with about, services, team, and contact. Professional and on-brand.</p><span class="sa">↗</span></div>
-      <div class="sc rv d2"><div class="sn">03</div><div class="si"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Web Applications</h3><p>Dashboards, tools, and custom web software. Built with modern frameworks for reliability.</p><span class="sa">↗</span></div>
-      <div class="sc rv d1"><div class="sn">04</div><div class="si"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>SEO & Performance</h3><p>Every site we build loads fast and follows SEO best practices — so Google finds you.</p><span class="sa">↗</span></div>
-      <div class="sc rv d2"><div class="sn">05</div><div class="si"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></div><h3>Redesigns</h3><p>Outdated or broken site? We modernise your presence without disrupting what works.</p><span class="sa">↗</span></div>
-      <div class="sc rv d3"><div class="sn">06</div><div class="si"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><h3>Maintenance</h3><p>Ongoing support, updates and tweaks so your site stays healthy and current long after launch.</p><span class="sa">↗</span></div>
+      <div class="sc rv"><div class="si"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>Landing Pages</h3><p>High-converting pages built to turn visitors into clients. Fast, focused, strong first impression.</p><span class="sa">↗</span></div>
+      <div class="sc rv d1"><div class="si"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Business Websites</h3><p>Multi-page sites with about, services, team, and contact. Professional and on-brand.</p><span class="sa">↗</span></div>
+      <div class="sc rv d2"><div class="si"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Web Applications</h3><p>Dashboards, tools, and custom web software. Built with modern frameworks for reliability.</p><span class="sa">↗</span></div>
+      <div class="sc rv d1"><div class="si"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>SEO & Performance</h3><p>Every site we build loads fast and follows SEO best practices — so Google finds you.</p><span class="sa">↗</span></div>
+      <div class="sc rv d2"><div class="si"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></div><h3>Redesigns</h3><p>Outdated or broken site? We modernise your presence without disrupting what works.</p><span class="sa">↗</span></div>
+      <div class="sc rv d3"><div class="si"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><h3>Maintenance</h3><p>Ongoing support, updates and tweaks so your site stays healthy and current long after launch.</p><span class="sa">↗</span></div>
     </div>
   </div>
 </section>
@@ -368,10 +381,10 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
 <section class="sec">
   <div class="con">
     <div class="stg rv">
-      <div class="stb"><div class="stn"><span class="gr counter" data-target="12">0</span>+</div><div class="stl">Projects delivered</div></div>
-      <div class="stb"><div class="stn"><span class="gr">$1,200</span></div><div class="stl">Starting price, SGD</div></div>
-      <div class="stb"><div class="stn"><span class="gr counter" data-target="7">0</span> days</div><div class="stl">Average delivery time</div></div>
-      <div class="stb"><div class="stn"><span class="gr counter" data-target="100">0</span>%</div><div class="stl">Custom code, no templates</div></div>
+      <div class="stb"><div class="stn">Projects delivered</div><div class="stv"><span class="counter" data-target="12">0</span>+</div></div>
+      <div class="stb"><div class="stn">Starting price</div><div class="stv">$1,200 SGD</div></div>
+      <div class="stb"><div class="stn">Average delivery</div><div class="stv"><span class="counter" data-target="7">0</span> days</div></div>
+      <div class="stb"><div class="stn">Custom code</div><div class="stv">No templates</div></div>
     </div>
   </div>
 </section>
