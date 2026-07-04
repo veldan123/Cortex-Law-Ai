@@ -38,8 +38,14 @@ h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;text-wrap:balanc
 
 /* PAGE TRANSITION */
 #pt{position:fixed;inset:0;z-index:5000;background:var(--ink);transform:translateY(100%);pointer-events:none;transition:transform 0.55s var(--ease);}
+#pt::after{content:'PrismStatic.web';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.25rem;letter-spacing:-0.02em;opacity:0;transform:translateY(14px);transition:opacity 0.3s 0.18s,transform 0.4s var(--ease) 0.18s;}
 #pt.in{transform:translateY(0);pointer-events:all;}
+#pt.in::after{opacity:1;transform:translateY(0);}
 #pt.out{transform:translateY(-100%);}
+
+/* SCROLL PROGRESS */
+#sprog{position:fixed;top:0;left:0;right:0;height:2.5px;z-index:4500;pointer-events:none;}
+#sprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--accs));transform:scaleX(0);transform-origin:left;}
 
 /* CURSOR */
 .cdot{position:fixed;width:6px;height:6px;background:var(--ink);border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:transform 0.15s;}
@@ -142,10 +148,23 @@ nav.sc{background:rgba(246,245,248,0.85);backdrop-filter:blur(20px);-webkit-back
 .stitle{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-0.025em;line-height:1.08;}
 .ssub{font-size:1rem;max-width:480px;margin-top:14px;}
 
-/* REVEAL */
-.rv{opacity:0;transform:translateY(30px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease);}
-.rv.vis{opacity:1;transform:translateY(0);}
+/* REVEAL — blur-to-sharp */
+.rv{opacity:0;transform:translateY(30px);filter:blur(10px);transition:opacity 0.9s var(--ease),transform 0.9s var(--ease),filter 0.9s var(--ease);}
+.rv.vis{opacity:1;transform:translateY(0);filter:blur(0);}
 .d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}
+
+/* CURSOR SPOTLIGHT on cards */
+.step,.pcard,.sv,.stb,.wc{position:relative;}
+.step::after,.pcard::after,.sv::after,.stb::after{content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity 0.35s;pointer-events:none;background:radial-gradient(340px circle at var(--gx,50%) var(--gy,50%),rgba(124,58,237,0.09),transparent 65%);}
+.pcard.dark::after{background:radial-gradient(380px circle at var(--gx,50%) var(--gy,50%),rgba(167,139,250,0.16),transparent 65%);}
+.step:hover::after,.pcard:hover::after,.sv:hover::after,.stb:hover::after{opacity:1;}
+
+/* BUTTON label slide */
+.btn-k .tx{position:relative;display:inline-block;overflow:hidden;}
+.btn-k .tx>i{display:block;font-style:normal;transition:transform 0.45s var(--ease);}
+.btn-k .tx::after{content:attr(data-t);position:absolute;left:0;top:100%;width:100%;transition:transform 0.45s var(--ease);}
+.btn-k:hover .tx>i{transform:translateY(-110%);}
+.btn-k:hover .tx::after{transform:translateY(-100%);}
 
 /* HOW IT WORKS */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px;counter-reset:step;}
@@ -251,7 +270,7 @@ footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
 /* REDUCED MOTION */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
-  .rv,.htag,.hsub,.hbtns,.hnote,.hvis{opacity:1;transform:none;animation:none;}
+  .rv,.htag,.hsub,.hbtns,.hnote,.hvis{opacity:1;transform:none;animation:none;filter:none;}
   .ll{transform:none;animation:none;}
   .htitle .u::after{transform:scaleX(1);}
   .ttrack,.blob1,.blob2,.hcard,.hchip{animation:none;}
@@ -267,6 +286,7 @@ footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
   <div class="ld-pct" id="lp">0</div>
 </div>
 <div id="pt"></div>
+<div id="sprog"><i id="sprogI"></i></div>
 <div class="cdot" id="cd"></div>
 <div class="cring" id="cr"></div>
 
@@ -303,7 +323,7 @@ footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
       </h1>
       <p class="hsub">PrismStatic.web is a boutique web studio in Singapore. Configure your site in two minutes, book a free call, and we build it — with up to 3 full remakes until you love it.</p>
       <div class="hbtns">
-        <a href="start.html" class="btn-k" data-h data-mag>Start your project <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a href="start.html" class="btn-k" data-h data-mag><span class="tx" data-t="Start your project"><i>Start your project</i></span> <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
         <a href="work.html" class="btn-o" data-h data-mag>See our work</a>
       </div>
       <div class="hnote">$30 flat development fee · No payment through the website</div>
@@ -530,7 +550,7 @@ footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
     <div class="ctai rv">
       <h2>Ready to build<br>something great?</h2>
       <p>Configure your website in two minutes — the discovery call is free.</p>
-      <a href="start.html" class="btn-k" data-h data-mag>Start your project <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="start.html" class="btn-k" data-h data-mag><span class="tx" data-t="Start your project"><i>Start your project</i></span> <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     </div>
   </div>
 </section>
@@ -579,21 +599,63 @@ document.querySelectorAll('[data-h],a,button').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});
 });
 
-/* NAV */
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
+/* NAV + SCROLL PROGRESS */
+const sprogI=document.getElementById('sprogI');
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('sc',scrollY>40);
+  const max=document.documentElement.scrollHeight-innerHeight;
+  sprogI.style.transform='scaleX('+(max>0?scrollY/max:0)+')';
+},{passive:true});
 
 /* HAMBURGER */
 const ham=document.getElementById('ham'),mm=document.getElementById('mm');
 ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.toggle('open');document.body.classList.toggle('no-scroll');});
 
-/* SCROLL REVEAL */
+/* SCROLL REVEAL + auto-stagger grids */
+document.querySelectorAll('.steps,.svc,.wg,.stg,.pgrid').forEach(g=>{
+  [...g.children].forEach((el,i)=>{if(el.classList.contains('rv'))el.style.transitionDelay=(i*0.09)+'s';});
+});
 const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
 
-/* COUNTERS */
-function cnt(el){const t=+el.dataset.target;let c=0;const s=Math.max(t/44,0.08);const iv=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.floor(c);if(c>=t)clearInterval(iv);},28);}
+/* COUNTERS — eased */
+function cnt(el){
+  const t=+el.dataset.target,dur=1400,st=performance.now();
+  (function tick(now){
+    const p=Math.min((now-st)/dur,1),e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(t*e);
+    if(p<1)requestAnimationFrame(tick);
+  })(st);
+}
 const co=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){cnt(e.target);co.unobserve(e.target);}});},{threshold:0.5});
 document.querySelectorAll('.counter').forEach(el=>co.observe(el));
+
+/* CURSOR SPOTLIGHT */
+if(matchMedia('(pointer:fine)').matches){
+  document.querySelectorAll('.step,.pcard,.sv,.stb').forEach(c=>{
+    c.addEventListener('mousemove',e=>{
+      const r=c.getBoundingClientRect();
+      c.style.setProperty('--gx',(e.clientX-r.left)+'px');
+      c.style.setProperty('--gy',(e.clientY-r.top)+'px');
+    });
+  });
+}
+
+/* HERO MOUSE PARALLAX */
+if(matchMedia('(pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  const hero=document.querySelector('.hero'),b1=document.querySelector('.blob1'),b2=document.querySelector('.blob2'),hv=document.querySelector('.hvis');
+  let px=0,py=0,tx=0,ty=0;
+  hero.addEventListener('mousemove',e=>{
+    tx=(e.clientX/innerWidth-0.5);ty=(e.clientY/innerHeight-0.5);
+  });
+  (function par(){
+    px+=(tx-px)*0.05;py+=(ty-py)*0.05;
+    if(b1)b1.style.translate=(px*-34)+'px '+(py*-24)+'px';
+    if(b2)b2.style.translate=(px*24)+'px '+(py*18)+'px';
+    if(hv)hv.style.translate=(px*-10)+'px '+(py*-8)+'px';
+    requestAnimationFrame(par);
+  })();
+}
 
 /* CARD TILT */
 if(matchMedia('(pointer:fine)').matches){

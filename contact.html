@@ -33,8 +33,12 @@ h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;text-wrap:balanc
 .ld-fill{position:absolute;left:0;top:0;height:100%;background:var(--acc);width:0;border-radius:2px;}
 .ld-pct{font-size:0.7rem;font-weight:600;color:var(--faint);letter-spacing:0.12em;margin-top:14px;font-variant-numeric:tabular-nums;}
 #pt{position:fixed;inset:0;z-index:5000;background:var(--ink);transform:translateY(100%);pointer-events:none;transition:transform 0.55s var(--ease);}
+#pt::after{content:'PrismStatic.web';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.25rem;letter-spacing:-0.02em;opacity:0;transform:translateY(14px);transition:opacity 0.3s 0.18s,transform 0.4s var(--ease) 0.18s;}
 #pt.in{transform:translateY(0);pointer-events:all;}
+#pt.in::after{opacity:1;transform:translateY(0);}
 #pt.out{transform:translateY(-100%);}
+#sprog{position:fixed;top:0;left:0;right:0;height:2.5px;z-index:4500;pointer-events:none;}
+#sprog i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--accs));transform:scaleX(0);transform-origin:left;}
 .cdot{position:fixed;width:6px;height:6px;background:var(--ink);border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:transform 0.15s;}
 .cring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(20,18,24,0.3);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%) scale(1);transition:transform 0.3s var(--ease),border-color 0.3s;}
 .cring.hov{transform:translate(-50%,-50%) scale(1.7);border-color:rgba(109,40,217,0.55);}
@@ -151,6 +155,7 @@ footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
   <div class="ld-pct" id="lp">0</div>
 </div>
 <div id="pt"></div>
+<div id="sprog"><i id="sprogI"></i></div>
 <div class="cdot" id="cd"></div>
 <div class="cring" id="cr"></div>
 
@@ -262,7 +267,12 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
 (function loop(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
 document.querySelectorAll('a,button,input,textarea').forEach(el=>{el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});});
-window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
+const sprogI=document.getElementById('sprogI');
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('sc',scrollY>40);
+  const max=document.documentElement.scrollHeight-innerHeight;
+  sprogI.style.transform='scaleX('+(max>0?scrollY/max:0)+')';
+},{passive:true});
 const ham=document.getElementById('ham'),mm=document.getElementById('mm');
 ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.toggle('open');document.body.classList.toggle('no-scroll');});
 
