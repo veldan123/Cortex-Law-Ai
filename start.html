@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Configure your website in two minutes and book a free discovery call with PrismStatic.web.">
+<title>Start your project — PrismStatic.web</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141218'/><text x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%237c3aed'>P</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f8;--card:#fff;--ink:#141218;--mut:#545061;--faint:#757082;
+  --line:#e9e6f0;--line2:#d6d1e2;--acc:#6d28d9;--accs:#7c3aed;--tint:#f1edfa;
+  --ease:cubic-bezier(0.16,1,0.3,1);--nav-h:72px;
+  --sh:0 2px 6px rgba(24,16,50,0.04),0 16px 40px rgba(24,16,50,0.07);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+a{text-decoration:none;color:inherit;}
+p{color:var(--mut);line-height:1.7;}
+button,input,textarea{font-family:inherit;cursor:none;}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;text-wrap:balance;}
+::selection{background:#ddd0f7;}
+
+#pt{position:fixed;inset:0;z-index:5000;background:var(--ink);transform:translateY(100%);pointer-events:none;transition:transform 0.55s var(--ease);}
+#pt.in{transform:translateY(0);pointer-events:all;}
+#pt.out{transform:translateY(-100%);}
+.cdot{position:fixed;width:6px;height:6px;background:var(--ink);border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:transform 0.15s;}
+.cring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(20,18,24,0.3);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%) scale(1);transition:transform 0.3s var(--ease),border-color 0.3s;}
+.cring.hov{transform:translate(-50%,-50%) scale(1.7);border-color:rgba(109,40,217,0.55);}
+.cdot.hov{transform:translate(-50%,-50%) scale(0);}
+@media(pointer:coarse){.cdot,.cring{display:none;}body,button,input,textarea{cursor:auto;}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);display:flex;align-items:center;background:rgba(246,245,248,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line);}
+.nav-in{width:100%;max-width:1240px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;}
+@media(max-width:768px){.nav-in{padding:0 24px;}}
+.nav-logo{font-family:'Bricolage Grotesque';font-size:1.15rem;font-weight:800;letter-spacing:-0.02em;}
+.nav-logo .g{color:var(--acc);}
+.nav-x{display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:600;color:var(--mut);transition:color 0.2s;}
+.nav-x:hover{color:var(--ink);}
+.nav-x svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* LAYOUT */
+.wrap{max-width:1240px;margin:0 auto;padding:calc(var(--nav-h) + 48px) 40px 100px;display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start;}
+@media(max-width:960px){.wrap{grid-template-columns:1fr;padding:calc(var(--nav-h) + 32px) 24px 80px;}}
+
+/* PROGRESS */
+.prog{display:flex;align-items:center;gap:10px;margin-bottom:36px;}
+.prog-bar{flex:1;height:4px;background:var(--line);border-radius:4px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--acc);border-radius:4px;width:0;transition:width 0.6s var(--ease);}
+.prog-txt{font-size:0.75rem;font-weight:700;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+/* STEPS */
+.panel{position:relative;}
+.stepv{display:none;animation:stepIn 0.55s var(--ease);}
+.stepv.on{display:block;}
+@keyframes stepIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+.q{font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:10px;}
+.qs{font-size:0.92rem;margin-bottom:34px;}
+
+/* OPTION CARDS */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.opts{grid-template-columns:1fr;}}
+.opt{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:26px 24px;text-align:left;transition:transform 0.4s var(--ease),border-color 0.25s,box-shadow 0.3s;position:relative;}
+.opt:hover{transform:translateY(-4px);box-shadow:var(--sh);border-color:var(--line2);}
+.opt.sel{border-color:var(--acc);background:var(--tint);}
+.opt .oi{width:40px;height:40px;background:var(--tint);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:transform 0.4s var(--ease);}
+.opt.sel .oi{background:#fff;}
+.opt:hover .oi{transform:rotate(-6deg) scale(1.08);}
+.opt .oi svg{width:19px;height:19px;stroke:var(--acc);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.opt h3{font-size:0.98rem;font-weight:700;margin-bottom:6px;font-family:'Inter';}
+.opt p{font-size:0.8rem;line-height:1.55;}
+.opt .tick{position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;transition:background 0.25s,border-color 0.25s;}
+.opt .tick svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity 0.2s;}
+.opt.sel .tick{background:var(--acc);border-color:var(--acc);}
+.opt.sel .tick svg{opacity:1;}
+
+/* FEATURE CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:10px;}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:100px;padding:12px 20px;font-size:0.85rem;font-weight:600;color:var(--mut);transition:all 0.25s var(--ease);}
+.chip:hover{border-color:var(--line2);transform:translateY(-2px);}
+.chip.sel{background:var(--ink);border-color:var(--ink);color:#fff;}
+.chip svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.3s var(--ease);}
+.chip.sel svg{transform:rotate(45deg);}
+
+/* NOTES */
+.notes{margin-top:26px;}
+.notes label{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;}
+textarea,.fin{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:15px 17px;font-size:0.9rem;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+textarea{resize:vertical;min-height:110px;line-height:1.6;}
+textarea:focus,.fin:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(124,58,237,0.1);}
+textarea::placeholder,.fin::placeholder{color:#9d97ad;}
+
+/* CALENDAR */
+.cal{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:26px;max-width:400px;box-shadow:var(--sh);}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.cal-m{font-family:'Bricolage Grotesque';font-size:1.05rem;font-weight:800;}
+.cal-nav{display:flex;gap:8px;}
+.cal-b{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s;}
+.cal-b:hover:not(:disabled){border-color:var(--ink);}
+.cal-b:disabled{opacity:0.35;}
+.cal-b svg{width:14px;height:14px;stroke:var(--ink);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-d{font-size:0.66rem;font-weight:700;color:var(--faint);text-align:center;padding:6px 0;text-transform:uppercase;letter-spacing:0.05em;}
+.cal-c{aspect-ratio:1;border-radius:10px;border:none;background:transparent;font-size:0.85rem;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.2s var(--ease);font-variant-numeric:tabular-nums;}
+.cal-c:hover:not(:disabled):not(.sel){background:var(--tint);transform:scale(1.08);}
+.cal-c:disabled{color:#c9c4d6;}
+.cal-c.sel{background:var(--acc);color:#fff;transform:scale(1.08);}
+.cal-pick{margin-top:18px;font-size:0.85rem;font-weight:600;color:var(--acc);min-height:1.4em;}
+
+/* REVIEW */
+.rev{display:flex;flex-direction:column;gap:12px;}
+.rev-row{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;transition:border-color 0.2s;}
+.rev-row:hover{border-color:var(--line2);}
+.rev-row .rl{font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-bottom:5px;}
+.rev-row .rval{font-size:0.92rem;font-weight:600;line-height:1.5;}
+.rev-row .redit{font-size:0.75rem;font-weight:700;color:var(--acc);white-space:nowrap;background:none;border:none;padding:4px;}
+.rev-row .redit:hover{text-decoration:underline;}
+.rev-price{background:var(--ink);border-radius:16px;padding:28px;color:#fff;margin-top:8px;}
+.rev-price h4{font-family:'Bricolage Grotesque';font-size:1rem;font-weight:800;margin-bottom:16px;}
+.rev-price .prow{display:flex;justify-content:space-between;font-size:0.87rem;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);}
+.rev-price .prow:last-of-type{border:none;}
+.rev-price .prow b{color:#fff;font-weight:700;}
+.rev-price .pnote{font-size:0.75rem;color:rgba(255,255,255,0.55);margin-top:14px;line-height:1.6;}
+
+/* CONTACT STEP */
+.cform{display:flex;flex-direction:column;gap:18px;max-width:480px;}
+.cform label{display:block;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+.notice{display:flex;gap:12px;background:var(--tint);border:1px solid #ddd0f7;border-radius:14px;padding:18px 20px;align-items:flex-start;}
+.notice svg{width:19px;height:19px;stroke:var(--acc);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-top:1px;}
+.notice p{font-size:0.84rem;color:#4c3a75;line-height:1.6;}
+
+/* NAV BUTTONS */
+.snav{display:flex;justify-content:space-between;margin-top:42px;gap:12px;}
+.b-back{display:inline-flex;align-items:center;gap:8px;background:var(--card);color:var(--mut);padding:14px 26px;border-radius:100px;font-weight:600;font-size:0.88rem;border:1.5px solid var(--line);transition:border-color 0.2s,color 0.2s;}
+.b-back:hover{border-color:var(--line2);color:var(--ink);}
+.b-back svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.b-next{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;padding:15px 32px;border-radius:100px;font-weight:700;font-size:0.9rem;border:none;transition:background 0.25s,opacity 0.2s,transform 0.4s var(--ease);}
+.b-next:hover:not(:disabled){background:var(--acc);}
+.b-next:disabled{opacity:0.35;}
+.b-next svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.3s var(--ease);}
+.b-next:hover:not(:disabled) svg{transform:translateX(3px);}
+
+/* SUMMARY SIDEBAR */
+.sums{position:sticky;top:calc(var(--nav-h) + 32px);}
+@media(max-width:960px){.sums{display:none;}}
+.sum{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px;box-shadow:var(--sh);}
+.sum h4{font-family:'Bricolage Grotesque';font-size:1rem;font-weight:800;margin-bottom:20px;}
+.sum-r{display:flex;justify-content:space-between;gap-10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:0.82rem;}
+.sum-r:last-of-type{border:none;}
+.sum-r .k{color:var(--faint);font-weight:600;flex-shrink:0;}
+.sum-r .v{font-weight:600;text-align:right;color:var(--ink);transition:opacity 0.3s;}
+.sum-r .v.dim{color:#b3aec2;font-weight:500;}
+.sum-p{margin-top:16px;background:var(--tint);border-radius:12px;padding:16px 18px;}
+.sum-p .row{display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:#4c3a75;padding:4px 0;}
+.sum-p .row b{font-weight:800;}
+.sum-note{font-size:0.72rem;color:var(--faint);margin-top:14px;line-height:1.6;}
+
+/* SUCCESS */
+.done{text-align:center;padding:40px 20px;}
+.done-ic{width:76px;height:76px;border-radius:50%;background:var(--tint);display:flex;align-items:center;justify-content:center;margin:0 auto 28px;animation:pop 0.6s var(--ease);}
+@keyframes pop{from{transform:scale(0);}to{transform:scale(1);}}
+.done-ic svg{width:34px;height:34px;stroke:var(--acc);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;animation:draw 0.6s var(--ease) 0.4s forwards;}
+@keyframes draw{to{stroke-dashoffset:0;}}
+.done h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:14px;}
+.done p{max-width:420px;margin:0 auto 10px;font-size:0.95rem;}
+.done .ref{display:inline-block;margin:18px 0 30px;background:var(--card);border:1px solid var(--line);border-radius:100px;padding:10px 22px;font-size:0.85rem;font-weight:700;letter-spacing:0.04em;}
+.done .ref b{color:var(--acc);}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}
+  .cdot,.cring{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="pt"></div>
+<div class="cdot" id="cd"></div>
+<div class="cring" id="cr"></div>
+
+<nav>
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo" data-h>PrismStatic<span class="g">.web</span></a>
+    <a href="index.html" class="nav-x" data-h><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Exit</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="prog" id="progWrap">
+      <div class="prog-bar"><div class="prog-fill" id="pf"></div></div>
+      <span class="prog-txt" id="ptxt">Step 1 of 6</span>
+    </div>
+
+    <!-- STEP 1: TYPE -->
+    <div class="stepv on" data-step="1">
+      <h2 class="q">What are we building?</h2>
+      <p class="qs">Pick the kind of website your business needs.</p>
+      <div class="opts" id="typeOpts">
+        <button class="opt" data-val="Landing page">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <h3>Landing page</h3><p>One powerful page that turns visitors into clients.</p>
+        </button>
+        <button class="opt" data-val="Business website">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <h3>Business website</h3><p>Multi-page site with services, about and contact.</p>
+        </button>
+        <button class="opt" data-val="Web application">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <h3>Web application</h3><p>Dashboards, booking systems or custom tools.</p>
+        </button>
+        <button class="opt" data-val="Redesign">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></div>
+          <h3>Redesign</h3><p>Give your existing site a modern rebuild.</p>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: FEATURES -->
+    <div class="stepv" data-step="2">
+      <h2 class="q">What should it include?</h2>
+      <p class="qs">Select as many as you like — we'll go through them together on the call.</p>
+      <div class="chips" id="featChips">
+        <button class="chip" data-val="Contact form"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Contact form</button>
+        <button class="chip" data-val="Booking system"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Booking system</button>
+        <button class="chip" data-val="Photo gallery"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Photo gallery</button>
+        <button class="chip" data-val="Blog"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Blog</button>
+        <button class="chip" data-val="Online store"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Online store</button>
+        <button class="chip" data-val="WhatsApp button"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>WhatsApp button</button>
+        <button class="chip" data-val="Google Maps"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Google Maps</button>
+        <button class="chip" data-val="Animations"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Animations</button>
+        <button class="chip" data-val="SEO setup"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>SEO setup</button>
+        <button class="chip" data-val="Multi-language"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Multi-language</button>
+        <button class="chip" data-val="Customer reviews"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Customer reviews</button>
+        <button class="chip" data-val="Not sure yet"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Not sure yet</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: STYLE -->
+    <div class="stepv" data-step="3">
+      <h2 class="q">How should it feel?</h2>
+      <p class="qs">Pick the style direction closest to your taste — we'll refine it together.</p>
+      <div class="opts" id="styleOpts">
+        <button class="opt" data-val="Minimal & clean">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="9" y2="18"/></svg></div>
+          <h3>Minimal &amp; clean</h3><p>Lots of white space, sharp typography, calm.</p>
+        </button>
+        <button class="opt" data-val="Bold & playful">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+          <h3>Bold &amp; playful</h3><p>Big colours, fun shapes, personality everywhere.</p>
+        </button>
+        <button class="opt" data-val="Corporate & trustworthy">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+          <h3>Corporate &amp; trustworthy</h3><p>Professional, structured, credible.</p>
+        </button>
+        <button class="opt" data-val="Dark & premium">
+          <span class="tick"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div class="oi"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+          <h3>Dark &amp; premium</h3><p>Deep tones, cinematic, high-end feel.</p>
+        </button>
+      </div>
+      <div class="notes">
+        <label for="notes">Anything else we should know? (optional)</label>
+        <textarea id="notes" placeholder="Websites you like, your business, colours you love or hate, deadlines..."></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 4: DATE -->
+    <div class="stepv" data-step="4">
+      <h2 class="q">When are you free for a call?</h2>
+      <p class="qs">Pick any date that suits you — no time needed. We'll confirm the exact time with you by email.</p>
+      <div class="cal">
+        <div class="cal-h">
+          <span class="cal-m" id="calM"></span>
+          <div class="cal-nav">
+            <button class="cal-b" id="calPrev" aria-label="Previous month"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button class="cal-b" id="calNext" aria-label="Next month"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+          </div>
+        </div>
+        <div class="cal-g" id="calG"></div>
+        <div class="cal-pick" id="calPick"></div>
+      </div>
+    </div>
+
+    <!-- STEP 5: REVIEW -->
+    <div class="stepv" data-step="5">
+      <h2 class="q">Here's your project.</h2>
+      <p class="qs">Check everything looks right — you can still change anything.</p>
+      <div class="rev">
+        <div class="rev-row"><div><div class="rl">Website type</div><div class="rval" id="rvType"></div></div><button class="redit" data-go="1" data-h>Edit</button></div>
+        <div class="rev-row"><div><div class="rl">Features</div><div class="rval" id="rvFeat"></div></div><button class="redit" data-go="2" data-h>Edit</button></div>
+        <div class="rev-row"><div><div class="rl">Style</div><div class="rval" id="rvStyle"></div></div><button class="redit" data-go="3" data-h>Edit</button></div>
+        <div class="rev-row"><div><div class="rl">Call date</div><div class="rval" id="rvDate"></div></div><button class="redit" data-go="4" data-h>Edit</button></div>
+        <div class="rev-price">
+          <h4>What it costs</h4>
+          <div class="prow"><span>Design &amp; development (up to 3 remakes)</span><b>$30 one-time</b></div>
+          <div class="prow"><span>Launch on your own domain, hosting &amp; support</span><b>$599 / year</b></div>
+          <p class="pnote">The first $599 is only due the moment you approve your final website. Nothing is paid through this website — we confirm everything together on the call.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: CONTACT -->
+    <div class="stepv" data-step="6">
+      <h2 class="q">Last step — how do we reach you?</h2>
+      <p class="qs">We'll send your Google Meet link to this email.</p>
+      <div class="cform">
+        <div><label for="fn">Full name</label><input class="fin" type="text" id="fn" placeholder="Jane Tan" autocomplete="name"></div>
+        <div><label for="fe">Email address</label><input class="fin" type="email" id="fe" placeholder="jane@example.com" autocomplete="email"></div>
+        <div><label for="fp">Phone number</label><input class="fin" type="tel" id="fp" placeholder="+65 9123 4567" autocomplete="tel"></div>
+        <div class="notice">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <p>We'll get back to you <strong>within 2 working days</strong> with your Google Meet link for the date you picked.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="stepv" data-step="7">
+      <div class="done">
+        <div class="done-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h2>Booking received.</h2>
+        <p id="doneMsg">Thanks! We'll reply within 2 working days with your Google Meet link.</p>
+        <div class="ref">Reference: <b id="doneRef"></b></div>
+        <div><a href="index.html" class="b-next" data-h style="display:inline-flex;">Back to home</a></div>
+      </div>
+    </div>
+
+    <div class="snav" id="snav">
+      <button class="b-back" id="bBack" style="visibility:hidden;"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back</button>
+      <button class="b-next" id="bNext" disabled>Next <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sums">
+    <div class="sum">
+      <h4>Your project</h4>
+      <div class="sum-r"><span class="k">Type</span><span class="v dim" id="sType">Not chosen yet</span></div>
+      <div class="sum-r"><span class="k">Features</span><span class="v dim" id="sFeat">None yet</span></div>
+      <div class="sum-r"><span class="k">Style</span><span class="v dim" id="sStyle">Not chosen yet</span></div>
+      <div class="sum-r"><span class="k">Call date</span><span class="v dim" id="sDate">Not picked yet</span></div>
+      <div class="sum-p">
+        <div class="row"><span>Development</span><b>$30</b></div>
+        <div class="row"><span>Launch &amp; hosting</span><b>$599 / yr</b></div>
+      </div>
+      <p class="sum-note">Includes up to 3 full remakes during development. First $599 due only when you approve the final site. No payment through this website.</p>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* CURSOR */
+const cd=document.getElementById('cd'),cr=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
+function bindHov(root){root.querySelectorAll('a,button,input,textarea').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});
+  el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});
+});}
+bindHov(document);
+
+/* PAGE TRANSITIONS */
+const pt=document.getElementById('pt');
+document.querySelectorAll('a[href]').forEach(a=>{
+  const h=a.getAttribute('href');
+  if(!h||h[0]==='#'||h.startsWith('mailto')||h.startsWith('http')||h.startsWith('tel'))return;
+  a.addEventListener('click',e=>{e.preventDefault();pt.classList.add('in');setTimeout(()=>{location.href=h;},560);});
+});
+window.addEventListener('pageshow',()=>{pt.classList.remove('in');pt.classList.add('out');setTimeout(()=>pt.classList.remove('out'),650);});
+
+/* ===== STATE ===== */
+const state={type:null,features:[],style:null,notes:'',date:null,name:'',email:'',phone:''};
+let step=1;const LAST=6;
+
+const pf=document.getElementById('pf'),ptxt=document.getElementById('ptxt');
+const bNext=document.getElementById('bNext'),bBack=document.getElementById('bBack'),snav=document.getElementById('snav');
+
+function fmtDate(d){return d?new Date(d+'T00:00:00').toLocaleDateString('en-SG',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):null;}
+
+function paintSummary(){
+  const set=(id,val,fallback)=>{const el=document.getElementById(id);if(val){el.textContent=val;el.classList.remove('dim');}else{el.textContent=fallback;el.classList.add('dim');}};
+  set('sType',state.type,'Not chosen yet');
+  set('sFeat',state.features.length?state.features.length+' selected':null,'None yet');
+  set('sStyle',state.style,'Not chosen yet');
+  set('sDate',state.date?new Date(state.date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}):null,'Not picked yet');
+}
+
+function valid(){
+  if(step===1)return !!state.type;
+  if(step===2)return true;
+  if(step===3)return !!state.style;
+  if(step===4)return !!state.date;
+  if(step===5)return true;
+  if(step===6)return state.name.trim().length>1&&/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(state.email.trim())&&state.phone.trim().length>5;
+  return false;
+}
+
+function go(n){
+  step=n;
+  document.querySelectorAll('.stepv').forEach(s=>s.classList.toggle('on',+s.dataset.step===n));
+  pf.style.width=(Math.min(n,LAST)/LAST*100)+'%';
+  ptxt.textContent=n>LAST?'Done':'Step '+n+' of '+LAST;
+  bBack.style.visibility=n>1&&n<=LAST?'visible':'hidden';
+  snav.style.display=n>LAST?'none':'flex';
+  document.getElementById('progWrap').style.display=n>LAST?'none':'flex';
+  bNext.innerHTML=n===LAST?'Submit booking <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>':'Next <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  if(n===5)paintReview();
+  refresh();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function refresh(){bNext.disabled=!valid();paintSummary();}
+
+/* STEP 1 + 3 single-select */
+function singleSel(containerId,key){
+  document.querySelectorAll('#'+containerId+' .opt').forEach(o=>{
+    o.addEventListener('click',()=>{
+      document.querySelectorAll('#'+containerId+' .opt').forEach(x=>x.classList.remove('sel'));
+      o.classList.add('sel');state[key]=o.dataset.val;refresh();
+    });
+  });
+}
+singleSel('typeOpts','type');
+singleSel('styleOpts','style');
+
+/* STEP 2 multi-select */
+document.querySelectorAll('#featChips .chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    c.classList.toggle('sel');
+    const v=c.dataset.val;
+    state.features=c.classList.contains('sel')?[...state.features,v]:state.features.filter(f=>f!==v);
+    refresh();
+  });
+});
+document.getElementById('notes').addEventListener('input',e=>state.notes=e.target.value);
+
+/* STEP 4 calendar */
+const calM=document.getElementById('calM'),calG=document.getElementById('calG'),calPick=document.getElementById('calPick');
+const today=new Date();today.setHours(0,0,0,0);
+let view=new Date(today.getFullYear(),today.getMonth(),1);
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function pad(n){return String(n).padStart(2,'0');}
+function drawCal(){
+  calM.textContent=MONTHS[view.getMonth()]+' '+view.getFullYear();
+  calG.innerHTML='';
+  ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d=>{const el=document.createElement('div');el.className='cal-d';el.textContent=d;calG.appendChild(el);});
+  const first=new Date(view.getFullYear(),view.getMonth(),1);
+  let lead=(first.getDay()+6)%7;
+  for(let i=0;i<lead;i++)calG.appendChild(document.createElement('div'));
+  const days=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+  for(let d=1;d<=days;d++){
+    const b=document.createElement('button');b.className='cal-c';b.textContent=d;
+    const dt=new Date(view.getFullYear(),view.getMonth(),d);
+    const iso=dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());
+    if(dt<=today){b.disabled=true;}
+    else{
+      if(state.date===iso)b.classList.add('sel');
+      b.addEventListener('click',()=>{state.date=iso;drawCal();calPick.textContent='You picked '+fmtDate(iso);refresh();});
+      b.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});
+      b.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});
+    }
+    calG.appendChild(b);
+  }
+  const min=new Date(today.getFullYear(),today.getMonth(),1);
+  document.getElementById('calPrev').disabled=view<=min;
+}
+document.getElementById('calPrev').addEventListener('click',()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);drawCal();});
+document.getElementById('calNext').addEventListener('click',()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);drawCal();});
+drawCal();
+
+/* STEP 5 review */
+function paintReview(){
+  document.getElementById('rvType').textContent=state.type||'—';
+  document.getElementById('rvFeat').textContent=state.features.length?state.features.join(', '):'None selected';
+  document.getElementById('rvStyle').textContent=(state.style||'—')+(state.notes.trim()?' · with notes':'');
+  document.getElementById('rvDate').textContent=fmtDate(state.date)||'—';
+}
+document.querySelectorAll('.redit').forEach(b=>b.addEventListener('click',()=>go(+b.dataset.go)));
+
+/* STEP 6 contact */
+['fn','fe','fp'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',e=>{
+    if(id==='fn')state.name=e.target.value;
+    if(id==='fe')state.email=e.target.value;
+    if(id==='fp')state.phone=e.target.value;
+    refresh();
+  });
+});
+
+/* PROMPT + SUBMIT */
+function buildPrompt(){
+  return 'Build a complete, production-ready '+state.type.toLowerCase()+' website for a client of PrismStatic.web.\n\n'
+    +'Client: '+state.name+' ('+state.email+', '+state.phone+')\n'
+    +'Website type: '+state.type+'\n'
+    +'Requested features: '+(state.features.length?state.features.join(', '):'None specified — clarify on the call')+'\n'
+    +'Style direction: '+state.style+'\n'
+    +'Client notes: '+(state.notes.trim()||'None')+'\n'
+    +'Discovery call: '+fmtDate(state.date)+'\n\n'
+    +'Requirements: fully responsive and mobile-first, fast loading, SEO-friendly semantic HTML, clean modern design matching the style direction above, smooth purposeful animations, and a clear call-to-action. No emojis — use SVG icons only.\n\n'
+    +'[ADD YOUR OWN PROMPT IN HERE — extra requests from the Google Meet]';
+}
+function makeRef(){return 'PS-'+Date.now().toString(36).toUpperCase().slice(-6);}
+
+async function submit(){
+  bNext.disabled=true;bNext.textContent='Sending…';
+  const ref=makeRef();
+  const booking={ref,ts:new Date().toISOString(),type:state.type,features:state.features,style:state.style,notes:state.notes.trim(),date:state.date,name:state.name.trim(),email:state.email.trim(),phone:state.phone.trim(),prompt:buildPrompt()};
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify(booking))));
+  try{
+    const res=await fetch('https://formspree.io/f/mzdlrnrz',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
+      _subject:'[PrismStatic.web] New booking '+ref+' — '+booking.name,
+      reference:ref,name:booking.name,email:booking.email,phone:booking.phone,
+      website_type:booking.type,features:booking.features.join(', ')||'None',style:booking.style,
+      notes:booking.notes||'None',call_date:fmtDate(booking.date),
+      claude_prompt:booking.prompt,
+      booking_code:code
+    })});
+    if(!res.ok)throw new Error('send failed');
+    try{const all=JSON.parse(localStorage.getItem('ps_bookings')||'[]');all.push(booking);localStorage.setItem('ps_bookings',JSON.stringify(all));}catch(_){}
+    document.getElementById('doneRef').textContent=ref;
+    document.getElementById('doneMsg').innerHTML='Thanks, '+booking.name.split(' ')[0]+'! We\'ll reply to <strong>'+booking.email+'</strong> within 2 working days with your Google Meet link for '+fmtDate(booking.date)+'.';
+    go(7);
+  }catch(err){
+    bNext.disabled=false;
+    bNext.innerHTML='Submit booking <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    alert('Something went wrong sending your booking. Please try again, or message us on WhatsApp.');
+  }
+}
+
+bNext.addEventListener('click',()=>{if(!valid())return;step===LAST?submit():go(step+1);});
+bBack.addEventListener('click',()=>{if(step>1)go(step-1);});
+refresh();
+</script>
+</body>
+</html>

@@ -3,115 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Selected work by PrismStatic.web — custom websites, dashboards and landing pages built for real businesses.">
 <title>Work — PrismStatic.web</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141218'/><text x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%237c3aed'>P</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080808;--s1:#111;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#fff;--muted:rgba(255,255,255,0.42);--subtle:rgba(255,255,255,0.16);--grad:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 50%,#06b6d4 100%);--ease:cubic-bezier(0.16,1,0.3,1);--nav-h:70px;}
+:root{
+  --bg:#f6f5f8;--card:#fff;--ink:#141218;--mut:#545061;--faint:#757082;
+  --line:#e9e6f0;--line2:#d6d1e2;--acc:#6d28d9;--accs:#7c3aed;--tint:#f1edfa;
+  --ease:cubic-bezier(0.16,1,0.3,1);--nav-h:72px;
+  --sh:0 2px 6px rgba(24,16,50,0.04),0 16px 40px rgba(24,16,50,0.07);
+  --shl:0 4px 12px rgba(24,16,50,0.06),0 28px 60px rgba(24,16,50,0.12);
+}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
 body.no-scroll{overflow:hidden;}
-a{text-decoration:none;color:inherit;}p{color:var(--muted);line-height:1.7;}button{font-family:inherit;cursor:none;}
+a{text-decoration:none;color:inherit;}
+p{color:var(--mut);line-height:1.7;}
+button{font-family:inherit;cursor:none;}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;text-wrap:balance;}
+::selection{background:#ddd0f7;}
 #loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.9s var(--ease);}
 #loader.hide{transform:translateY(-100%);}
-.ld-brand{font-size:1.6rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:52px;}
-.ld-brand span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.ld-bar{width:220px;height:1px;background:var(--border2);position:relative;overflow:hidden;}
-.ld-fill{position:absolute;left:0;top:0;height:100%;background:var(--grad);width:0;transition:width 0.08s linear;}
-.ld-pct{font-size:0.7rem;font-weight:600;color:var(--muted);letter-spacing:0.12em;margin-top:14px;}
-#pt{position:fixed;inset:0;z-index:5000;background:var(--bg);transform:translateY(100%);pointer-events:none;transition:transform 0.6s var(--ease);}
+.ld-brand{font-family:'Bricolage Grotesque';font-size:1.7rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:48px;}
+.ld-brand span{color:var(--acc);}
+.ld-bar{width:200px;height:2px;background:var(--line2);position:relative;overflow:hidden;border-radius:2px;}
+.ld-fill{position:absolute;left:0;top:0;height:100%;background:var(--acc);width:0;border-radius:2px;}
+.ld-pct{font-size:0.7rem;font-weight:600;color:var(--faint);letter-spacing:0.12em;margin-top:14px;font-variant-numeric:tabular-nums;}
+#pt{position:fixed;inset:0;z-index:5000;background:var(--ink);transform:translateY(100%);pointer-events:none;transition:transform 0.55s var(--ease);}
 #pt.in{transform:translateY(0);pointer-events:all;}
 #pt.out{transform:translateY(-100%);}
-.cdot{position:fixed;width:6px;height:6px;background:#fff;border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:opacity 0.2s,transform 0.15s;}
-.cring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(255,255,255,0.35);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%);transition:width 0.3s var(--ease),height 0.3s var(--ease),border-color 0.3s;}
-.cring.hov{width:64px;height:64px;border-color:rgba(139,92,246,0.6);}
+.cdot{position:fixed;width:6px;height:6px;background:var(--ink);border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:transform 0.15s;}
+.cring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(20,18,24,0.3);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%) scale(1);transition:transform 0.3s var(--ease),border-color 0.3s;}
+.cring.hov{transform:translate(-50%,-50%) scale(1.7);border-color:rgba(109,40,217,0.55);}
 .cdot.hov{transform:translate(-50%,-50%) scale(0);}
+@media(pointer:coarse){.cdot,.cring{display:none;}body,button{cursor:auto;}}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);display:flex;align-items:center;transition:background 0.3s,border-color 0.3s;border-bottom:1px solid transparent;}
-nav.sc{background:rgba(8,8,8,0.88);backdrop-filter:blur(24px);border-color:var(--border);}
-.nav-in{width:100%;max-width:1300px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-size:1.05rem;font-weight:800;letter-spacing:-0.03em;}
-.nav-logo .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.nav-links{display:flex;gap:40px;}
-.nav-links a{font-size:0.875rem;font-weight:500;color:var(--muted);position:relative;transition:color 0.2s;}
-.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform 0.3s var(--ease);}
-.nav-links a:hover{color:#fff;}.nav-links a:hover::after{transform:scaleX(1);}
-.nav-links a.active{color:#fff;}.nav-links a.active::after{transform:scaleX(1);}
-.nav-cta{font-size:0.85rem;font-weight:700;color:var(--bg);background:#fff;padding:11px 24px;border-radius:100px;transition:background 0.2s;}
-.nav-cta:hover{background:#ddd;}
+nav.sc{background:rgba(246,245,248,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-color:var(--line);}
+.nav-in{width:100%;max-width:1240px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Bricolage Grotesque';font-size:1.15rem;font-weight:800;letter-spacing:-0.02em;}
+.nav-logo .g{color:var(--acc);}
+.nav-links{display:flex;gap:36px;}
+.nav-links a{font-size:0.875rem;font-weight:500;color:var(--mut);position:relative;transition:color 0.2s;}
+.nav-links a::after{content:'';position:absolute;bottom:-5px;left:0;right:0;height:2px;background:var(--acc);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 0.3s var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+.nav-cta{font-size:0.85rem;font-weight:700;color:#fff;background:var(--ink);padding:11px 24px;border-radius:100px;transition:background 0.25s;}
+.nav-cta:hover{background:var(--acc);}
 .ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;}
-.ham span{display:block;width:22px;height:1.5px;background:#fff;transition:transform 0.3s,opacity 0.3s;}
-.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.ham span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:transform 0.3s,opacity 0.3s;}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
 .ham.open span:nth-child(2){opacity:0;}
-.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-@media(max-width:860px){.nav-links,.nav-cta{display:none;}.ham{display:flex;}.nav-in{padding:0 24px;}}
-.mmenu{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateX(100%);transition:transform 0.6s var(--ease);}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+@media(max-width:880px){.nav-links,.nav-cta{display:none;}.ham{display:flex;}.nav-in{padding:0 24px;}}
+.mmenu{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transform:translateX(100%);transition:transform 0.55s var(--ease);}
 .mmenu.open{transform:translateX(0);}
-.mmenu a{font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;color:var(--muted);transition:color 0.2s;}
-.mmenu a:hover{color:#fff;}
-.mmenu .mc{font-size:1.1rem;background:#fff;color:var(--bg);padding:16px 44px;border-radius:100px;font-weight:700;margin-top:12px;}
-.con{max-width:1300px;margin:0 auto;padding:0 48px;}
-@media(max-width:768px){.con{padding:0 24px;}}
-.rv{opacity:0;transform:translateY(32px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease);}
+.mmenu a{font-family:'Bricolage Grotesque';font-size:2.5rem;font-weight:800;color:var(--mut);transition:color 0.2s;}
+.mmenu a:hover{color:var(--ink);}
+.mmenu .mc{font-size:1.05rem;background:var(--ink);color:#fff;padding:16px 44px;border-radius:100px;font-weight:700;margin-top:12px;font-family:'Inter';}
+.rv{opacity:0;transform:translateY(30px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease);}
 .rv.vis{opacity:1;transform:translateY(0);}
-.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}.d4{transition-delay:0.4s;}
-.gr{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.btn-w{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--bg);padding:15px 30px;border-radius:100px;font-weight:700;font-size:0.9rem;transition:background 0.2s,transform 0.4s var(--ease);}
-.btn-w:hover{background:#e0e0e0;}
-.wa{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.35);transition:transform 0.2s;animation:wap 3s ease-in-out infinite;}
-.wa:hover{transform:scale(1.1);animation:none;}
-.wa svg{width:26px;height:26px;fill:#fff;}
-@keyframes wap{0%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 0 rgba(37,211,102,0.45);}70%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 0 rgba(37,211,102,0);}}
-footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
-.fi{max-width:1300px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
-@media(max-width:600px){.fi{padding:0 24px;flex-direction:column;}}
-.fl{font-size:0.92rem;font-weight:800;letter-spacing:-0.02em;}
-.fl .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.fc{font-size:0.76rem;color:var(--subtle);}
-.flinks{display:flex;gap:26px;}
-.flinks a{font-size:0.76rem;color:var(--muted);transition:color 0.2s;}
-.flinks a:hover{color:#fff;}
+.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}
+.con{max-width:1240px;margin:0 auto;padding:0 40px;}
+@media(max-width:768px){.con{padding:0 24px;}}
+.btn-k{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;padding:16px 32px;border-radius:100px;font-weight:700;font-size:0.92rem;transition:background 0.25s,transform 0.4s var(--ease);}
+.btn-k:hover{background:var(--acc);}
+.btn-k svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.3s var(--ease);}
+.btn-k:hover svg{transform:translateX(3px);}
 
 /* PAGE HERO */
-.phero{padding:calc(var(--nav-h) + 100px) 0 80px;border-bottom:1px solid var(--border);}
-.phero-label{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;opacity:0;animation:fu 0.8s var(--ease) 0.2s forwards;}
-.phero h1{font-size:clamp(3.5rem,9vw,8rem);font-weight:900;letter-spacing:-0.045em;line-height:0.95;margin-bottom:32px;}
-.phero-sub{font-size:1.05rem;color:var(--muted);max-width:480px;opacity:0;animation:fu 0.8s var(--ease) 0.7s forwards;}
-@keyframes fu{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.ph{padding:calc(var(--nav-h) + 90px) 0 56px;}
+.ph h1{font-size:clamp(2.6rem,6vw,4.4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.02;margin-bottom:20px;}
+.ph .u{position:relative;white-space:nowrap;}
+.ph .u::after{content:'';position:absolute;left:0;right:0;bottom:5px;height:0.28em;background:#ddd0f7;z-index:-1;border-radius:3px;transform:scaleX(0);transform-origin:left;animation:grow 0.8s var(--ease) 0.7s forwards;}
+@keyframes grow{to{transform:scaleX(1);}}
 .lw{overflow:hidden;display:block;}
-.ll{display:block;transform:translateY(110%);animation:lu 1s var(--ease) forwards;}
-.lw:nth-child(1) .ll{animation-delay:0.3s;}
-.lw:nth-child(2) .ll{animation-delay:0.48s;}
+.ll{display:block;transform:translateY(110%);animation:lu 1s var(--ease) 0.25s forwards;}
 @keyframes lu{to{transform:translateY(0);}}
+.ph p{max-width:480px;font-size:1.02rem;opacity:0;animation:fu 0.8s var(--ease) 0.6s forwards;}
+@keyframes fu{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
 /* FILTER */
-.filter-bar{padding:40px 0;display:flex;gap:8px;flex-wrap:wrap;}
-.filt{font-size:0.8rem;font-weight:600;padding:9px 20px;border-radius:100px;border:1.5px solid var(--border);color:var(--muted);background:transparent;cursor:none;transition:all 0.2s;}
-.filt:hover,.filt.active{background:#fff;color:var(--bg);border-color:#fff;}
+.fbar{display:flex;gap:10px;flex-wrap:wrap;padding:26px 0 44px;opacity:0;animation:fu 0.8s var(--ease) 0.75s forwards;}
+.fb{background:var(--card);border:1.5px solid var(--line);border-radius:100px;padding:10px 22px;font-size:0.82rem;font-weight:600;color:var(--mut);transition:all 0.25s var(--ease);}
+.fb:hover{border-color:var(--line2);transform:translateY(-2px);}
+.fb.on{background:var(--ink);border-color:var(--ink);color:#fff;}
 
-/* WORK GRID */
-.work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding-bottom:120px;}
-@media(max-width:700px){.work-grid{grid-template-columns:1fr;}}
-.wc{border-radius:16px;overflow:hidden;background:var(--s1);border:1px solid var(--border);transition:border-color 0.3s;transform-style:preserve-3d;}
-.wc:hover{border-color:var(--border2);}
-.wt{height:280px;overflow:hidden;position:relative;}
-.wt svg{width:100%;height:100%;display:block;}
-.wt1{background:linear-gradient(135deg,#120e24,#0a1230);}
-.wt2{background:linear-gradient(135deg,#0a1a0a,#091515);}
-.wt3{background:linear-gradient(135deg,#1a1300,#150900);}
-.wt4{background:linear-gradient(135deg,#1a0a14,#0d0818);}
+/* GRID */
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-bottom:110px;}
+@media(max-width:680px){.wg{grid-template-columns:1fr;}}
+.wc{border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--line);transition:border-color 0.3s,box-shadow 0.4s,opacity 0.4s,transform 0.5s var(--ease);transform-style:preserve-3d;}
+.wc:hover{border-color:var(--line2);box-shadow:var(--shl);}
+.wc.dim{opacity:0.25;}
+.wc.span2{grid-column:span 2;}
+@media(max-width:680px){.wc.span2{grid-column:span 1;}}
+.wt{overflow:hidden;position:relative;}
+.wt svg{width:100%;height:auto;display:block;}
+.wt1{background:linear-gradient(135deg,#171130,#0c1436);}
+.wt2{background:linear-gradient(135deg,#231a05,#1a0e02);}
+.wt3{background:linear-gradient(135deg,#0a2010,#07160e);}
+.wt4{background:linear-gradient(135deg,#240a18,#150a20);}
 .wov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:background 0.3s;}
-.wc:hover .wov{background:rgba(8,8,8,0.5);}
-.wob{font-size:0.82rem;font-weight:700;background:#fff;color:var(--bg);padding:11px 22px;border-radius:100px;opacity:0;transform:translateY(8px);transition:opacity 0.3s,transform 0.3s var(--ease);}
+.wc:hover .wov{background:rgba(14,10,30,0.45);}
+.wob{font-size:0.82rem;font-weight:700;background:#fff;color:var(--ink);padding:11px 22px;border-radius:100px;opacity:0;transform:translateY(8px);transition:opacity 0.3s,transform 0.3s var(--ease);}
 .wc:hover .wob{opacity:1;transform:translateY(0);}
-.wm{padding:24px 28px;}
-.wmr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.wm h3{font-size:1rem;font-weight:700;letter-spacing:-0.01em;}
-.wtag{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--subtle);}
-.wm p{font-size:0.82rem;color:var(--muted);}
-.wc.span2{grid-column:1/-1;}
-.wc.span2 .wt{height:380px;}
-@media(max-width:700px){.wc.span2{grid-column:auto;}.wc.span2 .wt{height:260px;}}
+.wm{padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.wm h3{font-size:1rem;font-weight:700;}
+.wm p{font-size:0.8rem;margin-top:3px;}
+.wtag{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--acc);background:var(--tint);padding:6px 12px;border-radius:100px;white-space:nowrap;}
+
+/* CTA */
+.ctai{border-radius:24px;padding:90px 60px;background:var(--ink);position:relative;overflow:hidden;text-align:center;margin-bottom:110px;}
+.ctai::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(124,58,237,0.35) 0%,transparent 60%);pointer-events:none;}
+.ctai h2{color:#fff;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-0.025em;margin-bottom:14px;position:relative;}
+.ctai p{color:rgba(255,255,255,0.65);margin-bottom:36px;position:relative;}
+.ctai .btn-k{background:#fff;color:var(--ink);position:relative;}
+.ctai .btn-k:hover{background:var(--accs);color:#fff;}
+@media(max-width:680px){.ctai{padding:56px 26px;}}
+footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
+.fi{max-width:1240px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
+@media(max-width:600px){.fi{padding:0 24px;flex-direction:column;}}
+.fl{font-family:'Bricolage Grotesque';font-size:0.95rem;font-weight:800;}
+.fl .g{color:var(--acc);}
+.fc{font-size:0.76rem;color:var(--faint);}
+.flinks{display:flex;gap:26px;}
+.flinks a{font-size:0.78rem;color:var(--mut);transition:color 0.2s;}
+.flinks a:hover{color:var(--ink);}
+.wa{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.22);transition:transform 0.2s;animation:wap 3s ease-in-out infinite;}
+.wa:hover{transform:scale(1.1);animation:none;}
+.wa svg{width:26px;height:26px;fill:#fff;}
+@keyframes wap{0%{box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 0 rgba(37,211,102,0.4);}70%{box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 0 rgba(37,211,102,0);}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+  .rv,.ph p,.fbar{opacity:1;transform:none;animation:none;}
+  .ll{transform:none;animation:none;}
+  .ph .u::after{transform:scaleX(1);}
+  .cdot,.cring{display:none;}
+}
 </style>
 </head>
 <body class="no-scroll">
@@ -134,7 +165,7 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
       <a href="services.html" data-h>Services</a>
       <a href="contact.html" data-h>Contact</a>
     </div>
-    <a href="contact.html" class="nav-cta" data-h>Book a call</a>
+    <a href="start.html" class="nav-cta" data-h>Start your project</a>
     <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -144,167 +175,141 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
   <a href="work.html">Work</a>
   <a href="services.html">Services</a>
   <a href="contact.html">Contact</a>
-  <a href="contact.html" class="mc">Book a call →</a>
+  <a href="start.html" class="mc">Start your project →</a>
 </div>
 
-<section class="phero">
+<section class="ph">
   <div class="con">
-    <div class="phero-label">Portfolio</div>
     <h1>
-      <span class="lw"><span class="ll">Selected</span></span>
-      <span class="lw"><span class="ll"><em style="font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">work.</em></span></span>
+      <span class="lw"><span class="ll">Selected <span class="u">work.</span></span></span>
     </h1>
-    <p class="phero-sub">A collection of projects built for real businesses — landing pages, apps, and everything in between.</p>
+    <p>Every project starts as a blank file and ends as a business asset. Here's a sample.</p>
+    <div class="fbar">
+      <button class="fb on" data-filter="all" data-h>All</button>
+      <button class="fb" data-filter="ecommerce" data-h>E-commerce</button>
+      <button class="fb" data-filter="webapp" data-h>Web apps</button>
+      <button class="fb" data-filter="business" data-h>Business</button>
+      <button class="fb" data-filter="landing" data-h>Landing pages</button>
+    </div>
   </div>
 </section>
 
 <div class="con">
-  <div class="filter-bar">
-    <button class="filt active" data-filter="all">All projects</button>
-    <button class="filt" data-filter="ecommerce">E-commerce</button>
-    <button class="filt" data-filter="webapp">Web App</button>
-    <button class="filt" data-filter="landing">Landing Page</button>
-    <button class="filt" data-filter="business">Business Site</button>
+  <div class="wg">
+    <div class="wc span2 rv" data-cat="ecommerce" data-tilt>
+      <div class="wt wt1">
+        <svg viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="26" width="920" height="250" rx="10" fill="rgba(255,255,255,0.03)"/>
+          <rect x="40" y="26" width="920" height="36" rx="10" fill="rgba(139,92,246,0.14)"/>
+          <rect x="40" y="50" width="920" height="12" fill="rgba(139,92,246,0.14)"/>
+          <circle cx="64" cy="44" r="5" fill="rgba(139,92,246,0.5)"/><circle cx="81" cy="44" r="5" fill="rgba(139,92,246,0.3)"/><circle cx="98" cy="44" r="5" fill="rgba(139,92,246,0.16)"/>
+          <rect x="130" y="35" width="280" height="17" rx="8" fill="rgba(255,255,255,0.05)"/>
+          <rect x="40" y="62" width="920" height="30" fill="rgba(139,92,246,0.1)"/>
+          <rect x="58" y="72" width="52" height="9" rx="4" fill="rgba(139,92,246,0.7)"/>
+          <rect x="820" y="68" width="120" height="18" rx="9" fill="rgba(139,92,246,0.5)"/>
+          <rect x="280" y="112" width="440" height="16" rx="8" fill="rgba(139,92,246,0.44)"/>
+          <rect x="340" y="140" width="320" height="9" rx="4" fill="rgba(139,92,246,0.2)"/>
+          <rect x="56" y="176" width="200" height="84" rx="8" fill="rgba(139,92,246,0.09)"/>
+          <rect x="56" y="176" width="200" height="52" rx="8" fill="rgba(139,92,246,0.13)"/>
+          <rect x="68" y="236" width="90" height="9" rx="4" fill="rgba(139,92,246,0.38)"/>
+          <rect x="284" y="176" width="200" height="84" rx="8" fill="rgba(139,92,246,0.09)"/>
+          <rect x="284" y="176" width="200" height="52" rx="8" fill="rgba(139,92,246,0.13)"/>
+          <rect x="296" y="236" width="90" height="9" rx="4" fill="rgba(139,92,246,0.38)"/>
+          <rect x="512" y="176" width="200" height="84" rx="8" fill="rgba(139,92,246,0.09)"/>
+          <rect x="512" y="176" width="200" height="52" rx="8" fill="rgba(139,92,246,0.13)"/>
+          <rect x="524" y="236" width="90" height="9" rx="4" fill="rgba(139,92,246,0.38)"/>
+          <rect x="740" y="176" width="200" height="84" rx="8" fill="rgba(139,92,246,0.09)"/>
+          <rect x="740" y="176" width="200" height="52" rx="8" fill="rgba(139,92,246,0.13)"/>
+          <rect x="752" y="236" width="90" height="9" rx="4" fill="rgba(139,92,246,0.38)"/>
+        </svg>
+        <div class="wov"><span class="wob">View project →</span></div>
+      </div>
+      <div class="wm"><div><h3>Retail Brand Website</h3><p>Full e-commerce presence · Custom design · Mobile first</p></div><span class="wtag">E-commerce</span></div>
+    </div>
+    <div class="wc rv" data-cat="webapp" data-tilt>
+      <div class="wt wt2">
+        <svg viewBox="0 0 500 256" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="22" width="444" height="214" rx="10" fill="rgba(255,255,255,0.03)"/>
+          <rect x="28" y="22" width="444" height="33" rx="10" fill="rgba(245,158,11,0.12)"/>
+          <rect x="28" y="43" width="444" height="12" fill="rgba(245,158,11,0.12)"/>
+          <circle cx="50" cy="38" r="5" fill="rgba(245,158,11,0.5)"/><circle cx="67" cy="38" r="5" fill="rgba(245,158,11,0.3)"/><circle cx="84" cy="38" r="5" fill="rgba(245,158,11,0.16)"/>
+          <rect x="28" y="55" width="90" height="181" fill="rgba(245,158,11,0.07)"/>
+          <rect x="42" y="69" width="62" height="9" rx="4" fill="rgba(245,158,11,0.5)"/>
+          <rect x="42" y="86" width="50" height="7" rx="3" fill="rgba(245,158,11,0.26)"/>
+          <rect x="42" y="101" width="54" height="7" rx="3" fill="rgba(245,158,11,0.2)"/>
+          <rect x="130" y="63" width="88" height="44" rx="7" fill="rgba(245,158,11,0.09)"/>
+          <rect x="140" y="73" width="36" height="8" rx="4" fill="rgba(245,158,11,0.3)"/><rect x="140" y="87" width="54" height="13" rx="5" fill="rgba(245,158,11,0.5)"/>
+          <rect x="228" y="63" width="88" height="44" rx="7" fill="rgba(245,158,11,0.09)"/>
+          <rect x="238" y="73" width="36" height="8" rx="4" fill="rgba(245,158,11,0.3)"/><rect x="238" y="87" width="54" height="13" rx="5" fill="rgba(245,158,11,0.5)"/>
+          <rect x="326" y="63" width="138" height="44" rx="7" fill="rgba(245,158,11,0.09)"/>
+          <rect x="336" y="73" width="36" height="8" rx="4" fill="rgba(245,158,11,0.3)"/><rect x="336" y="87" width="54" height="13" rx="5" fill="rgba(245,158,11,0.5)"/>
+          <rect x="130" y="117" width="334" height="119" rx="7" fill="rgba(245,158,11,0.06)"/>
+          <rect x="148" y="172" width="22" height="58" rx="4" fill="rgba(245,158,11,0.26)"/>
+          <rect x="180" y="152" width="22" height="78" rx="4" fill="rgba(245,158,11,0.4)"/>
+          <rect x="212" y="162" width="22" height="68" rx="4" fill="rgba(245,158,11,0.32)"/>
+          <rect x="244" y="142" width="22" height="88" rx="4" fill="rgba(245,158,11,0.55)"/>
+          <rect x="276" y="156" width="22" height="74" rx="4" fill="rgba(245,158,11,0.34)"/>
+          <rect x="308" y="138" width="22" height="92" rx="4" fill="rgba(245,158,11,0.6)"/>
+          <rect x="340" y="150" width="22" height="80" rx="4" fill="rgba(245,158,11,0.42)"/>
+        </svg>
+        <div class="wov"><span class="wob">View project →</span></div>
+      </div>
+      <div class="wm"><div><h3>SaaS Analytics Dashboard</h3><p>React application · Data visualisation</p></div><span class="wtag">Web App</span></div>
+    </div>
+    <div class="wc rv d1" data-cat="business" data-tilt>
+      <div class="wt wt3">
+        <svg viewBox="0 0 500 256" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="22" width="444" height="214" rx="10" fill="rgba(255,255,255,0.03)"/>
+          <rect x="28" y="22" width="444" height="33" rx="10" fill="rgba(34,197,94,0.12)"/>
+          <rect x="28" y="43" width="444" height="12" fill="rgba(34,197,94,0.12)"/>
+          <circle cx="50" cy="38" r="5" fill="rgba(34,197,94,0.5)"/><circle cx="67" cy="38" r="5" fill="rgba(34,197,94,0.3)"/><circle cx="84" cy="38" r="5" fill="rgba(34,197,94,0.16)"/>
+          <rect x="106" y="29" width="196" height="17" rx="8" fill="rgba(255,255,255,0.05)"/>
+          <rect x="28" y="55" width="444" height="90" fill="rgba(34,197,94,0.07)"/>
+          <rect x="120" y="76" width="260" height="14" rx="7" fill="rgba(34,197,94,0.45)"/>
+          <rect x="160" y="100" width="180" height="8" rx="4" fill="rgba(34,197,94,0.22)"/>
+          <rect x="204" y="118" width="92" height="16" rx="8" fill="rgba(34,197,94,0.5)"/>
+          <rect x="42" y="160" width="132" height="62" rx="7" fill="rgba(34,197,94,0.08)"/>
+          <circle cx="64" cy="182" r="10" fill="rgba(34,197,94,0.3)"/>
+          <rect x="52" y="200" width="80" height="7" rx="3" fill="rgba(34,197,94,0.3)"/>
+          <rect x="184" y="160" width="132" height="62" rx="7" fill="rgba(34,197,94,0.08)"/>
+          <circle cx="206" cy="182" r="10" fill="rgba(34,197,94,0.3)"/>
+          <rect x="194" y="200" width="80" height="7" rx="3" fill="rgba(34,197,94,0.3)"/>
+          <rect x="326" y="160" width="132" height="62" rx="7" fill="rgba(34,197,94,0.08)"/>
+          <circle cx="348" cy="182" r="10" fill="rgba(34,197,94,0.3)"/>
+          <rect x="336" y="200" width="80" height="7" rx="3" fill="rgba(34,197,94,0.3)"/>
+        </svg>
+        <div class="wov"><span class="wob">View project →</span></div>
+      </div>
+      <div class="wm"><div><h3>Wellness Studio</h3><p>Business website · Booking integration</p></div><span class="wtag">Business</span></div>
+    </div>
+    <div class="wc rv d2" data-cat="landing" data-tilt>
+      <div class="wt wt4">
+        <svg viewBox="0 0 500 256" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="22" width="444" height="214" rx="10" fill="rgba(255,255,255,0.03)"/>
+          <rect x="28" y="22" width="444" height="33" rx="10" fill="rgba(236,72,153,0.12)"/>
+          <rect x="28" y="43" width="444" height="12" fill="rgba(236,72,153,0.12)"/>
+          <circle cx="50" cy="38" r="5" fill="rgba(236,72,153,0.5)"/><circle cx="67" cy="38" r="5" fill="rgba(236,72,153,0.3)"/><circle cx="84" cy="38" r="5" fill="rgba(236,72,153,0.16)"/>
+          <rect x="106" y="29" width="196" height="17" rx="8" fill="rgba(255,255,255,0.05)"/>
+          <rect x="42" y="72" width="230" height="18" rx="9" fill="rgba(236,72,153,0.45)"/>
+          <rect x="42" y="98" width="180" height="18" rx="9" fill="rgba(236,72,153,0.45)"/>
+          <rect x="42" y="128" width="160" height="8" rx="4" fill="rgba(236,72,153,0.2)"/>
+          <rect x="42" y="142" width="120" height="8" rx="4" fill="rgba(236,72,153,0.16)"/>
+          <rect x="42" y="170" width="96" height="22" rx="11" fill="rgba(236,72,153,0.5)"/>
+          <rect x="300" y="66" width="158" height="150" rx="10" fill="rgba(236,72,153,0.1)"/>
+          <circle cx="379" cy="120" r="30" fill="rgba(236,72,153,0.24)"/>
+          <rect x="330" y="164" width="98" height="9" rx="4" fill="rgba(236,72,153,0.34)"/>
+          <rect x="344" y="182" width="70" height="7" rx="3" fill="rgba(236,72,153,0.22)"/>
+        </svg>
+        <div class="wov"><span class="wob">View project →</span></div>
+      </div>
+      <div class="wm"><div><h3>Creative Agency</h3><p>Landing page · Bold visual identity</p></div><span class="wtag">Landing</span></div>
+    </div>
   </div>
 
-  <div class="work-grid">
-
-    <div class="wc span2 rv" data-tilt data-cat="ecommerce">
-      <div class="wt wt1">
-        <svg viewBox="0 0 900 380" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <rect x="40" y="28" width="820" height="324" rx="12" fill="rgba(255,255,255,0.03)"/>
-          <rect x="40" y="28" width="820" height="38" rx="12" fill="rgba(139,92,246,0.13)"/>
-          <rect x="40" y="54" width="820" height="12" fill="rgba(139,92,246,0.13)"/>
-          <circle cx="66" cy="47" r="6" fill="rgba(139,92,246,0.5)"/><circle cx="86" cy="47" r="6" fill="rgba(139,92,246,0.3)"/><circle cx="106" cy="47" r="6" fill="rgba(139,92,246,0.16)"/>
-          <rect x="130" y="35" width="300" height="20" rx="10" fill="rgba(255,255,255,0.05)"/>
-          <rect x="40" y="66" width="820" height="34" fill="rgba(139,92,246,0.09)"/>
-          <rect x="58" y="78" width="60" height="10" rx="5" fill="rgba(139,92,246,0.7)"/>
-          <rect x="580" y="75" width="28" height="14" rx="7" fill="rgba(139,92,246,0.3)"/><rect x="618" y="75" width="28" height="14" rx="7" fill="rgba(139,92,246,0.3)"/><rect x="656" y="75" width="28" height="14" rx="7" fill="rgba(139,92,246,0.3)"/>
-          <rect x="700" y="72" width="80" height="20" rx="10" fill="rgba(139,92,246,0.5)"/>
-          <rect x="40" y="100" width="820" height="90" fill="rgba(139,92,246,0.05)"/>
-          <rect x="240" y="116" width="420" height="18" rx="9" fill="rgba(139,92,246,0.44)"/>
-          <rect x="290" y="142" width="320" height="10" rx="5" fill="rgba(139,92,246,0.2)"/>
-          <rect x="340" y="160" width="220" height="20" rx="10" fill="rgba(139,92,246,0.44)"/>
-          <rect x="58" y="204" width="180" height="100" rx="10" fill="rgba(139,92,246,0.07)"/>
-          <rect x="58" y="204" width="180" height="60" rx="10" fill="rgba(139,92,246,0.1)"/>
-          <rect x="70" y="270" width="90" height="10" rx="5" fill="rgba(139,92,246,0.38)"/>
-          <rect x="70" y="284" width="58" height="8" rx="4" fill="rgba(139,92,246,0.2)"/>
-          <rect x="262" y="204" width="180" height="100" rx="10" fill="rgba(139,92,246,0.07)"/>
-          <rect x="262" y="204" width="180" height="60" rx="10" fill="rgba(139,92,246,0.1)"/>
-          <rect x="274" y="270" width="90" height="10" rx="5" fill="rgba(139,92,246,0.38)"/>
-          <rect x="274" y="284" width="58" height="8" rx="4" fill="rgba(139,92,246,0.2)"/>
-          <rect x="466" y="204" width="180" height="100" rx="10" fill="rgba(139,92,246,0.07)"/>
-          <rect x="466" y="204" width="180" height="60" rx="10" fill="rgba(139,92,246,0.1)"/>
-          <rect x="478" y="270" width="90" height="10" rx="5" fill="rgba(139,92,246,0.38)"/>
-          <rect x="478" y="284" width="58" height="8" rx="4" fill="rgba(139,92,246,0.2)"/>
-          <rect x="670" y="204" width="180" height="100" rx="10" fill="rgba(139,92,246,0.07)"/>
-          <rect x="670" y="204" width="180" height="60" rx="10" fill="rgba(139,92,246,0.1)"/>
-          <rect x="682" y="270" width="90" height="10" rx="5" fill="rgba(139,92,246,0.38)"/>
-          <rect x="682" y="284" width="58" height="8" rx="4" fill="rgba(139,92,246,0.2)"/>
-        </svg>
-        <div class="wov"><span class="wob">View project →</span></div>
-      </div>
-      <div class="wm"><div class="wmr"><h3>Retail Brand Website</h3><span class="wtag">E-commerce · Landing Page</span></div><p>Custom e-commerce landing page with product grid, animated hero, and mobile-first design</p></div>
-    </div>
-
-    <div class="wc rv" data-tilt data-cat="webapp">
-      <div class="wt wt3">
-        <svg viewBox="0 0 500 280" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <rect x="28" y="22" width="444" height="238" rx="10" fill="rgba(255,255,255,0.03)"/>
-          <rect x="28" y="22" width="444" height="34" rx="10" fill="rgba(245,158,11,0.12)"/>
-          <rect x="28" y="44" width="444" height="12" fill="rgba(245,158,11,0.12)"/>
-          <circle cx="50" cy="38" r="5" fill="rgba(245,158,11,0.5)"/><circle cx="67" cy="38" r="5" fill="rgba(245,158,11,0.3)"/><circle cx="84" cy="38" r="5" fill="rgba(245,158,11,0.16)"/>
-          <rect x="28" y="56" width="90" height="204" fill="rgba(245,158,11,0.07)"/>
-          <rect x="42" y="72" width="62" height="9" rx="4" fill="rgba(245,158,11,0.5)"/>
-          <rect x="42" y="89" width="50" height="7" rx="3" fill="rgba(245,158,11,0.26)"/>
-          <rect x="42" y="104" width="54" height="7" rx="3" fill="rgba(245,158,11,0.2)"/>
-          <rect x="42" y="119" width="46" height="7" rx="3" fill="rgba(245,158,11,0.2)"/>
-          <rect x="42" y="134" width="58" height="7" rx="3" fill="rgba(245,158,11,0.2)"/>
-          <rect x="130" y="64" width="88" height="44" rx="7" fill="rgba(245,158,11,0.09)"/>
-          <rect x="140" y="74" width="36" height="8" rx="4" fill="rgba(245,158,11,0.3)"/><rect x="140" y="88" width="54" height="13" rx="5" fill="rgba(245,158,11,0.5)"/>
-          <rect x="228" y="64" width="88" height="44" rx="7" fill="rgba(245,158,11,0.09)"/>
-          <rect x="238" y="74" width="36" height="8" rx="4" fill="rgba(245,158,11,0.3)"/><rect x="238" y="88" width="54" height="13" rx="5" fill="rgba(245,158,11,0.5)"/>
-          <rect x="326" y="64" width="136" height="44" rx="7" fill="rgba(245,158,11,0.09)"/>
-          <rect x="336" y="74" width="36" height="8" rx="4" fill="rgba(245,158,11,0.3)"/><rect x="336" y="88" width="54" height="13" rx="5" fill="rgba(245,158,11,0.5)"/>
-          <rect x="130" y="118" width="332" height="144" rx="7" fill="rgba(245,158,11,0.06)"/>
-          <rect x="144" y="131" width="78" height="9" rx="4" fill="rgba(245,158,11,0.38)"/>
-          <rect x="148" y="188" width="22" height="62" rx="4" fill="rgba(245,158,11,0.26)"/>
-          <rect x="180" y="168" width="22" height="82" rx="4" fill="rgba(245,158,11,0.4)"/>
-          <rect x="212" y="178" width="22" height="72" rx="4" fill="rgba(245,158,11,0.32)"/>
-          <rect x="244" y="155" width="22" height="95" rx="4" fill="rgba(245,158,11,0.55)"/>
-          <rect x="276" y="170" width="22" height="80" rx="4" fill="rgba(245,158,11,0.34)"/>
-          <rect x="308" y="148" width="22" height="102" rx="4" fill="rgba(245,158,11,0.6)"/>
-          <rect x="340" y="162" width="22" height="88" rx="4" fill="rgba(245,158,11,0.42)"/>
-          <line x1="144" y1="250" x2="444" y2="250" stroke="rgba(245,158,11,0.14)" stroke-width="1"/>
-        </svg>
-        <div class="wov"><span class="wob">View project →</span></div>
-      </div>
-      <div class="wm"><div class="wmr"><h3>SaaS Analytics Dashboard</h3><span class="wtag">Web App</span></div><p>React application with real-time charts, KPI cards, and a collapsible sidebar nav</p></div>
-    </div>
-
-    <div class="wc rv d2" data-tilt data-cat="business">
-      <div class="wt wt2">
-        <svg viewBox="0 0 500 280" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <rect x="28" y="22" width="444" height="238" rx="10" fill="rgba(255,255,255,0.03)"/>
-          <rect x="28" y="22" width="444" height="34" rx="10" fill="rgba(22,163,74,0.1)"/>
-          <rect x="28" y="44" width="444" height="12" fill="rgba(22,163,74,0.1)"/>
-          <circle cx="50" cy="38" r="5" fill="rgba(22,163,74,0.5)"/><circle cx="67" cy="38" r="5" fill="rgba(22,163,74,0.3)"/><circle cx="84" cy="38" r="5" fill="rgba(22,163,74,0.16)"/>
-          <rect x="28" y="56" width="444" height="28" fill="rgba(22,163,74,0.08)"/>
-          <rect x="44" y="66" width="50" height="8" rx="4" fill="rgba(22,163,74,0.6)"/>
-          <rect x="266" y="64" width="28" height="10" rx="5" fill="rgba(22,163,74,0.3)"/><rect x="302" y="64" width="28" height="10" rx="5" fill="rgba(22,163,74,0.3)"/><rect x="338" y="64" width="28" height="10" rx="5" fill="rgba(22,163,74,0.3)"/>
-          <rect x="378" y="61" width="80" height="16" rx="8" fill="rgba(22,163,74,0.45)"/>
-          <rect x="28" y="84" width="444" height="80" fill="rgba(22,163,74,0.04)"/>
-          <rect x="128" y="100" width="244" height="16" rx="8" fill="rgba(22,163,74,0.4)"/>
-          <rect x="152" y="122" width="196" height="9" rx="4" fill="rgba(22,163,74,0.2)"/>
-          <rect x="174" y="138" width="152" height="18" rx="9" fill="rgba(22,163,74,0.4)"/>
-          <rect x="36" y="178" width="118" height="56" rx="8" fill="rgba(22,163,74,0.08)"/>
-          <rect x="54" y="190" width="60" height="9" rx="4" fill="rgba(22,163,74,0.35)"/>
-          <rect x="46" y="206" width="88" height="6" rx="3" fill="rgba(22,163,74,0.18)"/>
-          <rect x="46" y="216" width="70" height="6" rx="3" fill="rgba(22,163,74,0.12)"/>
-          <rect x="172" y="178" width="118" height="56" rx="8" fill="rgba(22,163,74,0.08)"/>
-          <rect x="190" y="190" width="60" height="9" rx="4" fill="rgba(22,163,74,0.35)"/>
-          <rect x="182" y="206" width="88" height="6" rx="3" fill="rgba(22,163,74,0.18)"/>
-          <rect x="182" y="216" width="70" height="6" rx="3" fill="rgba(22,163,74,0.12)"/>
-          <rect x="308" y="178" width="118" height="56" rx="8" fill="rgba(22,163,74,0.08)"/>
-          <rect x="326" y="190" width="60" height="9" rx="4" fill="rgba(22,163,74,0.35)"/>
-          <rect x="318" y="206" width="88" height="6" rx="3" fill="rgba(22,163,74,0.18)"/>
-          <rect x="318" y="216" width="70" height="6" rx="3" fill="rgba(22,163,74,0.12)"/>
-        </svg>
-        <div class="wov"><span class="wob">View project →</span></div>
-      </div>
-      <div class="wm"><div class="wmr"><h3>Wellness Studio</h3><span class="wtag">Business Site</span></div><p>Multi-page business website with booking integration and SEO optimisation</p></div>
-    </div>
-
-    <div class="wc rv" data-tilt data-cat="landing">
-      <div class="wt wt4">
-        <svg viewBox="0 0 500 280" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <rect x="28" y="22" width="444" height="238" rx="10" fill="rgba(255,255,255,0.03)"/>
-          <rect x="28" y="22" width="444" height="34" rx="10" fill="rgba(190,24,93,0.1)"/>
-          <rect x="28" y="44" width="444" height="12" fill="rgba(190,24,93,0.1)"/>
-          <circle cx="50" cy="38" r="5" fill="rgba(190,24,93,0.5)"/><circle cx="67" cy="38" r="5" fill="rgba(190,24,93,0.3)"/><circle cx="84" cy="38" r="5" fill="rgba(190,24,93,0.16)"/>
-          <rect x="28" y="56" width="444" height="26" fill="rgba(190,24,93,0.07)"/>
-          <rect x="44" y="64" width="60" height="9" rx="4" fill="rgba(190,24,93,0.55)"/>
-          <rect x="360" y="61" width="98" height="14" rx="7" fill="rgba(190,24,93,0.35)"/>
-          <rect x="44" y="96" width="300" height="20" rx="8" fill="rgba(190,24,93,0.44)"/>
-          <rect x="44" y="124" width="240" height="14" rx="7" fill="rgba(190,24,93,0.28)"/>
-          <rect x="44" y="148" width="180" height="14" rx="7" fill="rgba(190,24,93,0.2)"/>
-          <rect x="44" y="172" width="120" height="20" rx="10" fill="rgba(190,24,93,0.4)"/>
-          <rect x="306" y="90" width="158" height="80" rx="10" fill="rgba(190,24,93,0.1)"/>
-          <rect x="320" y="104" width="68" height="10" rx="5" fill="rgba(190,24,93,0.35)"/>
-          <rect x="320" y="120" width="48" height="7" rx="3" fill="rgba(190,24,93,0.2)"/>
-          <rect x="44" y="208" width="408" height="44" rx="8" fill="rgba(190,24,93,0.06)"/>
-          <rect x="60" y="220" width="72" height="9" rx="4" fill="rgba(190,24,93,0.3)"/>
-          <rect x="60" y="232" width="52" height="7" rx="3" fill="rgba(190,24,93,0.18)"/>
-          <rect x="188" y="220" width="72" height="9" rx="4" fill="rgba(190,24,93,0.3)"/>
-          <rect x="188" y="232" width="52" height="7" rx="3" fill="rgba(190,24,93,0.18)"/>
-          <rect x="316" y="220" width="72" height="9" rx="4" fill="rgba(190,24,93,0.3)"/>
-          <rect x="316" y="232" width="52" height="7" rx="3" fill="rgba(190,24,93,0.18)"/>
-        </svg>
-        <div class="wov"><span class="wob">View project →</span></div>
-      </div>
-      <div class="wm"><div class="wmr"><h3>Creative Agency Portfolio</h3><span class="wtag">Landing Page</span></div><p>Bold portfolio site with scroll animations and interactive project showcase</p></div>
-    </div>
-
+  <div class="ctai rv">
+    <h2>Your project could be next.</h2>
+    <p>Configure it in two minutes — $30 flat development, up to 3 remakes.</p>
+    <a href="start.html" class="btn-k" data-h>Start your project <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
   </div>
 </div>
 
@@ -315,7 +320,7 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
     <div class="flinks">
       <a href="mailto:veldanleeyh@gmail.com" data-h>Email</a>
       <a href="https://wa.me/6589008796" target="_blank" data-h>WhatsApp</a>
-      <a href="work.html" data-h>Work</a>
+      <a href="start.html" data-h>Start a project</a>
       <a href="contact.html" data-h>Contact</a>
     </div>
   </div>
@@ -327,22 +332,36 @@ footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
 
 <script>
 const ldr=document.getElementById('loader'),lf=document.getElementById('lf'),lp=document.getElementById('lp');
-let p=0;const ti=setInterval(()=>{p+=Math.random()*16;if(p>=100){p=100;clearInterval(ti);setTimeout(()=>{ldr.classList.add('hide');document.body.classList.remove('no-scroll');setTimeout(()=>ldr.remove(),950);},280);}lf.style.width=p+'%';lp.textContent=Math.floor(p);},55);
+let p=0;const ti=setInterval(()=>{p+=Math.random()*16;if(p>=100){p=100;clearInterval(ti);setTimeout(()=>{ldr.classList.add('hide');document.body.classList.remove('no-scroll');setTimeout(()=>ldr.remove(),950);},240);}lf.style.width=p+'%';lp.textContent=Math.floor(p);},50);
 const pt=document.getElementById('pt');
-document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(!h||h[0]==='#'||h.startsWith('mailto')||h.startsWith('https')||h.startsWith('tel'))return;a.addEventListener('click',e=>{e.preventDefault();pt.classList.add('in');setTimeout(()=>{location.href=h;},600);});});
+document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(!h||h[0]==='#'||h.startsWith('mailto')||h.startsWith('http')||h.startsWith('tel'))return;a.addEventListener('click',e=>{e.preventDefault();pt.classList.add('in');setTimeout(()=>{location.href=h;},560);});});
 window.addEventListener('pageshow',()=>{pt.classList.remove('in');pt.classList.add('out');setTimeout(()=>pt.classList.remove('out'),650);});
 const cd=document.getElementById('cd'),cr=document.getElementById('cr');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
-(function loop(){rx+=(mx-rx)*0.11;ry+=(my-ry)*0.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
-document.querySelectorAll('[data-h]').forEach(el=>{el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});});
+(function loop(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});});
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
 const ham=document.getElementById('ham'),mm=document.getElementById('mm');
 ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.toggle('open');document.body.classList.toggle('no-scroll');});
 const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
-document.querySelectorAll('[data-tilt]').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-0.5;const y=(e.clientY-r.top)/r.height-0.5;c.style.transform=`perspective(900px) rotateX(${-y*6}deg) rotateY(${x*6}deg) translateZ(8px)`;});c.addEventListener('mouseleave',()=>{c.style.transition='transform 0.5s cubic-bezier(0.16,1,0.3,1)';c.style.transform='';setTimeout(()=>c.style.transition='',500);});});
-document.querySelectorAll('.filt').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.filt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;document.querySelectorAll('.wc').forEach(c=>{if(f==='all'||c.dataset.cat===f){c.style.display='';c.style.opacity='1';}else{c.style.opacity='0.2';}});});});
+/* FILTER */
+document.querySelectorAll('.fb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const f=b.dataset.filter;
+    document.querySelectorAll('.wc').forEach(c=>c.classList.toggle('dim',f!=='all'&&c.dataset.cat!==f));
+  });
+});
+/* TILT */
+if(matchMedia('(pointer:fine)').matches){
+  document.querySelectorAll('[data-tilt]').forEach(c=>{
+    c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-0.5;const y=(e.clientY-r.top)/r.height-0.5;c.style.transform=`perspective(900px) rotateX(${-y*4}deg) rotateY(${x*4}deg)`;});
+    c.addEventListener('mouseleave',()=>{c.style.transition='transform 0.5s cubic-bezier(0.16,1,0.3,1)';c.style.transform='';setTimeout(()=>c.style.transition='',500);});
+  });
+}
 </script>
 </body>
 </html>

@@ -3,152 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Contact PrismStatic.web — email, WhatsApp, or send a quick enquiry. We reply within 2 working days.">
 <title>Contact — PrismStatic.web</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23141218'/><text x='16' y='23' text-anchor='middle' font-family='system-ui,sans-serif' font-weight='900' font-size='20' fill='%237c3aed'>P</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080808;--s1:#111;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);--text:#fff;--muted:rgba(255,255,255,0.42);--subtle:rgba(255,255,255,0.16);--grad:linear-gradient(135deg,#8b5cf6 0%,#3b82f6 50%,#06b6d4 100%);--ease:cubic-bezier(0.16,1,0.3,1);--nav-h:70px;}
+:root{
+  --bg:#f6f5f8;--card:#fff;--ink:#141218;--mut:#545061;--faint:#757082;
+  --line:#e9e6f0;--line2:#d6d1e2;--acc:#6d28d9;--accs:#7c3aed;--tint:#f1edfa;
+  --ease:cubic-bezier(0.16,1,0.3,1);--nav-h:72px;
+  --sh:0 2px 6px rgba(24,16,50,0.04),0 16px 40px rgba(24,16,50,0.07);
+}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none;}
 body.no-scroll{overflow:hidden;}
-a{text-decoration:none;color:inherit;}p{color:var(--muted);line-height:1.7;}button{font-family:inherit;cursor:none;}
+a{text-decoration:none;color:inherit;}
+p{color:var(--mut);line-height:1.7;}
+button,input,textarea,select{font-family:inherit;cursor:none;}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;text-wrap:balance;}
+::selection{background:#ddd0f7;}
 #loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 0.9s var(--ease);}
 #loader.hide{transform:translateY(-100%);}
-.ld-brand{font-size:1.6rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:52px;}
-.ld-brand span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.ld-bar{width:220px;height:1px;background:rgba(255,255,255,0.13);position:relative;overflow:hidden;}
-.ld-fill{position:absolute;left:0;top:0;height:100%;background:var(--grad);width:0;transition:width 0.08s linear;}
-.ld-pct{font-size:0.7rem;font-weight:600;color:var(--muted);letter-spacing:0.12em;margin-top:14px;}
-#pt{position:fixed;inset:0;z-index:5000;background:var(--bg);transform:translateY(100%);pointer-events:none;transition:transform 0.6s var(--ease);}
-#pt.in{transform:translateY(0);pointer-events:all;}#pt.out{transform:translateY(-100%);}
-.cdot{position:fixed;width:6px;height:6px;background:#fff;border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);}
-.cring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(255,255,255,0.35);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%);transition:width 0.3s var(--ease),height 0.3s var(--ease),border-color 0.3s;}
-.cring.hov{width:64px;height:64px;border-color:rgba(139,92,246,0.6);}
+.ld-brand{font-family:'Bricolage Grotesque';font-size:1.7rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:48px;}
+.ld-brand span{color:var(--acc);}
+.ld-bar{width:200px;height:2px;background:var(--line2);position:relative;overflow:hidden;border-radius:2px;}
+.ld-fill{position:absolute;left:0;top:0;height:100%;background:var(--acc);width:0;border-radius:2px;}
+.ld-pct{font-size:0.7rem;font-weight:600;color:var(--faint);letter-spacing:0.12em;margin-top:14px;font-variant-numeric:tabular-nums;}
+#pt{position:fixed;inset:0;z-index:5000;background:var(--ink);transform:translateY(100%);pointer-events:none;transition:transform 0.55s var(--ease);}
+#pt.in{transform:translateY(0);pointer-events:all;}
+#pt.out{transform:translateY(-100%);}
+.cdot{position:fixed;width:6px;height:6px;background:var(--ink);border-radius:50%;pointer-events:none;z-index:4000;transform:translate(-50%,-50%);transition:transform 0.15s;}
+.cring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(20,18,24,0.3);border-radius:50%;pointer-events:none;z-index:3999;transform:translate(-50%,-50%) scale(1);transition:transform 0.3s var(--ease),border-color 0.3s;}
+.cring.hov{transform:translate(-50%,-50%) scale(1.7);border-color:rgba(109,40,217,0.55);}
 .cdot.hov{transform:translate(-50%,-50%) scale(0);}
+@media(pointer:coarse){.cdot,.cring{display:none;}body,button,input,textarea{cursor:auto;}}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);display:flex;align-items:center;transition:background 0.3s,border-color 0.3s;border-bottom:1px solid transparent;}
-nav.sc{background:rgba(8,8,8,0.88);backdrop-filter:blur(24px);border-color:var(--border);}
-.nav-in{width:100%;max-width:1300px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-size:1.05rem;font-weight:800;letter-spacing:-0.03em;}
-.nav-logo .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.nav-links{display:flex;gap:40px;}
-.nav-links a{font-size:0.875rem;font-weight:500;color:var(--muted);position:relative;transition:color 0.2s;}
-.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform 0.3s var(--ease);}
-.nav-links a:hover,.nav-links a.active{color:#fff;}
+nav.sc{background:rgba(246,245,248,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-color:var(--line);}
+.nav-in{width:100%;max-width:1240px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Bricolage Grotesque';font-size:1.15rem;font-weight:800;letter-spacing:-0.02em;}
+.nav-logo .g{color:var(--acc);}
+.nav-links{display:flex;gap:36px;}
+.nav-links a{font-size:0.875rem;font-weight:500;color:var(--mut);position:relative;transition:color 0.2s;}
+.nav-links a::after{content:'';position:absolute;bottom:-5px;left:0;right:0;height:2px;background:var(--acc);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 0.3s var(--ease);}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
-.nav-cta{font-size:0.85rem;font-weight:700;color:var(--bg);background:#fff;padding:11px 24px;border-radius:100px;transition:background 0.2s;}
-.nav-cta:hover{background:#ddd;}
+.nav-cta{font-size:0.85rem;font-weight:700;color:#fff;background:var(--ink);padding:11px 24px;border-radius:100px;transition:background 0.25s;}
+.nav-cta:hover{background:var(--acc);}
 .ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;}
-.ham span{display:block;width:22px;height:1.5px;background:#fff;transition:transform 0.3s,opacity 0.3s;}
-.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.ham span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:transform 0.3s,opacity 0.3s;}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
 .ham.open span:nth-child(2){opacity:0;}
-.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
-@media(max-width:860px){.nav-links,.nav-cta{display:none;}.ham{display:flex;}.nav-in{padding:0 24px;}}
-.mmenu{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateX(100%);transition:transform 0.6s var(--ease);}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+@media(max-width:880px){.nav-links,.nav-cta{display:none;}.ham{display:flex;}.nav-in{padding:0 24px;}}
+.mmenu{position:fixed;inset:0;z-index:90;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transform:translateX(100%);transition:transform 0.55s var(--ease);}
 .mmenu.open{transform:translateX(0);}
-.mmenu a{font-size:2.8rem;font-weight:800;letter-spacing:-0.03em;color:var(--muted);transition:color 0.2s;}
-.mmenu a:hover{color:#fff;}
-.mmenu .mc{font-size:1.1rem;background:#fff;color:var(--bg);padding:16px 44px;border-radius:100px;font-weight:700;margin-top:12px;}
-.rv{opacity:0;transform:translateY(32px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease);}
-.rv.vis{opacity:1;transform:translateY(0);}
-.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}
-.gr{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.mmenu a{font-family:'Bricolage Grotesque';font-size:2.5rem;font-weight:800;color:var(--mut);transition:color 0.2s;}
+.mmenu a:hover{color:var(--ink);}
+.mmenu .mc{font-size:1.05rem;background:var(--ink);color:#fff;padding:16px 44px;border-radius:100px;font-weight:700;margin-top:12px;font-family:'Inter';}
+
+/* PAGE */
+.wrap{max-width:1240px;margin:0 auto;padding:calc(var(--nav-h) + 90px) 40px 110px;}
+@media(max-width:768px){.wrap{padding:calc(var(--nav-h) + 60px) 24px 80px;}}
+.cgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:80px;align-items:start;}
+@media(max-width:900px){.cgrid{grid-template-columns:1fr;gap:52px;}}
+.ct h1{font-size:clamp(2.8rem,6.5vw,5rem);font-weight:800;letter-spacing:-0.03em;line-height:1;margin-bottom:26px;}
+.ct .u{position:relative;white-space:nowrap;}
+.ct .u::after{content:'';position:absolute;left:0;right:0;bottom:5px;height:0.28em;background:#ddd0f7;z-index:-1;border-radius:3px;transform:scaleX(0);transform-origin:left;animation:grow 0.8s var(--ease) 0.8s forwards;}
+@keyframes grow{to{transform:scaleX(1);}}
 .lw{overflow:hidden;display:block;}
-.ll{display:block;transform:translateY(110%);animation:lu 1s var(--ease) forwards;}
-.lw:nth-child(1) .ll{animation-delay:0.3s;}.lw:nth-child(2) .ll{animation-delay:0.48s;}
+.ll{display:block;transform:translateY(110%);animation:lu 1s var(--ease) 0.25s forwards;}
 @keyframes lu{to{transform:translateY(0);}}
 @keyframes fu{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-.wa{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.35);transition:transform 0.2s;animation:wap 3s ease-in-out infinite;}
-.wa:hover{transform:scale(1.1);animation:none;}
-.wa svg{width:26px;height:26px;fill:#fff;}
-@keyframes wap{0%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 0 rgba(37,211,102,0.45);}70%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 4px 20px rgba(0,0,0,0.35),0 0 0 0 rgba(37,211,102,0);}}
-footer{background:var(--s1);border-top:1px solid var(--border);padding:44px 0;}
-.fi{max-width:1300px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
-@media(max-width:600px){.fi{padding:0 24px;flex-direction:column;}}
-.fl{font-size:0.92rem;font-weight:800;letter-spacing:-0.02em;}
-.fl .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.fc{font-size:0.76rem;color:var(--subtle);}
-.flinks{display:flex;gap:26px;}
-.flinks a{font-size:0.76rem;color:var(--muted);transition:color 0.2s;}
-.flinks a:hover{color:#fff;}
+.ct>p{max-width:400px;font-size:1rem;margin-bottom:44px;opacity:0;animation:fu 0.8s var(--ease) 0.6s forwards;}
+.cdet{display:flex;flex-direction:column;opacity:0;animation:fu 0.8s var(--ease) 0.75s forwards;}
+.cdr{display:flex;align-items:center;gap:16px;padding:19px 0;border-bottom:1px solid var(--line);transition:padding-left 0.3s var(--ease);}
+.cdr:first-child{border-top:1px solid var(--line);}
+.cdr:hover{padding-left:8px;}
+.cdi{width:42px;height:42px;background:var(--card);border:1px solid var(--line);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s,border-color 0.2s;}
+.cdr:hover .cdi{background:var(--tint);border-color:#ddd0f7;}
+.cdi svg{width:18px;height:18px;stroke:var(--acc);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.cdt small{display:block;font-size:0.66rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--faint);margin-bottom:2px;}
+.cdt a,.cdt span{font-size:0.92rem;font-weight:600;}
+.cdt a:hover{color:var(--acc);}
 
-/* CONTACT PAGE */
-.page-wrap{min-height:100vh;padding:calc(var(--nav-h) + 80px) 48px 120px;max-width:1300px;margin:0 auto;}
-@media(max-width:768px){.page-wrap{padding:calc(var(--nav-h) + 60px) 24px 80px;}}
-
-.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:100px;align-items:start;padding-top:40px;}
-@media(max-width:900px){.contact-grid{grid-template-columns:1fr;gap:56px;}}
-
-/* LEFT */
-.c-label{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;opacity:0;animation:fu 0.8s var(--ease) 0.2s forwards;}
-.c-title{font-size:clamp(3rem,7vw,6.5rem);font-weight:900;letter-spacing:-0.045em;line-height:0.95;margin-bottom:40px;}
-.c-sub{font-size:1rem;color:var(--muted);line-height:1.75;margin-bottom:52px;opacity:0;animation:fu 0.8s var(--ease) 0.75s forwards;}
-
-.c-details{display:flex;flex-direction:column;gap:0;opacity:0;animation:fu 0.8s var(--ease) 0.9s forwards;}
-.cd{display:flex;align-items:center;gap:18px;padding:20px 0;border-bottom:1px solid var(--border);transition:border-color 0.2s;}
-.cd:first-child{border-top:1px solid var(--border);}
-.cd:hover{border-color:var(--border2);}
-.cd-icon{width:40px;height:40px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color 0.2s,background 0.2s;}
-.cd:hover .cd-icon{border-color:rgba(139,92,246,0.5);background:rgba(139,92,246,0.07);}
-.cd-icon svg{width:18px;height:18px;stroke:rgba(255,255,255,0.4);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.2s;}
-.cd:hover .cd-icon svg{stroke:rgba(139,92,246,0.85);}
-.cd-text small{display:block;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:3px;}
-.cd-text a,.cd-text span{font-size:0.9rem;font-weight:600;color:var(--text);transition:color 0.2s;}
-.cd-text a:hover{color:rgba(139,92,246,0.9);}
-
-/* RIGHT — FORM */
-.form-wrap{opacity:0;animation:fu 0.9s var(--ease) 0.5s forwards;}
-.form-head{margin-bottom:36px;}
-.form-head h2{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
-.form-head p{font-size:0.875rem;color:var(--muted);}
-
-.fg{margin-bottom:18px;}
+/* FORM */
+.fcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:44px;box-shadow:var(--sh);opacity:0;animation:fu 0.9s var(--ease) 0.5s forwards;}
+@media(max-width:560px){.fcard{padding:30px 24px;}}
+.fcard h2{font-size:1.35rem;font-weight:800;margin-bottom:6px;}
+.fcard .fsub{font-size:0.86rem;margin-bottom:30px;}
+.fg{margin-bottom:16px;}
 .fg.half{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:500px){.fg.half{grid-template-columns:1fr;}}
-label{display:block;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:8px;}
-input,textarea,select{
-  width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:10px;
-  padding:14px 16px;font-size:0.9rem;font-family:inherit;color:var(--text);
-  outline:none;transition:border-color 0.2s,background 0.2s;
-  -webkit-appearance:none;appearance:none;
-}
-input::placeholder,textarea::placeholder{color:var(--subtle);}
-input:focus,textarea:focus,select:focus{border-color:rgba(139,92,246,0.6);background:rgba(139,92,246,0.04);}
-select{cursor:none;}
-select option{background:#111;}
+label{display:block;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+input,textarea{width:100%;background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;font-size:0.9rem;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+input::placeholder,textarea::placeholder{color:#9d97ad;}
+input:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 4px rgba(124,58,237,0.1);}
 textarea{resize:vertical;min-height:130px;line-height:1.6;}
-
-.submit-btn{
-  width:100%;margin-top:8px;padding:16px;border-radius:100px;
-  background:#fff;color:var(--bg);border:none;
-  font-size:0.95rem;font-weight:800;font-family:inherit;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  transition:background 0.2s,transform 0.4s var(--ease);
-  position:relative;overflow:hidden;
-}
-.submit-btn::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity 0.3s;}
-.submit-btn:hover{background:#fff;}
-.submit-btn:hover::before{opacity:1;}
-.submit-btn span{position:relative;z-index:1;transition:color 0.3s;}
-.submit-btn:hover span{color:#fff;}
-.submit-btn svg{position:relative;z-index:1;width:18px;height:18px;transition:stroke 0.3s,transform 0.3s var(--ease);}
-.submit-btn:hover svg{stroke:#fff;transform:translateX(4px);}
-.form-note{font-size:0.76rem;color:var(--subtle);text-align:center;margin-top:14px;}
-.form-note a{color:var(--muted);transition:color 0.2s;}
-.form-note a:hover{color:#fff;}
-
-/* SUCCESS */
-.success{
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:60px 40px;
-  border:1px solid rgba(34,197,94,0.25);border-radius:16px;
-  background:rgba(34,197,94,0.04);min-height:400px;
-}
+.notice{display:flex;gap:12px;background:var(--tint);border:1px solid #ddd0f7;border-radius:12px;padding:15px 17px;align-items:flex-start;margin-bottom:18px;}
+.notice svg{width:18px;height:18px;stroke:var(--acc);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-top:1px;}
+.notice p{font-size:0.8rem;color:#4c3a75;line-height:1.55;}
+.sbtn{width:100%;background:var(--ink);color:#fff;border:none;border-radius:100px;padding:16px;font-size:0.95rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:9px;transition:background 0.25s;}
+.sbtn:hover:not(:disabled){background:var(--acc);}
+.sbtn:disabled{opacity:0.5;}
+.sbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:transform 0.3s var(--ease);}
+.sbtn:hover:not(:disabled) svg{transform:translateX(3px);}
+.fnote{font-size:0.76rem;color:var(--faint);text-align:center;margin-top:14px;}
+.fnote a{color:var(--mut);font-weight:600;}
+.fnote a:hover{color:var(--ink);}
+.success{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 30px;min-height:380px;}
 .success.show{display:flex;}
-.success-icon{width:56px;height:56px;border-radius:50%;border:2px solid rgba(34,197,94,0.5);display:flex;align-items:center;justify-content:center;margin-bottom:24px;}
-.success-icon svg{width:24px;height:24px;stroke:#22c55e;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.success h3{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
-.success p{font-size:0.9rem;color:var(--muted);max-width:300px;}
+.suc-ic{width:64px;height:64px;border-radius:50%;background:var(--tint);display:flex;align-items:center;justify-content:center;margin-bottom:22px;animation:pop 0.6s var(--ease);}
+@keyframes pop{from{transform:scale(0);}to{transform:scale(1);}}
+.suc-ic svg{width:28px;height:28px;stroke:var(--acc);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.success h3{font-size:1.35rem;font-weight:800;margin-bottom:9px;}
+.success p{font-size:0.9rem;max-width:300px;}
+
+footer{background:var(--card);border-top:1px solid var(--line);padding:44px 0;}
+.fi{max-width:1240px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
+@media(max-width:600px){.fi{padding:0 24px;flex-direction:column;}}
+.fl{font-family:'Bricolage Grotesque';font-size:0.95rem;font-weight:800;}
+.fl .g{color:var(--acc);}
+.fc{font-size:0.76rem;color:var(--faint);}
+.flinks{display:flex;gap:26px;}
+.flinks a{font-size:0.78rem;color:var(--mut);transition:color 0.2s;}
+.flinks a:hover{color:var(--ink);}
+.wa{position:fixed;bottom:28px;right:28px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.22);transition:transform 0.2s;animation:wap 3s ease-in-out infinite;}
+.wa:hover{transform:scale(1.1);animation:none;}
+.wa svg{width:26px;height:26px;fill:#fff;}
+@keyframes wap{0%{box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 0 rgba(37,211,102,0.4);}70%{box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 14px rgba(37,211,102,0);}100%{box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 0 rgba(37,211,102,0);}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;}
+  .ct>p,.cdet,.fcard{opacity:1;animation:none;}
+  .ll{transform:none;animation:none;}
+  .ct .u::after{transform:scaleX(1);}
+  .cdot,.cring{display:none;}
+}
 </style>
 </head>
 <body class="no-scroll">
@@ -171,7 +163,7 @@ textarea{resize:vertical;min-height:130px;line-height:1.6;}
       <a href="services.html" data-h>Services</a>
       <a href="contact.html" class="active" data-h>Contact</a>
     </div>
-    <a href="contact.html" class="nav-cta" data-h>Book a call</a>
+    <a href="start.html" class="nav-cta" data-h>Start your project</a>
     <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -181,136 +173,64 @@ textarea{resize:vertical;min-height:130px;line-height:1.6;}
   <a href="work.html">Work</a>
   <a href="services.html">Services</a>
   <a href="contact.html">Contact</a>
-  <a href="contact.html" class="mc">Book a call →</a>
+  <a href="start.html" class="mc">Start your project →</a>
 </div>
 
-<div class="page-wrap">
-  <div class="contact-grid">
-
-    <!-- LEFT -->
-    <div>
-      <div class="c-label">Get in touch</div>
-      <h1 class="c-title">
+<div class="wrap">
+  <div class="cgrid">
+    <div class="ct">
+      <h1>
         <span class="lw"><span class="ll">Let's</span></span>
-        <span class="lw"><span class="ll"><em style="font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">talk.</em></span></span>
+        <span class="lw"><span class="ll" style="animation-delay:0.4s;"><span class="u">talk.</span></span></span>
       </h1>
-      <p class="c-sub">Fill in the form and we'll schedule a free Google Meet within 24 hours. Tell us about your project and we'll take it from there.</p>
-
-      <div class="c-details">
-        <div class="cd">
-          <div class="cd-icon">
-            <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </div>
-          <div class="cd-text">
-            <small>Email</small>
-            <a href="mailto:veldanleeyh@gmail.com" data-h>veldanleeyh@gmail.com</a>
-          </div>
+      <p>Ready to start a project? Use the <a href="start.html" data-h style="color:var(--acc);font-weight:600;">project form</a> — it takes two minutes. For anything else, reach us here.</p>
+      <div class="cdet">
+        <div class="cdr">
+          <div class="cdi"><svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+          <div class="cdt"><small>Email</small><a href="mailto:veldanleeyh@gmail.com" data-h>veldanleeyh@gmail.com</a></div>
         </div>
-        <div class="cd">
-          <div class="cd-icon">
-            <svg viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-          </div>
-          <div class="cd-text">
-            <small>WhatsApp</small>
-            <a href="https://wa.me/6589008796" target="_blank" rel="noopener" data-h>+65 8900 8796</a>
-          </div>
+        <div class="cdr">
+          <div class="cdi"><svg viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></div>
+          <div class="cdt"><small>WhatsApp</small><a href="https://wa.me/6589008796" target="_blank" rel="noopener" data-h>+65 8900 8796</a></div>
         </div>
-        <div class="cd">
-          <div class="cd-icon">
-            <svg viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z"/></svg>
-          </div>
-          <div class="cd-text">
-            <small>Location</small>
-            <span>Singapore</span>
-          </div>
+        <div class="cdr">
+          <div class="cdi"><svg viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z"/></svg></div>
+          <div class="cdt"><small>Location</small><span>Singapore</span></div>
         </div>
-        <div class="cd">
-          <div class="cd-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="cd-text">
-            <small>Response time</small>
-            <span>Within 24 hours</span>
-          </div>
+        <div class="cdr">
+          <div class="cdi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="cdt"><small>Response time</small><span>Within 2 working days</span></div>
         </div>
-        <div class="cd">
-          <div class="cd-icon">
-            <svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-          </div>
-          <div class="cd-text">
-            <small>Discovery call</small>
-            <span>Free · 30 minutes · Google Meet</span>
-          </div>
+        <div class="cdr">
+          <div class="cdi"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></div>
+          <div class="cdt"><small>Discovery call</small><span>Free · 30 minutes · Google Meet</span></div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT — FORM -->
-    <div>
-      <div class="form-wrap">
-        <div class="form-head">
-          <h2>Book a discovery call</h2>
-          <p>Tell us about your project and we'll get back to you within 24 hours.</p>
+    <div class="fcard">
+      <form id="cf">
+        <h2>Send us a message</h2>
+        <p class="fsub">Questions, ideas, or anything that doesn't fit the project form.</p>
+        <div class="fg half">
+          <div><label for="fn">Full name</label><input type="text" id="fn" name="name" placeholder="Jane Tan" required></div>
+          <div><label for="fe">Email address</label><input type="email" id="fe" name="email" placeholder="jane@example.com" required></div>
         </div>
-
-        <form id="bookForm" onsubmit="handleSubmit(event)">
-          <div class="fg half">
-            <div>
-              <label for="fn">Full name</label>
-              <input type="text" id="fn" name="name" placeholder="Jane Smith" required>
-            </div>
-            <div>
-              <label for="fe">Email address</label>
-              <input type="email" id="fe" name="email" placeholder="jane@example.com" required>
-            </div>
-          </div>
-          <div class="fg half">
-            <div>
-              <label for="fs">Service needed</label>
-              <select id="fs" name="service" required>
-                <option value="" disabled selected>Select a service</option>
-                <option>Landing Page</option>
-                <option>Business Website</option>
-                <option>Web Application</option>
-                <option>SEO & Performance</option>
-                <option>Redesign</option>
-                <option>Maintenance</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-            <div>
-              <label for="fb">Budget (SGD)</label>
-              <select id="fb" name="budget">
-                <option value="" disabled selected>Select range</option>
-                <option>$1,200 – $2,500</option>
-                <option>$2,500 – $5,000</option>
-                <option>$5,000 – $10,000</option>
-                <option>$10,000+</option>
-                <option>Not sure yet</option>
-              </select>
-            </div>
-          </div>
-          <div class="fg">
-            <label for="fm">Tell us about your project</label>
-            <textarea id="fm" name="message" placeholder="What do you need built? Any references, features, deadlines, or context we should know about?" required></textarea>
-          </div>
-          <button type="submit" class="submit-btn" data-h>
-            <span>Send enquiry</span>
-            <svg stroke="#0a0a0a" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-          <p class="form-note">Or message us directly on <a href="https://wa.me/6589008796" target="_blank" data-h>WhatsApp</a></p>
-        </form>
-
-        <div class="success" id="successBox">
-          <div class="success-icon">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <h3>Enquiry sent</h3>
-          <p>We'll be in touch within 24 hours to confirm your Google Meet.</p>
+        <div class="fg"><label for="fp">Phone number</label><input type="tel" id="fp" name="phone" placeholder="+65 9123 4567"></div>
+        <div class="fg"><label for="fm">Message</label><textarea id="fm" name="message" placeholder="What's on your mind?" required></textarea></div>
+        <div class="notice">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <p>We'll get back to you <strong>within 2 working days</strong>.</p>
         </div>
+        <button type="submit" class="sbtn" data-h><span>Send message</span><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        <p class="fnote">Or message us directly on <a href="https://wa.me/6589008796" target="_blank" data-h>WhatsApp</a></p>
+      </form>
+      <div class="success" id="suc">
+        <div class="suc-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>Message sent</h3>
+        <p>We'll reply within 2 working days.</p>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -321,8 +241,8 @@ textarea{resize:vertical;min-height:130px;line-height:1.6;}
     <div class="flinks">
       <a href="mailto:veldanleeyh@gmail.com" data-h>Email</a>
       <a href="https://wa.me/6589008796" target="_blank" data-h>WhatsApp</a>
+      <a href="start.html" data-h>Start a project</a>
       <a href="work.html" data-h>Work</a>
-      <a href="contact.html" data-h>Contact</a>
     </div>
   </div>
 </footer>
@@ -333,42 +253,36 @@ textarea{resize:vertical;min-height:130px;line-height:1.6;}
 
 <script>
 const ldr=document.getElementById('loader'),lf=document.getElementById('lf'),lp=document.getElementById('lp');
-let p=0;const ti=setInterval(()=>{p+=Math.random()*16;if(p>=100){p=100;clearInterval(ti);setTimeout(()=>{ldr.classList.add('hide');document.body.classList.remove('no-scroll');setTimeout(()=>ldr.remove(),950);},280);}lf.style.width=p+'%';lp.textContent=Math.floor(p);},55);
+let p=0;const ti=setInterval(()=>{p+=Math.random()*16;if(p>=100){p=100;clearInterval(ti);setTimeout(()=>{ldr.classList.add('hide');document.body.classList.remove('no-scroll');setTimeout(()=>ldr.remove(),950);},240);}lf.style.width=p+'%';lp.textContent=Math.floor(p);},50);
 const pt=document.getElementById('pt');
-document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(!h||h[0]==='#'||h.startsWith('mailto')||h.startsWith('https')||h.startsWith('tel'))return;a.addEventListener('click',e=>{e.preventDefault();pt.classList.add('in');setTimeout(()=>{location.href=h;},600);});});
+document.querySelectorAll('a[href]').forEach(a=>{const h=a.getAttribute('href');if(!h||h[0]==='#'||h.startsWith('mailto')||h.startsWith('http')||h.startsWith('tel'))return;a.addEventListener('click',e=>{e.preventDefault();pt.classList.add('in');setTimeout(()=>{location.href=h;},560);});});
 window.addEventListener('pageshow',()=>{pt.classList.remove('in');pt.classList.add('out');setTimeout(()=>pt.classList.remove('out'),650);});
 const cd=document.getElementById('cd'),cr=document.getElementById('cr');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
-(function loop(){rx+=(mx-rx)*0.11;ry+=(my-ry)*0.11;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
-document.querySelectorAll('[data-h]').forEach(el=>{el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});});
+(function loop(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,input,textarea').forEach(el=>{el.addEventListener('mouseenter',()=>{cd.classList.add('hov');cr.classList.add('hov');});el.addEventListener('mouseleave',()=>{cd.classList.remove('hov');cr.classList.remove('hov');});});
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>40));
 const ham=document.getElementById('ham'),mm=document.getElementById('mm');
 ham.addEventListener('click',()=>{ham.classList.toggle('open');mm.classList.toggle('open');document.body.classList.toggle('no-scroll');});
-const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:0.08});
-document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
 
-async function handleSubmit(e){
+document.getElementById('cf').addEventListener('submit',async e=>{
   e.preventDefault();
-  const f=e.target;
-  const btn=f.querySelector('.submit-btn');
-  btn.disabled=true;
-  btn.querySelector('span').textContent='Sending…';
-  const data={name:f.name.value.trim(),email:f.email.value.trim(),service:f.service.value,budget:f.budget.value||'Not specified',message:f.message.value.trim()};
+  const f=e.target,btn=f.querySelector('.sbtn');
+  btn.disabled=true;btn.querySelector('span').textContent='Sending…';
   try{
-    const res=await fetch('https://formspree.io/f/mzdlrnrz',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)});
-    if(res.ok){
-      document.getElementById('bookForm').style.display='none';
-      document.getElementById('successBox').classList.add('show');
-    } else {
-      btn.disabled=false;btn.querySelector('span').textContent='Send enquiry';
-      alert('Something went wrong. Please email us directly at veldanleeyh@gmail.com');
-    }
-  } catch(err){
-    btn.disabled=false;btn.querySelector('span').textContent='Send enquiry';
+    const res=await fetch('https://formspree.io/f/mzdlrnrz',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
+      _subject:'[PrismStatic.web] Message from '+f.name.value.trim(),
+      name:f.name.value.trim(),email:f.email.value.trim(),phone:f.phone.value.trim()||'Not given',message:f.message.value.trim()
+    })});
+    if(!res.ok)throw new Error();
+    f.style.display='none';
+    document.getElementById('suc').classList.add('show');
+  }catch(_){
+    btn.disabled=false;btn.querySelector('span').textContent='Send message';
     alert('Something went wrong. Please email us directly at veldanleeyh@gmail.com');
   }
-}
+});
 </script>
 </body>
 </html>
