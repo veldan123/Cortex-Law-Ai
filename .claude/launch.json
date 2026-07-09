@@ -1,0 +1,8 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "veldan-games", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "4599"], "port": 4599 },
+    { "name": "res-site", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "3032", "--directory", "/Users/veldanlee/Applications/res-engineering-website"], "port": 3032 },
+    { "name": "vibeclip-dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev", "--prefix", "vibeclip"], "port": 5173 }
+  ]
+}

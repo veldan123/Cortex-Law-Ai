@@ -1,0 +1,267 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;800&display=swap');
+
+  .splash-wrap {
+    background: #0A0A0F;
+    width: 100%;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    border-radius: 16px;
+  }
+
+  .dot-grid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #3A3A55 1px, transparent 1px);
+    background-size: 28px 28px;
+    animation: gridPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.5; }
+  }
+
+  .glow-center {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+    animation: glowBreath 4s ease-in-out infinite;
+    border-radius: 50%;
+  }
+
+  @keyframes glowBreath {
+    0%, 100% { transform: scale(0.85); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .logo-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .hex-svg {
+    animation: hexEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes hexEntrance {
+    from { opacity: 0; transform: scale(0.6) rotate(-15deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .wordmark-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    animation: wordEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  }
+
+  @keyframes wordEntrance {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .w-main {
+    font-family: 'Inter', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    color: #F0F0F5;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .w-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: #6060A8;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  .divider {
+    width: 0;
+    height: 1px;
+    background: #2A2A38;
+    animation: dividerGrow 0.6s ease 1s both;
+    margin: 2px 0;
+  }
+
+  @keyframes dividerGrow {
+    from { width: 0; opacity: 0; }
+    to   { width: 200px; opacity: 1; }
+  }
+
+  .loader-bar-wrap {
+    position: absolute;
+    bottom: 52px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    animation: fadeInLoader 0.5s ease 1.4s both;
+  }
+
+  @keyframes fadeInLoader {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .loader-track {
+    width: 120px;
+    height: 2px;
+    background: #1E1E2E;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .loader-fill {
+    height: 100%;
+    width: 0%;
+    background: #6C63FF;
+    border-radius: 2px;
+    animation: loaderFill 2.2s cubic-bezier(0.4, 0, 0.2, 1) 1.6s forwards;
+  }
+
+  @keyframes loaderFill {
+    0%   { width: 0%; }
+    60%  { width: 75%; }
+    85%  { width: 92%; }
+    100% { width: 100%; }
+  }
+
+  .loader-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #3A3A5A;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .spoke {
+    transform-origin: 0 0;
+    animation: spokeAppear 0.4s ease both;
+  }
+
+  .spoke-1 { animation-delay: 0.15s; }
+  .spoke-2 { animation-delay: 0.22s; }
+  .spoke-3 { animation-delay: 0.29s; }
+  .spoke-4 { animation-delay: 0.36s; }
+  .spoke-5 { animation-delay: 0.43s; }
+  .spoke-6 { animation-delay: 0.50s; }
+
+  @keyframes spokeAppear {
+    from { opacity: 0; stroke-dashoffset: 60; }
+    to   { opacity: 1; stroke-dashoffset: 0; }
+  }
+
+  .end-node {
+    animation: nodeAppear 0.4s ease both;
+  }
+  .en-1 { animation-delay: 0.2s; }
+  .en-2 { animation-delay: 0.27s; }
+  .en-3 { animation-delay: 0.34s; }
+  .en-4 { animation-delay: 0.41s; }
+  .en-5 { animation-delay: 0.48s; }
+  .en-6 { animation-delay: 0.55s; }
+
+  @keyframes nodeAppear {
+    from { opacity: 0; transform: scale(0); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .core-pulse {
+    animation: corePulse 2.5s ease-in-out 0.8s infinite;
+  }
+
+  @keyframes corePulse {
+    0%, 100% { r: 8; opacity: 1; }
+    50% { r: 11; opacity: 0.7; }
+  }
+
+  .hex-ring {
+    animation: hexDraw 1s cubic-bezier(0.16,1,0.3,1) 0s both;
+    stroke-dasharray: 520;
+    stroke-dashoffset: 520;
+  }
+
+  @keyframes hexDraw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .hex-ring-inner {
+    animation: hexDraw 1s cubic-bezier(0.16,1,0.3,1) 0.2s both;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+  }
+</style>
+
+<div class="splash-wrap">
+  <div class="dot-grid"></div>
+  <div class="glow-center"></div>
+
+  <div class="logo-wrap">
+    <svg class="hex-svg" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+
+      <polygon points="90,10 164,52 164,128 90,170 16,128 16,52"
+        fill="rgba(108,99,255,0.1)" />
+
+      <polygon class="hex-ring" points="90,10 164,52 164,128 90,170 16,128 16,52"
+        fill="none" stroke="#6C63FF" stroke-width="1.5" opacity="0.8" />
+
+      <polygon class="hex-ring-inner" points="90,28 148,62 148,118 90,152 32,118 32,62"
+        fill="none" stroke="#6C63FF" stroke-width="0.6" opacity="0.3" />
+
+      <line class="spoke spoke-1" x1="90" y1="70" x2="90" y2="22" stroke="#A78BFA" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="50" stroke-dashoffset="50" />
+      <line class="spoke spoke-2" x1="90" y1="110" x2="90" y2="158" stroke="#A78BFA" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="50" stroke-dashoffset="50" />
+      <line class="spoke spoke-3" x1="107" y1="80" x2="149" y2="56" stroke="#A78BFA" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="50" stroke-dashoffset="50" />
+      <line class="spoke spoke-4" x1="73" y1="80" x2="31" y2="56" stroke="#A78BFA" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="50" stroke-dashoffset="50" />
+      <line class="spoke spoke-5" x1="107" y1="100" x2="149" y2="124" stroke="#A78BFA" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="50" stroke-dashoffset="50" />
+      <line class="spoke spoke-6" x1="73" y1="100" x2="31" y2="124" stroke="#A78BFA" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="50" stroke-dashoffset="50" />
+
+      <circle class="end-node en-1" cx="90" cy="20" r="7" fill="#6C63FF" opacity="0.95" />
+      <circle class="end-node en-2" cx="90" cy="160" r="7" fill="#6C63FF" opacity="0.95" />
+      <circle class="end-node en-3" cx="151" cy="55" r="7" fill="#6C63FF" opacity="0.95" />
+      <circle class="end-node en-4" cx="29" cy="55" r="7" fill="#6C63FF" opacity="0.95" />
+      <circle class="end-node en-5" cx="151" cy="125" r="7" fill="#6C63FF" opacity="0.95" />
+      <circle class="end-node en-6" cx="29" cy="125" r="7" fill="#6C63FF" opacity="0.95" />
+
+      <circle cx="90" cy="20" r="3" fill="white" opacity="0.9" class="end-node en-1" />
+      <circle cx="90" cy="160" r="3" fill="white" opacity="0.9" class="end-node en-2" />
+      <circle cx="151" cy="55" r="3" fill="white" opacity="0.9" class="end-node en-3" />
+      <circle cx="29" cy="55" r="3" fill="white" opacity="0.9" class="end-node en-4" />
+      <circle cx="151" cy="125" r="3" fill="white" opacity="0.9" class="end-node en-5" />
+      <circle cx="29" cy="125" r="3" fill="white" opacity="0.9" class="end-node en-6" />
+
+      <circle cx="90" cy="90" r="22" fill="rgba(108,99,255,0.2)" />
+      <circle cx="90" cy="90" r="16" fill="rgba(180,170,255,0.9)" />
+      <circle class="core-pulse" cx="90" cy="90" r="8" fill="#6C63FF" />
+      <circle cx="90" cy="90" r="3.5" fill="white" />
+    </svg>
+
+    <div class="wordmark-block">
+      <div class="w-main">Clarix</div>
+      <div class="divider"></div>
+      <div class="w-sub">AI Support</div>
+    </div>
+  </div>
+
+  <div class="loader-bar-wrap">
+    <div class="loader-track">
+      <div class="loader-fill"></div>
+    </div>
+    <div class="loader-label">Loading your workspace</div>
+  </div>
+</div>

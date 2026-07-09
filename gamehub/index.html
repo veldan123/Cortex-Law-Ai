@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veldan's 67th Website — Play With Friends</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;color:#fff;overflow-x:hidden}
+.screen{display:none;min-height:100vh;padding:20px}
+.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.center{text-align:center}
+.logo{font-size:2.8rem;font-weight:900;background:linear-gradient(90deg,#e94560,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px}
+.logo-sub{color:rgba(255,255,255,.55);font-size:.95rem;margin-top:4px}
+h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+p.muted{color:rgba(255,255,255,.55);font-size:.9rem;margin-bottom:18px}
+.label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-bottom:6px;display:block}
+.card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;width:100%;max-width:560px;backdrop-filter:blur(12px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;width:100%;margin-top:10px}
+.btn-primary{background:linear-gradient(135deg,#e94560,#c0392b);color:#fff}
+.btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(233,69,96,.45)}
+.btn-green{background:linear-gradient(135deg,#00b09b,#00c9a7);color:#fff}
+.btn-green:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,176,155,.4)}
+.btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
+.btn-ghost:hover:not(:disabled){background:rgba(255,255,255,.16)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+.btn-sm{padding:10px 16px;font-size:.88rem;margin-top:0}
+input{width:100%;padding:13px 16px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.18);border-radius:11px;color:#fff;font-size:1rem;outline:none;transition:border-color .2s;margin-bottom:4px}
+input:focus{border-color:#e94560}
+input::placeholder{color:rgba(255,255,255,.35)}
+.game-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:16px 0}
+@media(max-width:600px){.game-grid{grid-template-columns:repeat(2,1fr)}}
+.game-tile{background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;user-select:none}
+.game-tile:hover{border-color:#e94560;background:rgba(233,69,96,.12);transform:translateY(-2px)}
+.game-tile.sel{border-color:#f5a623;background:rgba(245,166,35,.15)}
+.game-tile .ico{font-size:2rem;display:block;margin-bottom:6px}
+.game-tile .gname{font-weight:700;font-size:.82rem}
+.game-tile .gdesc{font-size:.68rem;color:rgba(255,255,255,.5);margin-top:3px}
+.pin-box{font-size:3rem;font-weight:900;letter-spacing:.35em;background:linear-gradient(90deg,#e94560,#f5a623);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin:10px 0 4px}
+.pin-hint{font-size:.78rem;color:rgba(255,255,255,.4);text-align:center;margin-bottom:18px}
+.player-list{list-style:none;margin:0 0 14px}
+.player-list li{display:flex;align-items:center;gap:10px;padding:9px 13px;background:rgba(255,255,255,.05);border-radius:9px;margin-bottom:6px;font-weight:600;font-size:.9rem}
+.dot{width:8px;height:8px;border-radius:50%;background:#00c9a7;flex-shrink:0}
+.game-wrap{width:100%;max-width:680px}
+.q-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:28px;text-align:center}
+.q-meta{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:14px}
+.q-text{font-size:1.25rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.timer-track{height:7px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin:14px 0 20px}
+.timer-fill{height:100%;background:linear-gradient(90deg,#00c9a7,#e94560);border-radius:4px;transition:width 1s linear}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ans-btn{padding:14px 12px;border-radius:11px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:#fff;font-size:.92rem;cursor:pointer;transition:all .2s;text-align:left;font-weight:500}
+.ans-btn:hover:not(:disabled){border-color:#f5a623;background:rgba(245,166,35,.15)}
+.ans-btn.correct{background:rgba(0,201,167,.25)!important;border-color:#00c9a7!important}
+.ans-btn.wrong{background:rgba(233,69,96,.25)!important;border-color:#e94560!important}
+.ans-btn.chosen{border-color:#f5a623;background:rgba(245,166,35,.2)}
+.ans-btn:disabled{cursor:default}
+.tf-btn{padding:20px;border-radius:14px;border:2px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:#fff;font-size:1.2rem;font-weight:800;cursor:pointer;transition:all .2s;text-align:center}
+.tf-btn:hover:not(:disabled){transform:scale(1.04)}
+.tf-btn.tf-true{border-color:#00c9a7}
+.tf-btn.tf-true:hover:not(:disabled){background:rgba(0,201,167,.2)}
+.tf-btn.tf-false{border-color:#e94560}
+.tf-btn.tf-false:hover:not(:disabled){background:rgba(233,69,96,.2)}
+.tf-btn.correct{background:rgba(0,201,167,.3)!important;border-color:#00c9a7!important}
+.tf-btn.wrong{background:rgba(233,69,96,.3)!important;border-color:#e94560!important}
+.tf-btn:disabled{cursor:default}
+.word-big{font-size:2.8rem;font-weight:900;letter-spacing:.2em;color:#f5a623;text-align:center;margin:18px 0}
+.emoji-big{font-size:3.8rem;text-align:center;margin:20px 0;line-height:1.3}
+.cat-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;background:rgba(233,69,96,.2);border:1px solid rgba(233,69,96,.4);margin-bottom:16px}
+.guess-row{display:flex;gap:9px;margin-top:10px}
+.guess-row input{margin:0}
+.guess-row .btn{width:auto;min-width:90px;margin:0}
+canvas#draw-canvas{background:#fff;border-radius:12px;cursor:crosshair;touch-action:none;max-width:100%;display:block;margin:0 auto}
+.draw-tools{display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap}
+.color-dot{width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.2);cursor:pointer;transition:transform .15s}
+.color-dot:hover,.color-dot.active{transform:scale(1.2);border-color:#fff}
+.lyric-text{font-size:1.3rem;font-weight:600;line-height:1.6;margin:18px 0;color:#fff}
+.lyric-blank{display:inline-block;min-width:80px;border-bottom:3px solid #f5a623;color:#f5a623;font-weight:800;padding:0 4px}
+.nhie-stmt{font-size:1.2rem;font-weight:700;margin:20px 0;line-height:1.4}
+.nhie-btns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+.nhie-btn{padding:22px;border-radius:14px;border:2px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}
+.nhie-btn:hover:not(:disabled){transform:scale(1.03)}
+.nhie-have{border-color:#e94560}.nhie-have:hover:not(:disabled){background:rgba(233,69,96,.2)}
+.nhie-never{border-color:#00c9a7}.nhie-never:hover:not(:disabled){background:rgba(0,201,167,.2)}
+.nhie-reveal{display:flex;gap:14px;margin-top:20px}
+.nhie-col{flex:1;background:rgba(255,255,255,.05);border-radius:12px;padding:16px}
+.nhie-col h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.nhie-name{padding:7px 10px;background:rgba(255,255,255,.06);border-radius:8px;margin-bottom:6px;font-size:.9rem}
+.vote-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.vote-label{width:90px;text-align:right;font-weight:700;font-size:.9rem}
+.vote-track{flex:1;background:rgba(255,255,255,.1);border-radius:7px;height:26px;overflow:hidden}
+.vote-fill{height:100%;border-radius:7px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-weight:700;font-size:.82rem;transition:width 1.2s ease}
+.vf-red{background:linear-gradient(90deg,#c0392b,#e94560)}
+.vf-teal{background:linear-gradient(90deg,#00b09b,#00c9a7)}
+.vf-orange{background:linear-gradient(90deg,#f39c12,#f5a623)}
+.vf-blue{background:linear-gradient(90deg,#2980b9,#3498db)}
+.vote-count{width:26px;color:rgba(255,255,255,.6);font-size:.82rem}
+.scores-wrap{width:100%;max-width:460px}
+.score-row{display:flex;align-items:center;padding:12px 16px;background:rgba(255,255,255,.05);border-radius:11px;margin-bottom:8px;gap:12px}
+.score-row.rank1{background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.4)}
+.score-row.rank2{background:rgba(192,192,192,.12)}
+.score-row.rank3{background:rgba(180,100,0,.15)}
+.rank-num{font-size:1.2rem;width:26px;text-align:center}
+.pname{flex:1;font-weight:700}
+.pts{font-weight:800;color:#f5a623;font-size:1.05rem}
+.badge-game{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.78rem;font-weight:700;background:rgba(233,69,96,.2);border:1px solid rgba(233,69,96,.4);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+.status{padding:10px 14px;border-radius:9px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);font-size:.86rem;text-align:center;margin:10px 0}
+.toast{position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:12px;font-weight:700;z-index:9999;animation:slide-in .3s ease;pointer-events:none;font-size:.9rem}
+.toast.ok{background:#00c9a7;color:#fff}
+.toast.err{background:#e94560;color:#fff}
+@keyframes slide-in{from{transform:translateX(120px);opacity:0}to{transform:translateX(0);opacity:1}}
+.waiting::after{content:'...';animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:rgba(255,255,255,.35);font-size:.82rem}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.12)}
+.math-problem{font-size:3rem;font-weight:900;color:#f5a623;text-align:center;margin:24px 0;letter-spacing:.05em}
+.big-result{font-size:2.2rem;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="s-home" class="screen active">
+  <div class="center" style="margin-bottom:28px">
+    <div class="logo">🎮 Veldan's 67th Website</div>
+    <div class="logo-sub">(I need to get a life...) · Pick a game · Host a session · Play with friends</div>
+  </div>
+  <div class="card">
+    <span class="label">Choose a game</span>
+    <div class="game-grid">
+      <div class="game-tile" onclick="selectGame('trivia',this)"><span class="ico">🧠</span><div class="gname">Trivia</div><div class="gdesc">Quiz questions</div></div>
+      <div class="game-tile" onclick="selectGame('scramble',this)"><span class="ico">🔤</span><div class="gname">Scramble</div><div class="gdesc">Unscramble words</div></div>
+      <div class="game-tile" onclick="selectGame('emoji',this)"><span class="ico">🎬</span><div class="gname">Emoji Guess</div><div class="gdesc">Guess the movie</div></div>
+      <div class="game-tile" onclick="selectGame('wyr',this)"><span class="ico">🤔</span><div class="gname">Would You Rather</div><div class="gdesc">Vote &amp; reveal</div></div>
+      <div class="game-tile" onclick="selectGame('draw',this)"><span class="ico">🎨</span><div class="gname">Draw &amp; Guess</div><div class="gdesc">Pictionary!</div></div>
+      <div class="game-tile" onclick="selectGame('truefalse',this)"><span class="ico">✅</span><div class="gname">True or False</div><div class="gdesc">Fact check fast</div></div>
+      <div class="game-tile" onclick="selectGame('mathrace',this)"><span class="ico">➕</span><div class="gname">Math Race</div><div class="gdesc">First to answer wins</div></div>
+      <div class="game-tile" onclick="selectGame('lyrics',this)"><span class="ico">🎵</span><div class="gname">Song Lyrics</div><div class="gdesc">Fill the blank</div></div>
+      <div class="game-tile" onclick="selectGame('nhie',this)"><span class="ico">🙋</span><div class="gname">Never Have I Ever</div><div class="gdesc">Who's done it?</div></div>
+      <div class="game-tile" onclick="selectGame('hottakes',this)"><span class="ico">🔥</span><div class="gname">Hot Takes</div><div class="gdesc">Agree or disagree</div></div>
+    </div>
+    <div id="home-name-row" style="display:none;margin-top:6px">
+      <span class="label">Your name</span>
+      <input id="home-name" type="text" maxlength="18" placeholder="Enter your name…">
+    </div>
+    <div id="home-btns" style="display:none">
+      <button class="btn btn-primary" onclick="doHost()">🏠 Host Session</button>
+      <div class="divider">or join</div>
+      <span class="label">PIN code</span>
+      <input id="join-pin" type="text" maxlength="6" placeholder="6-digit PIN" style="letter-spacing:.3em;font-size:1.2rem;text-align:center">
+      <button class="btn btn-ghost" onclick="doJoin()">🚀 Join Game</button>
+    </div>
+    <div id="home-hint" class="status">↑ Select a game above to get started</div>
+  </div>
+</div>
+
+<!-- HOST LOBBY -->
+<div id="s-host-lobby" class="screen">
+  <div class="card">
+    <div class="center">
+      <div id="hl-badge" class="badge-game">—</div>
+      <h2>Your Session PIN</h2>
+      <div id="hl-pin" class="pin-box">——————</div>
+      <div class="pin-hint">Friends open this page and enter the PIN to join</div>
+    </div>
+    <span class="label">Players in lobby</span>
+    <ul id="hl-players" class="player-list"></ul>
+    <div id="hl-status" class="status">Waiting for players<span class="waiting"></span></div>
+    <button id="hl-start" class="btn btn-green" onclick="hostStartGame()" disabled>▶ Start Game</button>
+    <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="goHome()">✕ Cancel</button>
+  </div>
+</div>
+
+<!-- JOIN LOBBY -->
+<div id="s-join-lobby" class="screen">
+  <div class="card center">
+    <div id="jl-badge" class="badge-game">Connecting…</div>
+    <h2>You're in the lobby!</h2>
+    <p class="muted">Waiting for the host to start…</p>
+    <ul id="jl-players" class="player-list" style="text-align:left"></ul>
+    <div class="status">Host will start soon<span class="waiting"></span></div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:14px" onclick="goHome()">Leave</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="s-game" class="screen">
+  <div id="game-wrap" class="game-wrap"></div>
+</div>
+
+<!-- SCORES -->
+<div id="s-scores" class="screen">
+  <div class="card center" style="max-width:480px">
+    <div style="font-size:2.4rem;margin-bottom:10px">🏆</div>
+    <h2>Final Scores</h2>
+    <p class="muted" id="sc-subtitle">—</p>
+    <div id="sc-list" class="scores-wrap" style="margin-top:18px"></div>
+    <div id="sc-host-btn" style="display:none">
+      <button class="btn btn-green" onclick="hostRestartLobby()">🔄 Play Again</button>
+    </div>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="goHome()">🏠 Home</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const TRIVIA_QUESTIONS=[
+  {q:"What planet is closest to the Sun?",a:["Mercury","Venus","Mars","Earth"],c:0},
+  {q:"How many bones in the adult human body?",a:["186","206","226","246"],c:1},
+  {q:"What language has the most native speakers?",a:["English","Spanish","Hindi","Mandarin"],c:3},
+  {q:"Who painted the Mona Lisa?",a:["Michelangelo","Raphael","Leonardo da Vinci","Donatello"],c:2},
+  {q:"What is the capital of Australia?",a:["Sydney","Melbourne","Canberra","Brisbane"],c:2},
+  {q:"Which element has symbol 'Au'?",a:["Silver","Aluminum","Gold","Argon"],c:2},
+  {q:"How many sides does a hexagon have?",a:["5","6","7","8"],c:1},
+  {q:"What year did World War II end?",a:["1943","1944","1945","1946"],c:2},
+  {q:"What is the largest ocean?",a:["Atlantic","Indian","Arctic","Pacific"],c:3},
+  {q:"Who wrote Romeo and Juliet?",a:["Dickens","Shakespeare","Tolkien","Austen"],c:1},
+  {q:"How many continents are there?",a:["5","6","7","8"],c:2},
+  {q:"What is the chemical formula for water?",a:["H2O","CO2","O2","HO2"],c:0},
+  {q:"Which country invented pizza?",a:["France","Spain","Greece","Italy"],c:3},
+  {q:"What is the speed of light (approx km/s)?",a:["200,000","300,000","400,000","500,000"],c:1},
+  {q:"How many strings does a standard guitar have?",a:["4","5","6","7"],c:2},
+  {q:"What is the largest planet in the solar system?",a:["Saturn","Neptune","Jupiter","Uranus"],c:2},
+  {q:"In what year did the Titanic sink?",a:["1910","1912","1914","1916"],c:1},
+  {q:"Which animal is the fastest on land?",a:["Lion","Horse","Cheetah","Leopard"],c:2},
+];
+
+const SCRAMBLE_WORDS=[
+  {w:"ELEPHANT",h:"Large animal with a trunk"},
+  {w:"UMBRELLA",h:"Keeps you dry in rain"},
+  {w:"KEYBOARD",h:"You type on this"},
+  {w:"DINOSAUR",h:"Ancient reptile"},
+  {w:"BIRTHDAY",h:"Your special annual day"},
+  {w:"CHOCOLATE",h:"Sweet brown treat"},
+  {w:"ADVENTURE",h:"An exciting journey"},
+  {w:"SUNFLOWER",h:"Tall yellow flower"},
+  {w:"BUTTERFLY",h:"Colourful flying insect"},
+  {w:"TELESCOPE",h:"Used to see distant stars"},
+  {w:"SUBMARINE",h:"Underwater vessel"},
+  {w:"ORCHESTRA",h:"Large musical ensemble"},
+  {w:"LIGHTNING",h:"Flash in a storm"},
+  {w:"PINEAPPLE",h:"Tropical spiky fruit"},
+];
+
+const EMOJI_PUZZLES=[
+  {e:"🦁👑",ans:["lion king","the lion king"],cat:"Movie"},
+  {e:"🕷️🕸️👦",ans:["spider man","spiderman","spider-man"],cat:"Movie"},
+  {e:"❄️👸🏼",ans:["frozen"],cat:"Movie"},
+  {e:"🐟🔍",ans:["finding nemo","finding dory"],cat:"Movie"},
+  {e:"🧙‍♂️💍",ans:["lord of the rings"],cat:"Movie"},
+  {e:"🚂⚡🧙",ans:["harry potter"],cat:"Movie"},
+  {e:"🤖🚗",ans:["transformers"],cat:"Movie"},
+  {e:"💀☠️🏴‍☠️",ans:["pirates of the caribbean"],cat:"Movie"},
+  {e:"🦖🌿🏝️",ans:["jurassic park","jurassic world"],cat:"Movie"},
+  {e:"🎃👻",ans:["halloween"],cat:"Movie"},
+  {e:"🧟‍♂️🏚️",ans:["the walking dead","walking dead"],cat:"TV Show"},
+  {e:"🌊🦈",ans:["jaws","shark tale"],cat:"Movie"},
+  {e:"👻👁️🏚️",ans:["haunting of hill house","the haunting"],cat:"TV Show"},
+  {e:"🐧❄️🎵",ans:["happy feet"],cat:"Movie"},
+  {e:"🚀🌕👨‍🚀",ans:["apollo 13","interstellar","gravity"],cat:"Movie"},
+];
+
+const WYR_QUESTIONS=[
+  {a:"Be able to fly",b:"Be invisible"},
+  {a:"Only eat pizza forever",b:"Never eat pizza again"},
+  {a:"Go back in time",b:"Travel to the future"},
+  {a:"Have super strength",b:"Have super speed"},
+  {a:"Live in the ocean",b:"Live in space"},
+  {a:"Know every language",b:"Play every instrument"},
+  {a:"Never sleep again",b:"Sleep 16 hours a day"},
+  {a:"Talk to animals",b:"Speak to plants"},
+  {a:"Fight 100 duck-sized horses",b:"Fight 1 horse-sized duck"},
+  {a:"Always be slightly too hot",b:"Always be slightly too cold"},
+];
+
+const TRUE_FALSE=[
+  {q:"The Great Wall of China is visible from space.",a:false},
+  {q:"Honey never expires.",a:true},
+  {q:"Lightning never strikes the same place twice.",a:false},
+  {q:"A group of flamingos is called a flamboyance.",a:true},
+  {q:"Bananas are technically berries.",a:true},
+  {q:"Sharks are older than trees.",a:true},
+  {q:"The Amazon is the longest river in the world.",a:false},
+  {q:"Humans and dinosaurs coexisted.",a:false},
+  {q:"Octopuses have three hearts.",a:true},
+  {q:"A day on Venus is longer than a year on Venus.",a:true},
+  {q:"Dogs can only see in black and white.",a:false},
+  {q:"Cleopatra lived closer in time to the Moon landing than to the pyramids.",a:true},
+  {q:"A group of crows is called a murder.",a:true},
+  {q:"The Eiffel Tower grows taller in summer.",a:true},
+  {q:"The human tongue has 4 taste zones.",a:false},
+  {q:"Mount Everest is the mountain furthest from Earth's centre.",a:false},
+  {q:"Penguins can fly.",a:false},
+  {q:"Sound travels faster than light.",a:false},
+];
+
+const LYRICS=[
+  {l:"Is this the real life? Is this just ___?",ans:"fantasy",song:"Bohemian Rhapsody"},
+  {l:"I would walk ___ miles",ans:"500",song:"500 Miles"},
+  {l:"Don't stop ___ in",ans:"believin",song:"Don't Stop Believin'"},
+  {l:"We will, we will ___ you",ans:"rock",song:"We Will Rock You"},
+  {l:"All the ___ ladies, all the single ladies",ans:"single",song:"Single Ladies"},
+  {l:"Hello from the ___ side",ans:"other",song:"Hello"},
+  {l:"Never gonna give you ___, never gonna let you down",ans:"up",song:"Never Gonna Give You Up"},
+  {l:"Just a small town girl, livin' in a ___ world",ans:"lonely",song:"Don't Stop Believin'"},
+  {l:"I came in like a ___ ball",ans:"wrecking",song:"Wrecking Ball"},
+  {l:"I will always ___ you",ans:"love",song:"I Will Always Love You"},
+  {l:"Cause I'm happy, clap along if you feel like a ___ without a roof",ans:"room",song:"Happy"},
+  {l:"Hit me baby one ___ time",ans:"more",song:"Baby One More Time"},
+  {l:"Walking on ___, walking on sunshine",ans:"sunshine",song:"Walking on Sunshine"},
+  {l:"You shake my nerves and you rattle my ___",ans:"brain",song:"Great Balls of Fire"},
+];
+
+const NEVER_HAVE=[
+  "eaten sushi","stayed up all night","been on a plane",
+  "cried at a movie","met a celebrity","been to another country",
+  "broken a bone","dyed my hair","eaten something off the floor",
+  "sent a text to the wrong person","forgotten someone's name mid-conversation",
+  "pretended to laugh at a joke I didn't understand",
+  "fallen asleep in public","sung karaoke",
+];
+
+const HOT_TAKES=[
+  "Pineapple belongs on pizza",
+  "Morning showers are better than night showers",
+  "Cats are better pets than dogs",
+  "A hot dog is a sandwich",
+  "Die Hard is a Christmas movie",
+  "Cereal goes in the bowl BEFORE the milk",
+  "Texting is better than calling",
+  "Books are better than movies",
+  "Toilet paper should hang over the top",
+  "Breakfast food is the best food at any time of day",
+  "Marvel movies are better than DC movies",
+  "Social media has made the world worse",
+];
+
+const DRAW_WORDS=[
+  'cat','dog','sun','house','tree','car','boat','pizza','guitar','elephant',
+  'rainbow','bicycle','umbrella','castle','rocket','butterfly','dragon',
+  'hamburger','dinosaur','penguin','volcano','submarine','telescope',
+  'trophy','crown','lightning','snowman','spider','cactus','pirate',
+  'shark','ice cream','glasses','clock','mountain',
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let selectedGame=null,myName='',isHost=false,myPin='';
+let peer=null,hostConn=null;
+let playerConns={},playerNames={},scores={},gameState={};
+
+// ============================================================
+// UI
+// ============================================================
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function toast(msg,type='ok'){const t=document.createElement('div');t.className=`toast ${type}`;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2800)}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function sanitize(s){return(s||'').trim().slice(0,20)||'Anonymous'}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function scrambleWord(w){let a=w.split(''),n=0;while(a.join('')===w&&n++<20)shuffle(a);return a.join('')}
+
+function selectGame(game,el){
+  selectedGame=game;
+  document.querySelectorAll('.game-tile').forEach(t=>t.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('home-name-row').style.display='block';
+  document.getElementById('home-btns').style.display='block';
+  document.getElementById('home-hint').style.display='none';
+}
+
+function goHome(){
+  if(peer){peer.destroy();peer=null;}
+  hostConn=null;playerConns={};playerNames={};scores={};gameState={};
+  isHost=false;myPin='';selectedGame=null;
+  document.querySelectorAll('.game-tile').forEach(t=>t.classList.remove('sel'));
+  document.getElementById('home-name-row').style.display='none';
+  document.getElementById('home-btns').style.display='none';
+  document.getElementById('home-hint').style.display='block';
+  show('s-home');
+}
+
+function gameLabel(g){
+  return{trivia:'🧠 Trivia',scramble:'🔤 Scramble',emoji:'🎬 Emoji Guess',wyr:'🤔 Would You Rather',
+    draw:'🎨 Draw & Guess',truefalse:'✅ True or False',mathrace:'➕ Math Race',
+    lyrics:'🎵 Song Lyrics',nhie:'🙋 Never Have I Ever',hottakes:'🔥 Hot Takes'}[g]||g;
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer(secs,onDone){
+  const fill=document.getElementById('tf');
+  let rem=secs;
+  if(fill)fill.style.width='100%';
+  const iv=setInterval(()=>{
+    rem--;
+    const pct=Math.max(0,(rem/secs)*100);
+    const f=document.getElementById('tf');
+    if(f)f.style.width=pct+'%';
+    if(rem<=0){clearInterval(iv);onDone();}
+  },1000);
+  return iv;
+}
+
+// ============================================================
+// HOST FLOW
+// ============================================================
+function doHost(){
+  const name=document.getElementById('home-name').value.trim();
+  if(!name){toast('Enter your name first','err');return;}
+  if(!selectedGame){toast('Select a game first','err');return;}
+  myName=name;isHost=true;
+  myPin=String(Math.floor(100000+Math.random()*900000));
+  show('s-host-lobby');
+  document.getElementById('hl-pin').textContent=myPin;
+  document.getElementById('hl-badge').textContent=gameLabel(selectedGame);
+  scores={};scores[myName]=0;playerNames.host=myName;
+  renderHostPlayers();
+  peer=new Peer('gamehub-'+myPin,{debug:0});
+  peer.on('open',()=>{});
+  peer.on('error',e=>{
+    if(e.type==='unavailable-id'){toast('PIN clash — try again','err');goHome();}
+    else toast('Network error: '+e.type,'err');
+  });
+  peer.on('connection',conn=>{
+    const pid=conn.peer;
+    playerConns[pid]=conn;
+    conn.on('data',data=>handleHostReceive(pid,data));
+    conn.on('close',()=>{
+      const gone=playerNames[pid]||'Someone';
+      delete playerConns[pid];delete playerNames[pid];delete scores[gone];
+      renderHostPlayers();
+      broadcastToPlayers({type:'lobby-update',players:lobbyList(),game:selectedGame});
+      toast(gone+' left');
+    });
+  });
+}
+
+function handleHostReceive(pid,data){
+  if(data.type==='join'){
+    const name=sanitize(data.name);
+    playerNames[pid]=name;scores[name]=0;
+    renderHostPlayers();
+    broadcastToPlayers({type:'lobby-update',players:lobbyList(),game:selectedGame});
+    toast(name+' joined 👋');
+    document.getElementById('hl-start').disabled=Object.keys(playerConns).length<1;
+  }
+  if(data.type==='answer') handlePlayerAnswer(pid,data);
+}
+
+function lobbyList(){
+  const list=[{name:myName,host:true}];
+  Object.entries(playerNames).filter(([k])=>k!=='host').forEach(([,n])=>list.push({name:n,host:false}));
+  return list;
+}
+
+function renderHostPlayers(){
+  const ul=document.getElementById('hl-players');
+  const list=lobbyList();
+  ul.innerHTML=list.map(p=>`<li><span class="dot"></span>${esc(p.name)}${p.host?' (host)':''}</li>`).join('');
+  const n=Object.keys(playerConns).length+1;
+  document.getElementById('hl-status').textContent=n+' player'+(n!==1?'s':'')+' in lobby';
+  document.getElementById('hl-start').disabled=n<2;
+}
+
+function broadcastToPlayers(msg){
+  Object.values(playerConns).forEach(c=>{try{c.send(msg);}catch(e){}});
+}
+
+function hostStartGame(){
+  const data=buildGameData(selectedGame);
+  broadcastToPlayers({type:'game-start',game:selectedGame,data});
+  initHostGame(selectedGame,data);
+}
+
+// ============================================================
+// JOIN FLOW
+// ============================================================
+function doJoin(){
+  const name=document.getElementById('home-name').value.trim();
+  const pin=document.getElementById('join-pin').value.trim().replace(/\D/g,'');
+  if(!name){toast('Enter your name first','err');return;}
+  if(pin.length!==6){toast('Enter a valid 6-digit PIN','err');return;}
+  myName=name;isHost=false;myPin=pin;
+  show('s-join-lobby');
+  peer=new Peer({debug:0});
+  peer.on('open',()=>{
+    hostConn=peer.connect('gamehub-'+pin);
+    hostConn.on('open',()=>hostConn.send({type:'join',name:myName}));
+    hostConn.on('data',data=>handlePlayerReceive(data));
+    hostConn.on('error',()=>{toast('Could not connect','err');goHome();});
+    hostConn.on('close',()=>{toast('Host disconnected','err');goHome();});
+  });
+  peer.on('error',e=>{toast('Error: '+e.type,'err');goHome();});
+}
+
+function handlePlayerReceive(data){
+  if(data.type==='lobby-update'){
+    document.getElementById('jl-badge').textContent=gameLabel(data.game);
+    document.getElementById('jl-players').innerHTML=data.players.map(p=>`<li><span class="dot"></span>${esc(p.name)}${p.host?' (host)':''}</li>`).join('');
+  }
+  if(data.type==='game-start') initPlayerGame(data.game,data.data);
+  // route game messages
+  if(data.type==='question') renderTriviaQuestion(data);
+  if(data.type==='round-result') showTriviaResult(data);
+  if(data.type==='scramble-round') renderScrambleRound(data);
+  if(data.type==='scramble-result') showScrambleResult(data);
+  if(data.type==='emoji-round') renderEmojiRound(data);
+  if(data.type==='emoji-result') showEmojiResult(data);
+  if(data.type==='wyr-round') renderWyrRound(data);
+  if(data.type==='wyr-result') showVoteResult(data,'wyr');
+  if(data.type==='draw-round') renderPlayerDrawRound(data);
+  if(data.type==='draw-stroke') applyDrawStroke(data);
+  if(data.type==='draw-result') showDrawResult(data);
+  if(data.type==='tf-round') renderTFRound(data);
+  if(data.type==='tf-result') showTFResult(data);
+  if(data.type==='math-round') renderMathRound(data);
+  if(data.type==='math-result') showMathResult(data);
+  if(data.type==='lyrics-round') renderLyricsRound(data);
+  if(data.type==='lyrics-result') showLyricsResult(data);
+  if(data.type==='nhie-round') renderNHIERound(data);
+  if(data.type==='nhie-result') showNHIEResult(data);
+  if(data.type==='ht-round') renderHTRound(data);
+  if(data.type==='ht-result') showVoteResult(data,'ht');
+  if(data.type==='game-over') showFinalScores(data.scores,data.game,false);
+}
+
+// ============================================================
+// BUILD GAME DATA
+// ============================================================
+function buildGameData(game){
+  if(game==='trivia') return{questions:shuffle([...TRIVIA_QUESTIONS]).slice(0,10)};
+  if(game==='scramble') return{words:shuffle([...SCRAMBLE_WORDS]).slice(0,8)};
+  if(game==='emoji') return{puzzles:shuffle([...EMOJI_PUZZLES]).slice(0,8)};
+  if(game==='wyr') return{questions:shuffle([...WYR_QUESTIONS]).slice(0,7)};
+  if(game==='draw') return{words:shuffle([...DRAW_WORDS]).slice(0,5)};
+  if(game==='truefalse') return{questions:shuffle([...TRUE_FALSE]).slice(0,10)};
+  if(game==='mathrace') return{rounds:8};
+  if(game==='lyrics') return{songs:shuffle([...LYRICS]).slice(0,8)};
+  if(game==='nhie') return{statements:shuffle([...NEVER_HAVE]).slice(0,8)};
+  if(game==='hottakes') return{statements:shuffle([...HOT_TAKES]).slice(0,8)};
+}
+
+function initHostGame(game,data){
+  show('s-game');
+  gameState={game,data,round:0,timer:null,answers:{},hostAnswer:undefined};
+  if(game==='trivia') hostNextTrivia();
+  if(game==='scramble') hostNextScramble();
+  if(game==='emoji') hostNextEmoji();
+  if(game==='wyr') hostNextWyr();
+  if(game==='draw') hostNextDraw();
+  if(game==='truefalse') hostNextTF();
+  if(game==='mathrace') hostNextMath();
+  if(game==='lyrics') hostNextLyrics();
+  if(game==='nhie') hostNextNHIE();
+  if(game==='hottakes') hostNextHT();
+}
+
+function initPlayerGame(game,data){
+  show('s-game');
+  gameState={game,data,round:0};
+  document.getElementById('game-wrap').innerHTML='<div class="q-card center"><p class="muted">Get ready<span class="waiting"></span></p></div>';
+}
+
+// ============================================================
+// PLAYER ANSWER ROUTER
+// ============================================================
+function handlePlayerAnswer(pid,data){
+  const g=gameState.game;
+  if(g==='trivia') handleTriviaAnswer(pid,data);
+  else if(g==='scramble') handleScrambleAnswer(pid,data);
+  else if(g==='emoji') handleEmojiAnswer(pid,data);
+  else if(g==='wyr') handleVoteAnswer(pid,data,'wyr');
+  else if(g==='draw') handleDrawAnswer(pid,data);
+  else if(g==='truefalse') handleTFAnswer(pid,data);
+  else if(g==='mathrace') handleMathAnswer(pid,data);
+  else if(g==='lyrics') handleLyricsAnswer(pid,data);
+  else if(g==='nhie') handleNHIEAnswer(pid,data);
+  else if(g==='hottakes') handleVoteAnswer(pid,data,'ht');
+}
+
+// ============================================================
+// GAME: TRIVIA
+// ============================================================
+function hostNextTrivia(){
+  const gs=gameState,qs=gs.data.questions;
+  if(gs.round>=qs.length){endGame();return;}
+  const q=qs[gs.round];
+  gs.answers={};gs.hostAnswer=undefined;gs.roundStart=Date.now();
+  const payload={type:'question',index:gs.round,total:qs.length,question:q.q,options:q.a,timeLimit:15};
+  broadcastToPlayers(payload);
+  // host UI
+  const wrap=document.getElementById('game-wrap');
+  wrap.innerHTML=`<div class="q-card">
+    <div class="q-meta">Question ${gs.round+1} / ${qs.length}</div>
+    <div class="q-text">${esc(q.q)}</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="ans-grid">${q.a.map((o,i)=>`<button class="ans-btn" id="ab${i}" onclick="hostPickTrivia(${i})">${esc(o)}</button>`).join('')}</div>
+    <div class="status" id="hs">Waiting for answers…</div>
+  </div>`;
+  gs.timer=startTimer(15,()=>hostRevealTrivia());
+}
+
+function hostPickTrivia(idx){
+  if(gameState.hostAnswer!==undefined) return;
+  gameState.hostAnswer=idx;
+  gameState.answers['host']={answer:idx,elapsed:Date.now()-gameState.roundStart};
+  document.querySelectorAll('.ans-btn').forEach((b,i)=>{b.disabled=true;if(i===idx)b.classList.add('chosen');});
+  checkAllAnswered();
+}
+
+function handleTriviaAnswer(pid,data){
+  if(gameState.answers[pid]!==undefined) return;
+  gameState.answers[pid]={answer:data.answer,elapsed:Date.now()-gameState.roundStart};
+  checkAllAnswered();
+}
+
+function checkAllAnswered(){
+  const total=Object.keys(playerConns).length+1;
+  const got=Object.keys(gameState.answers).length;
+  const el=document.getElementById('hs');
+  if(el) el.textContent=`${got}/${total} answered`;
+  if(got>=total){clearInterval(gameState.timer);hostRevealTrivia();}
+}
+
+function hostRevealTrivia(){
+  clearInterval(gameState.timer);
+  const q=gameState.data.questions[gameState.round];
+  const correct=q.c;
+  const resultMap={};
+  Object.entries(gameState.answers).forEach(([pid,{answer,elapsed}])=>{
+    const name=pid==='host'?myName:playerNames[pid];
+    if(!name) return;
+    const ok=answer===correct;
+    const pts=ok?Math.max(80,Math.round(500*(1-elapsed/15000))):0;
+    scores[name]=(scores[name]||0)+pts;
+    resultMap[name]={correct:ok,pts};
+  });
+  for(let i=0;i<q.a.length;i++){
+    const b=document.getElementById('ab'+i);
+    if(!b) continue;
+    if(i===correct) b.classList.add('correct');
+    else if(b.classList.contains('chosen')) b.classList.add('wrong');
+    b.disabled=true;
+  }
+  const el=document.getElementById('hs');
+  if(el) el.textContent='Correct: '+q.a[correct];
+  broadcastToPlayers({type:'round-result',correctIndex:correct,scores,resultMap});
+  gameState.round++;
+  setTimeout(()=>hostNextTrivia(),3200);
+}
+
+function renderTriviaQuestion(data){
+  const wrap=document.getElementById('game-wrap');
+  gameState.selectedAns=undefined;gameState.roundStart=Date.now();
+  wrap.innerHTML=`<div class="q-card">
+    <div class="q-meta">Question ${data.index+1} / ${data.total}</div>
+    <div class="q-text">${esc(data.question)}</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="ans-grid">${data.options.map((o,i)=>`<button class="ans-btn" id="ab${i}" onclick="playerPickTrivia(${i})">${esc(o)}</button>`).join('')}</div>
+    <div class="status" id="ps">Choose your answer!</div>
+  </div>`;
+  startTimer(15,()=>{const el=document.getElementById('ps');if(el)el.textContent="Time's up!";document.querySelectorAll('.ans-btn').forEach(b=>b.disabled=true);});
+}
+
+function playerPickTrivia(idx){
+  if(gameState.selectedAns!==undefined) return;
+  gameState.selectedAns=idx;
+  document.querySelectorAll('.ans-btn').forEach((b,i)=>{b.disabled=true;if(i===idx)b.classList.add('chosen');});
+  document.getElementById('ps').textContent='Submitted! Waiting…';
+  hostConn.send({type:'answer',answer:idx});
+}
+
+function showTriviaResult(data){
+  document.querySelectorAll('.ans-btn').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===data.correctIndex) b.classList.add('correct');
+    else if(b.classList.contains('chosen')) b.classList.add('wrong');
+  });
+  const my=data.resultMap[myName];
+  const el=document.getElementById('ps');
+  if(el&&my) el.textContent=my.correct?`✅ Correct! +${my.pts} pts`:`❌ Wrong — +0 pts`;
+}
+
+// ============================================================
+// GAME: SCRAMBLE
+// ============================================================
+function hostNextScramble(){
+  const gs=gameState,ws=gs.data.words;
+  if(gs.round>=ws.length){endGame();return;}
+  const word=ws[gs.round];
+  gs.scrambleWinner=null;gs.hostGuessed=false;
+  const scrambled=scrambleWord(word.w);
+  const payload={type:'scramble-round',index:gs.round,total:ws.length,scrambled,hint:word.h,timeLimit:20};
+  broadcastToPlayers(payload);
+  renderScrambleRound({...payload,forHost:true});
+  gs.timer=startTimer(20,()=>{if(!gs.scrambleWinner)hostRevealScramble(null);});
+}
+
+function handleScrambleAnswer(pid,data){
+  if(gameState.scrambleWinner) return;
+  const word=gameState.data.words[gameState.round];
+  if((data.answer||'').trim().toUpperCase()===word.w){
+    gameState.scrambleWinner=playerNames[pid];
+    clearInterval(gameState.timer);
+    hostRevealScramble(gameState.scrambleWinner);
+  }
+}
+
+function hostRevealScramble(winner){
+  const word=gameState.data.words[gameState.round];
+  if(winner) scores[winner]=(scores[winner]||0)+300;
+  broadcastToPlayers({type:'scramble-result',winner,word:word.w,scores});
+  showScrambleResult({winner,word:word.w});
+  gameState.round++;
+  setTimeout(()=>hostNextScramble(),3000);
+}
+
+function renderScrambleRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${data.index+1} / ${data.total} · Scramble</div>
+    <div class="word-big">${data.scrambled}</div>
+    <p class="muted">Hint: ${esc(data.hint)}</p>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="guess-row">
+      <input id="scr-in" type="text" placeholder="Type the word…" oninput="this.value=this.value.toUpperCase()" autocomplete="off">
+      <button class="btn btn-primary btn-sm" style="width:auto;min-width:88px" onclick="submitScramble()">Submit</button>
+    </div>
+    <div class="status" id="scr-st">Unscramble the word!</div>
+  </div>`;
+  document.getElementById('scr-in').focus();
+  startTimer(20,()=>{document.getElementById('scr-st').textContent="Time's up!";document.getElementById('scr-in').disabled=true;});
+}
+
+function submitScramble(){
+  const val=(document.getElementById('scr-in').value||'').trim().toUpperCase();
+  const word=gameState.data.words[gameState.round];
+  if(isHost){
+    if(gameState.scrambleWinner||gameState.hostGuessed) return;
+    if(val===word.w){
+      gameState.hostGuessed=true;
+      clearInterval(gameState.timer);
+      gameState.scrambleWinner=myName;
+      hostRevealScramble(myName);
+    } else {document.getElementById('scr-st').textContent='Not quite!';}
+  } else {
+    hostConn.send({type:'answer',answer:val});
+    document.getElementById('scr-in').disabled=true;
+    document.getElementById('scr-st').textContent='Submitted! Waiting…';
+  }
+}
+
+function showScrambleResult(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="big-result">${data.winner?'🎉':'⏱️'}</div>
+    <h2>${data.winner?esc(data.winner)+' got it!':'Nobody got it!'}</h2>
+    <p class="muted">The word was: <strong style="color:#f5a623">${esc(data.word)}</strong></p>
+    <p class="muted" style="margin-top:8px">Next round coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: EMOJI GUESS
+// ============================================================
+function hostNextEmoji(){
+  const gs=gameState,ps=gs.data.puzzles;
+  if(gs.round>=ps.length){endGame();return;}
+  const p=ps[gs.round];
+  gs.emojiWinner=null;gs.hostGuessed=false;
+  const payload={type:'emoji-round',index:gs.round,total:ps.length,emoji:p.e,cat:p.cat,timeLimit:20};
+  broadcastToPlayers(payload);
+  renderEmojiRound({...payload,forHost:true});
+  gs.timer=startTimer(20,()=>{if(!gs.emojiWinner)hostRevealEmoji(null);});
+}
+
+function handleEmojiAnswer(pid,data){
+  if(gameState.emojiWinner) return;
+  const p=gameState.data.puzzles[gameState.round];
+  if(p.ans.includes((data.answer||'').trim().toLowerCase())){
+    gameState.emojiWinner=playerNames[pid];
+    clearInterval(gameState.timer);
+    hostRevealEmoji(gameState.emojiWinner);
+  }
+}
+
+function hostRevealEmoji(winner){
+  const p=gameState.data.puzzles[gameState.round];
+  if(winner) scores[winner]=(scores[winner]||0)+300;
+  broadcastToPlayers({type:'emoji-result',winner,answer:p.ans[0],scores});
+  showEmojiResult({winner,answer:p.ans[0]});
+  gameState.round++;
+  setTimeout(()=>hostNextEmoji(),3500);
+}
+
+function renderEmojiRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Puzzle ${data.index+1} / ${data.total}</div>
+    <span class="cat-badge">${esc(data.cat)}</span>
+    <div class="emoji-big">${data.emoji}</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="guess-row">
+      <input id="em-in" type="text" placeholder="Guess the title…" autocomplete="off">
+      <button class="btn btn-primary btn-sm" style="width:auto;min-width:88px" onclick="submitEmoji()">Guess</button>
+    </div>
+    <div class="status" id="em-st">What movie or show is this?</div>
+  </div>`;
+  document.getElementById('em-in').focus();
+  startTimer(20,()=>{document.getElementById('em-st').textContent="Time's up!";document.getElementById('em-in').disabled=true;});
+}
+
+function submitEmoji(){
+  const val=(document.getElementById('em-in').value||'').trim().toLowerCase();
+  const p=gameState.data.puzzles[gameState.round];
+  if(isHost){
+    if(gameState.emojiWinner||gameState.hostGuessed) return;
+    if(p.ans.includes(val)){
+      gameState.hostGuessed=true;
+      clearInterval(gameState.timer);
+      gameState.emojiWinner=myName;
+      hostRevealEmoji(myName);
+    } else document.getElementById('em-st').textContent='Not quite!';
+  } else {
+    hostConn.send({type:'answer',answer:val});
+    document.getElementById('em-in').disabled=true;
+    document.getElementById('em-st').textContent='Submitted! Waiting…';
+  }
+}
+
+function showEmojiResult(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="big-result">${data.winner?'🎉':'😅'}</div>
+    <h2>${data.winner?esc(data.winner)+' got it!':'Nobody got it!'}</h2>
+    <p class="muted">Answer: <strong style="color:#f5a623">${esc(data.answer)}</strong></p>
+    <p class="muted" style="margin-top:8px">Next puzzle coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: WOULD YOU RATHER
+// ============================================================
+function hostNextWyr(){
+  const gs=gameState,qs=gs.data.questions;
+  if(gs.round>=qs.length){endGame();return;}
+  const q=qs[gs.round];
+  gs.votes={A:0,B:0};gs.voted={};gs.hostVoted=false;
+  const payload={type:'wyr-round',index:gs.round,total:qs.length,a:q.a,b:q.b,timeLimit:15};
+  broadcastToPlayers(payload);
+  renderWyrRound({...payload,forHost:true});
+  gs.timer=startTimer(15,()=>hostRevealVote('wyr'));
+}
+
+function handleVoteAnswer(pid,data,game){
+  const gs=gameState;
+  if(!gs.votes) gs.votes={A:0,B:0};
+  if(!gs.voted) gs.voted={};
+  if(gs.voted[pid]) return;
+  gs.voted[pid]=true;
+  if(data.answer==='A') gs.votes.A++;
+  if(data.answer==='B') gs.votes.B++;
+  const total=Object.keys(playerConns).length+(gs.hostVoted?1:0);
+  const got=Object.keys(gs.voted).length+(gs.hostVoted?1:0);
+  if(got>=total&&total>0){clearInterval(gs.timer);hostRevealVote(game);}
+}
+
+function hostRevealVote(game){
+  clearInterval(gameState.timer);
+  const votes=gameState.votes;
+  if(game==='wyr') broadcastToPlayers({type:'wyr-result',votes,scores});
+  else broadcastToPlayers({type:'ht-result',votes,scores});
+  showVoteResult({votes,scores},game);
+  gameState.round++;
+  setTimeout(()=>{ if(game==='wyr') hostNextWyr(); else hostNextHT(); },4000);
+}
+
+function renderWyrRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${data.index+1} / ${data.total} · Would You Rather</div>
+    <div class="q-text">Would you rather…</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="ans-grid" style="margin-top:16px">
+      <button class="ans-btn" id="wyr-a" onclick="castVote('A','wyr')" style="text-align:center;padding:20px;font-weight:700;border-color:#e94560">A: ${esc(data.a)}</button>
+      <button class="ans-btn" id="wyr-b" onclick="castVote('B','wyr')" style="text-align:center;padding:20px;font-weight:700;border-color:#00c9a7">B: ${esc(data.b)}</button>
+    </div>
+    <div class="status" id="vote-st">Pick one!</div>
+  </div>`;
+  startTimer(15,()=>{document.getElementById('vote-st').textContent='Votes in!';document.querySelectorAll('#wyr-a,#wyr-b').forEach(b=>b.disabled=true);});
+}
+
+function castVote(choice,game){
+  document.querySelectorAll('#wyr-a,#wyr-b,#ht-a,#ht-b').forEach(b=>b.disabled=true);
+  const el=document.getElementById('vote-st');
+  if(isHost){
+    if(!gameState.hostVoted){
+      gameState.hostVoted=true;
+      gameState.votes[choice]=(gameState.votes[choice]||0)+1;
+    }
+    if(el) el.textContent='Voted '+choice+'!';
+    const total=Object.keys(playerConns).length+1;
+    const got=Object.keys(gameState.voted).length+1;
+    if(got>=total){clearInterval(gameState.timer);hostRevealVote(game);}
+  } else {
+    hostConn.send({type:'answer',answer:choice});
+    if(el) el.textContent='Voted! Waiting for results…';
+  }
+}
+
+function showVoteResult(data,game){
+  const {votes}=data;
+  const total=(votes.A||0)+(votes.B||0);
+  const pA=total?Math.round(votes.A/total*100):50;
+  const pB=100-pA;
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <h2>Results</h2>
+    <div style="margin:22px 0">
+      <div class="vote-bar-row">
+        <span class="vote-label" style="color:#e94560">A</span>
+        <div class="vote-track"><div class="vote-fill vf-red" style="width:${pA}%">${pA}%</div></div>
+        <span class="vote-count">${votes.A||0}</span>
+      </div>
+      <div class="vote-bar-row">
+        <span class="vote-label" style="color:#00c9a7">B</span>
+        <div class="vote-track"><div class="vote-fill vf-teal" style="width:${pB}%">${pB}%</div></div>
+        <span class="vote-count">${votes.B||0}</span>
+      </div>
+    </div>
+    <p class="muted">Next question coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: DRAW & GUESS
+// ============================================================
+let drawColor='#000000';
+
+function hostNextDraw(){
+  const gs=gameState,ws=gs.data.words;
+  if(gs.round>=ws.length){endGame();return;}
+  const word=ws[gs.round];
+  gs.drawWinner=null;gs.hostGuessed=false;
+  const payload={type:'draw-round',index:gs.round,total:ws.length,timeLimit:60};
+  broadcastToPlayers(payload);
+  renderHostDrawRound(word,gs.round,ws.length);
+  gs.timer=startTimer(60,()=>hostRevealDraw(null));
+}
+
+function renderHostDrawRound(word,index,total){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${index+1} / ${total} · Draw &amp; Guess</div>
+    <p style="margin-bottom:10px">Draw: <strong style="color:#f5a623;font-size:1.3rem">${esc(word)}</strong></p>
+    <canvas id="draw-canvas" width="480" height="300"></canvas>
+    <div class="draw-tools">
+      <div class="color-dot active" style="background:#000" onclick="setColor('#000',this)"></div>
+      <div class="color-dot" style="background:#e94560" onclick="setColor('#e94560',this)"></div>
+      <div class="color-dot" style="background:#3498db" onclick="setColor('#3498db',this)"></div>
+      <div class="color-dot" style="background:#2ecc71" onclick="setColor('#2ecc71',this)"></div>
+      <div class="color-dot" style="background:#f5a623" onclick="setColor('#f5a623',this)"></div>
+      <div class="color-dot" style="background:#fff;border-color:rgba(255,255,255,.5)" onclick="setColor('#fff',this)"></div>
+      <button class="btn btn-ghost btn-sm" style="width:auto;padding:6px 12px" onclick="clearDrawCanvas()">🗑️</button>
+    </div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="status" id="draw-st">Players are guessing!</div>
+  </div>`;
+  setupHostCanvas();
+}
+
+function setColor(c,el){
+  drawColor=c;
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function clearDrawCanvas(){
+  const c=document.getElementById('draw-canvas');
+  if(!c) return;
+  c.getContext('2d').clearRect(0,0,c.width,c.height);
+  broadcastToPlayers({type:'draw-stroke',event:'clear'});
+}
+
+function setupHostCanvas(){
+  const canvas=document.getElementById('draw-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';
+  let drawing=false,lx=0,ly=0,lastSent=0;
+
+  function pos(e){
+    const r=canvas.getBoundingClientRect();
+    const sx=canvas.width/r.width,sy=canvas.height/r.height;
+    if(e.touches) return[(e.touches[0].clientX-r.left)*sx,(e.touches[0].clientY-r.top)*sy];
+    return[(e.clientX-r.left)*sx,(e.clientY-r.top)*sy];
+  }
+  function start(e){e.preventDefault();drawing=true;[lx,ly]=pos(e);ctx.beginPath();ctx.moveTo(lx,ly);}
+  function move(e){
+    if(!drawing) return;e.preventDefault();
+    const [x,y]=pos(e);
+    ctx.strokeStyle=drawColor;ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();
+    const now=Date.now();
+    if(now-lastSent>30){
+      broadcastToPlayers({type:'draw-stroke',event:'draw',x1:lx,y1:ly,x2:x,y2:y,color:drawColor});
+      lastSent=now;
+    }
+    [lx,ly]=[x,y];
+  }
+  function end(){drawing=false;}
+  canvas.addEventListener('mousedown',start);
+  canvas.addEventListener('mousemove',move);
+  canvas.addEventListener('mouseup',end);
+  canvas.addEventListener('mouseleave',end);
+  canvas.addEventListener('touchstart',start,{passive:false});
+  canvas.addEventListener('touchmove',move,{passive:false});
+  canvas.addEventListener('touchend',end);
+}
+
+function handleDrawAnswer(pid,data){
+  if(gameState.drawWinner) return;
+  const word=gameState.data.words[gameState.round];
+  if((data.answer||'').trim().toLowerCase()===word.toLowerCase()){
+    gameState.drawWinner=playerNames[pid];
+    clearInterval(gameState.timer);
+    hostRevealDraw(gameState.drawWinner);
+  }
+}
+
+function hostRevealDraw(winner){
+  const word=gameState.data.words[gameState.round];
+  if(winner){scores[winner]=(scores[winner]||0)+300;scores[myName]=(scores[myName]||0)+100;}
+  broadcastToPlayers({type:'draw-result',winner,word,scores});
+  showDrawResult({winner,word});
+  gameState.round++;
+  setTimeout(()=>hostNextDraw(),3500);
+}
+
+function renderPlayerDrawRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${data.index+1} / ${data.total} · Draw &amp; Guess</div>
+    <p class="muted">The host is drawing something…</p>
+    <canvas id="draw-canvas" width="480" height="300"></canvas>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="guess-row">
+      <input id="draw-in" type="text" placeholder="What is it?" autocomplete="off">
+      <button class="btn btn-primary btn-sm" style="width:auto;min-width:88px" onclick="submitDrawGuess()">Guess</button>
+    </div>
+    <div class="status" id="draw-st">Watch and guess!</div>
+  </div>`;
+  document.getElementById('draw-in').focus();
+  startTimer(60,()=>{document.getElementById('draw-st').textContent="Time's up!";document.getElementById('draw-in').disabled=true;});
+}
+
+function applyDrawStroke(data){
+  const c=document.getElementById('draw-canvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  if(data.event==='clear'){ctx.clearRect(0,0,c.width,c.height);return;}
+  if(data.event==='draw'){
+    ctx.strokeStyle=data.color||'#000';ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.beginPath();ctx.moveTo(data.x1,data.y1);ctx.lineTo(data.x2,data.y2);ctx.stroke();
+  }
+}
+
+function submitDrawGuess(){
+  const val=(document.getElementById('draw-in').value||'').trim();
+  hostConn.send({type:'answer',answer:val.toLowerCase()});
+  document.getElementById('draw-in').disabled=true;
+  document.getElementById('draw-st').textContent='Guessed! Waiting…';
+}
+
+function showDrawResult(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="big-result">${data.winner?'🎉':'😅'}</div>
+    <h2>${data.winner?esc(data.winner)+' guessed it!':'Nobody guessed it!'}</h2>
+    <p class="muted">It was: <strong style="color:#f5a623">${esc(data.word)}</strong></p>
+    <p class="muted" style="margin-top:8px">Next round coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: TRUE OR FALSE
+// ============================================================
+function hostNextTF(){
+  const gs=gameState,qs=gs.data.questions;
+  if(gs.round>=qs.length){endGame();return;}
+  const q=qs[gs.round];
+  gs.answers={};gs.hostAnswer=undefined;gs.roundStart=Date.now();
+  const payload={type:'tf-round',index:gs.round,total:qs.length,question:q.q,timeLimit:10};
+  broadcastToPlayers(payload);
+  renderTFRound({...payload,forHost:true});
+  gs.timer=startTimer(10,()=>hostRevealTF());
+}
+
+function handleTFAnswer(pid,data){
+  if(gameState.answers[pid]!==undefined) return;
+  gameState.answers[pid]={answer:data.answer,elapsed:Date.now()-gameState.roundStart};
+  const total=Object.keys(playerConns).length+(gameState.hostAnswer!==undefined?1:0);
+  if(Object.keys(gameState.answers).length+(gameState.hostAnswer!==undefined?1:0)>=total&&total>0){
+    clearInterval(gameState.timer);hostRevealTF();
+  }
+}
+
+function hostPickTF(val){
+  if(gameState.hostAnswer!==undefined) return;
+  gameState.hostAnswer=val;
+  gameState.answers['host']={answer:val,elapsed:Date.now()-gameState.roundStart};
+  document.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);
+  hostRevealTF();
+}
+
+function hostRevealTF(){
+  clearInterval(gameState.timer);
+  const q=gameState.data.questions[gameState.round];
+  const correct=q.a;
+  const resultMap={};
+  Object.entries(gameState.answers).forEach(([pid,{answer,elapsed}])=>{
+    const name=pid==='host'?myName:playerNames[pid];
+    if(!name) return;
+    const ok=answer===correct;
+    const pts=ok?Math.max(50,Math.round(200*(1-elapsed/10000))):0;
+    scores[name]=(scores[name]||0)+pts;
+    resultMap[name]={correct:ok,pts};
+  });
+  const el=document.getElementById('tf-st');
+  if(el) el.textContent='Answer: '+(correct?'TRUE ✅':'FALSE ❌');
+  broadcastToPlayers({type:'tf-result',correct,scores,resultMap});
+  gameState.round++;
+  setTimeout(()=>hostNextTF(),3000);
+}
+
+function renderTFRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Question ${data.index+1} / ${data.total} · True or False</div>
+    <div class="q-text" style="margin-bottom:20px">${esc(data.question)}</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="ans-grid">
+      <button class="tf-btn tf-true" id="tf-t" onclick="${data.forHost?'hostPickTF(true)':'playerPickTF(true)'}">✅ TRUE</button>
+      <button class="tf-btn tf-false" id="tf-f" onclick="${data.forHost?'hostPickTF(false)':'playerPickTF(false)'}">❌ FALSE</button>
+    </div>
+    <div class="status" id="tf-st">True or False?</div>
+  </div>`;
+  if(!data.forHost) startTimer(10,()=>{document.getElementById('tf-st').textContent="Time's up!";document.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);});
+}
+
+function playerPickTF(val){
+  document.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);
+  document.getElementById('tf-st').textContent='Submitted! Waiting…';
+  hostConn.send({type:'answer',answer:val});
+}
+
+function showTFResult(data){
+  const tBtn=document.getElementById('tf-t'),fBtn=document.getElementById('tf-f');
+  if(tBtn) tBtn.disabled=true;if(fBtn) fBtn.disabled=true;
+  if(data.correct===true&&tBtn) tBtn.classList.add('correct');
+  if(data.correct===false&&fBtn) fBtn.classList.add('correct');
+  const my=data.resultMap[myName];
+  const el=document.getElementById('tf-st');
+  if(el&&my) el.textContent=my.correct?`✅ Correct! +${my.pts} pts`:`❌ Wrong — +0 pts`;
+}
+
+// ============================================================
+// GAME: MATH RACE
+// ============================================================
+function makeMathProblem(){
+  const ops=['+','-','×'];
+  const op=ops[rand(0,2)];
+  let a,b,ans;
+  if(op==='+'){a=rand(1,50);b=rand(1,50);ans=a+b;}
+  if(op==='-'){a=rand(10,99);b=rand(1,a);ans=a-b;}
+  if(op==='×'){a=rand(2,12);b=rand(2,12);ans=a*b;}
+  return{problem:`${a} ${op} ${b}`,answer:ans};
+}
+
+function hostNextMath(){
+  const gs=gameState;
+  if(gs.round>=gs.data.rounds){endGame();return;}
+  gs.mathWinner=null;gs.hostGuessed=false;
+  gs.currentMath=makeMathProblem();
+  const payload={type:'math-round',index:gs.round,total:gs.data.rounds,problem:gs.currentMath.problem,timeLimit:15};
+  broadcastToPlayers(payload);
+  renderMathRound({...payload,forHost:true});
+  gs.timer=startTimer(15,()=>{if(!gs.mathWinner)hostRevealMath(null);});
+}
+
+function handleMathAnswer(pid,data){
+  if(gameState.mathWinner) return;
+  if(parseInt(data.answer)===gameState.currentMath.answer){
+    gameState.mathWinner=playerNames[pid];
+    clearInterval(gameState.timer);
+    hostRevealMath(gameState.mathWinner);
+  }
+}
+
+function hostRevealMath(winner){
+  const ans=gameState.currentMath.answer;
+  if(winner) scores[winner]=(scores[winner]||0)+300;
+  broadcastToPlayers({type:'math-result',winner,answer:ans,scores});
+  showMathResult({winner,answer:ans});
+  gameState.round++;
+  setTimeout(()=>hostNextMath(),3000);
+}
+
+function renderMathRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Problem ${data.index+1} / ${data.total} · Math Race</div>
+    <div class="math-problem">${esc(data.problem)} = ?</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="guess-row">
+      <input id="math-in" type="number" placeholder="Your answer…" autocomplete="off">
+      <button class="btn btn-primary btn-sm" style="width:auto;min-width:88px" onclick="submitMath()">Submit</button>
+    </div>
+    <div class="status" id="math-st">First correct answer wins!</div>
+  </div>`;
+  document.getElementById('math-in').focus();
+  const onTimeout=()=>{document.getElementById('math-st').textContent="Time's up!";document.getElementById('math-in').disabled=true;};
+  if(!data.forHost) startTimer(15,onTimeout);
+}
+
+function submitMath(){
+  const val=document.getElementById('math-in').value.trim();
+  if(isHost){
+    if(gameState.mathWinner||gameState.hostGuessed) return;
+    if(parseInt(val)===gameState.currentMath.answer){
+      gameState.hostGuessed=true;
+      clearInterval(gameState.timer);
+      gameState.mathWinner=myName;
+      hostRevealMath(myName);
+    } else document.getElementById('math-st').textContent='Wrong! Keep trying…';
+  } else {
+    hostConn.send({type:'answer',answer:val});
+    document.getElementById('math-in').disabled=true;
+    document.getElementById('math-st').textContent='Submitted! Waiting…';
+  }
+}
+
+function showMathResult(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="big-result">${data.winner?'🎉':'⏱️'}</div>
+    <h2>${data.winner?esc(data.winner)+' got it!':'Nobody got it!'}</h2>
+    <p class="muted">Answer: <strong style="color:#f5a623">${data.answer}</strong></p>
+    <p class="muted" style="margin-top:8px">Next problem coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: SONG LYRICS
+// ============================================================
+function hostNextLyrics(){
+  const gs=gameState,ss=gs.data.songs;
+  if(gs.round>=ss.length){endGame();return;}
+  const s=ss[gs.round];
+  gs.lyricsWinner=null;gs.hostGuessed=false;
+  const payload={type:'lyrics-round',index:gs.round,total:ss.length,lyric:s.l,song:s.song,timeLimit:20};
+  broadcastToPlayers(payload);
+  renderLyricsRound({...payload,forHost:true});
+  gs.timer=startTimer(20,()=>{if(!gs.lyricsWinner)hostRevealLyrics(null);});
+}
+
+function handleLyricsAnswer(pid,data){
+  if(gameState.lyricsWinner) return;
+  const s=gameState.data.songs[gameState.round];
+  if((data.answer||'').trim().toLowerCase()===s.ans.toLowerCase()){
+    gameState.lyricsWinner=playerNames[pid];
+    clearInterval(gameState.timer);
+    hostRevealLyrics(gameState.lyricsWinner);
+  }
+}
+
+function hostRevealLyrics(winner){
+  const s=gameState.data.songs[gameState.round];
+  if(winner) scores[winner]=(scores[winner]||0)+300;
+  broadcastToPlayers({type:'lyrics-result',winner,answer:s.ans,song:s.song,scores});
+  showLyricsResult({winner,answer:s.ans,song:s.song});
+  gameState.round++;
+  setTimeout(()=>hostNextLyrics(),3500);
+}
+
+function renderLyricsRound(data){
+  const parts=data.lyric.split('___');
+  const lyricHTML=parts.map((p,i)=>esc(p)+(i<parts.length-1?'<span class="lyric-blank">___</span>':'')).join('');
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${data.index+1} / ${data.total} · Song Lyrics</div>
+    <div class="lyric-text">${lyricHTML}</div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="guess-row">
+      <input id="lyr-in" type="text" placeholder="Fill in the blank…" autocomplete="off">
+      <button class="btn btn-primary btn-sm" style="width:auto;min-width:88px" onclick="submitLyrics()">Submit</button>
+    </div>
+    <div class="status" id="lyr-st">What's the missing word?</div>
+  </div>`;
+  document.getElementById('lyr-in').focus();
+  if(!data.forHost) startTimer(20,()=>{document.getElementById('lyr-st').textContent="Time's up!";document.getElementById('lyr-in').disabled=true;});
+}
+
+function submitLyrics(){
+  const val=(document.getElementById('lyr-in').value||'').trim();
+  const s=gameState.data.songs[gameState.round];
+  if(isHost){
+    if(gameState.lyricsWinner||gameState.hostGuessed) return;
+    if(val.toLowerCase()===s.ans.toLowerCase()){
+      gameState.hostGuessed=true;
+      clearInterval(gameState.timer);
+      gameState.lyricsWinner=myName;
+      hostRevealLyrics(myName);
+    } else document.getElementById('lyr-st').textContent='Not quite!';
+  } else {
+    hostConn.send({type:'answer',answer:val});
+    document.getElementById('lyr-in').disabled=true;
+    document.getElementById('lyr-st').textContent='Submitted! Waiting…';
+  }
+}
+
+function showLyricsResult(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="big-result">${data.winner?'🎉':'😅'}</div>
+    <h2>${data.winner?esc(data.winner)+' got it!':'Nobody got it!'}</h2>
+    <p class="muted">Missing word: <strong style="color:#f5a623">${esc(data.answer)}</strong></p>
+    <p class="muted">From: <em>${esc(data.song)}</em></p>
+    <p class="muted" style="margin-top:8px">Next round coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: NEVER HAVE I EVER
+// ============================================================
+function hostNextNHIE(){
+  const gs=gameState,ss=gs.data.statements;
+  if(gs.round>=ss.length){endGame();return;}
+  gs.nhieVotes={};gs.nhieHostVoted=false;
+  const payload={type:'nhie-round',index:gs.round,total:ss.length,statement:ss[gs.round],timeLimit:12};
+  broadcastToPlayers(payload);
+  renderNHIERound({...payload,forHost:true});
+  gs.timer=startTimer(12,()=>hostRevealNHIE());
+}
+
+function handleNHIEAnswer(pid,data){
+  if(gameState.nhieVotes[pid]) return;
+  gameState.nhieVotes[pid]=data.answer;
+  const total=Object.keys(playerConns).length+(gameState.nhieHostVoted?1:0);
+  const got=Object.keys(gameState.nhieVotes).length+(gameState.nhieHostVoted?1:0);
+  if(got>=total&&total>0){clearInterval(gameState.timer);hostRevealNHIE();}
+}
+
+function castNHIE(val){
+  document.querySelectorAll('.nhie-btn').forEach(b=>b.disabled=true);
+  if(isHost){
+    if(!gameState.nhieHostVoted){
+      gameState.nhieHostVoted=true;
+      gameState.nhieVotes['host']=val;
+    }
+    hostRevealNHIE();
+  } else {
+    hostConn.send({type:'answer',answer:val});
+    document.getElementById('nhie-st').textContent='Voted! Waiting…';
+  }
+}
+
+function hostRevealNHIE(){
+  clearInterval(gameState.timer);
+  const have=[],havenot=[];
+  Object.entries(gameState.nhieVotes).forEach(([pid,v])=>{
+    const name=pid==='host'?myName:playerNames[pid];
+    if(!name) return;
+    if(v==='have') have.push(name);
+    else havenot.push(name);
+  });
+  broadcastToPlayers({type:'nhie-result',have,havenot,scores});
+  showNHIEResult({have,havenot});
+  gameState.round++;
+  setTimeout(()=>hostNextNHIE(),4000);
+}
+
+function renderNHIERound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${data.index+1} / ${data.total} · Never Have I Ever</div>
+    <div class="nhie-stmt">Never have I ever…<br><strong style="color:#f5a623">${esc(data.statement)}</strong></div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="nhie-btns">
+      <button class="nhie-btn nhie-have" onclick="castNHIE('have')">🙋 I HAVE!</button>
+      <button class="nhie-btn nhie-never" onclick="castNHIE('never')">😇 Never!</button>
+    </div>
+    <div class="status" id="nhie-st">Be honest!</div>
+  </div>`;
+  if(!data.forHost) startTimer(12,()=>{document.getElementById('nhie-st').textContent='Time\'s up!';document.querySelectorAll('.nhie-btn').forEach(b=>b.disabled=true);});
+}
+
+function showNHIEResult(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <h2>Who's done it?</h2>
+    <div class="nhie-reveal">
+      <div class="nhie-col">
+        <h3 style="color:#e94560">🙋 I Have (${data.have.length})</h3>
+        ${data.have.length?data.have.map(n=>`<div class="nhie-name">${esc(n)}</div>`).join(''):'<div class="nhie-name" style="color:rgba(255,255,255,.4)">Nobody!</div>'}
+      </div>
+      <div class="nhie-col">
+        <h3 style="color:#00c9a7">😇 Never (${data.havenot.length})</h3>
+        ${data.havenot.length?data.havenot.map(n=>`<div class="nhie-name">${esc(n)}</div>`).join(''):'<div class="nhie-name" style="color:rgba(255,255,255,.4)">Nobody!</div>'}
+      </div>
+    </div>
+    <p class="muted" style="margin-top:16px">Next statement coming up…</p>
+  </div>`;
+}
+
+// ============================================================
+// GAME: HOT TAKES
+// ============================================================
+function hostNextHT(){
+  const gs=gameState,ss=gs.data.statements;
+  if(gs.round>=ss.length){endGame();return;}
+  gs.votes={A:0,B:0};gs.voted={};gs.hostVoted=false;
+  const payload={type:'ht-round',index:gs.round,total:ss.length,statement:ss[gs.round],timeLimit:15};
+  broadcastToPlayers(payload);
+  renderHTRound({...payload,forHost:true});
+  gs.timer=startTimer(15,()=>hostRevealVote('ht'));
+}
+
+function renderHTRound(data){
+  document.getElementById('game-wrap').innerHTML=`<div class="q-card center">
+    <div class="q-meta">Round ${data.index+1} / ${data.total} · Hot Takes</div>
+    <div class="nhie-stmt"><strong style="color:#f5a623">${esc(data.statement)}</strong></div>
+    <div class="timer-track"><div class="timer-fill" id="tf" style="width:100%"></div></div>
+    <div class="ans-grid" style="margin-top:16px">
+      <button class="ans-btn" id="ht-a" onclick="castVote('A','ht')" style="text-align:center;padding:20px;font-weight:700;border-color:#00c9a7;font-size:1.05rem">✅ Agree</button>
+      <button class="ans-btn" id="ht-b" onclick="castVote('B','ht')" style="text-align:center;padding:20px;font-weight:700;border-color:#e94560;font-size:1.05rem">❌ Disagree</button>
+    </div>
+    <div class="status" id="vote-st">What's your take?</div>
+  </div>`;
+  if(!data.forHost) startTimer(15,()=>{document.getElementById('vote-st').textContent='Time\'s up!';document.querySelectorAll('#ht-a,#ht-b').forEach(b=>b.disabled=true);});
+}
+
+// ============================================================
+// SCOREBOARD
+// ============================================================
+function endGame(){
+  broadcastToPlayers({type:'game-over',scores,game:gameState.game});
+  showFinalScores(scores,gameState.game,true);
+}
+
+function showFinalScores(sc,game,amHost){
+  show('s-scores');
+  document.getElementById('sc-subtitle').textContent=gameLabel(game);
+  document.getElementById('sc-host-btn').style.display=amHost?'block':'none';
+  const sorted=Object.entries(sc).sort((a,b)=>b[1]-a[1]);
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('sc-list').innerHTML=sorted.map(([name,pts],i)=>`
+    <div class="score-row ${i<3?'rank'+(i+1):''}">
+      <span class="rank-num">${medals[i]||'#'+(i+1)}</span>
+      <span class="pname">${esc(name)}</span>
+      <span class="pts">${pts} pts</span>
+    </div>`).join('');
+}
+
+function hostRestartLobby(){
+  Object.keys(scores).forEach(k=>scores[k]=0);
+  gameState={};
+  broadcastToPlayers({type:'lobby-update',players:lobbyList(),game:selectedGame});
+  show('s-host-lobby');
+  renderHostPlayers();
+}
+</script>
+</body>
+</html>
